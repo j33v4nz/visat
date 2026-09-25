@@ -75,6 +75,51 @@ Not used: ECOSTRESS. In GEE it only covers Los Angeles tiles.
 
 ---
 
+## 2c. Live Malayalam news alerts (RSS)
+
+**Tested 25 Sep 2026**
+
+| Feed | URL | Status |
+|---|---|---|
+| **Google News, Malayalam search** (aggregator) | `https://news.google.com/rss/search?q=<query>&hl=ml&gl=IN&ceid=IN:ml` | ✅ 64 Kerala weather items in 7 days, from Asianet News, 24 News, MediaOne, News18 Malayalam, Manorama Online, Kerala Kaumudi, Indian Express Malayalam, Samakalika Malayalam |
+| Mathrubhumi | `https://www.mathrubhumi.com/rss` | ✅ 48 current items (general news, so filter with keywords) |
+| 24 News | `https://www.twentyfournews.com/feed` | ✅ 10 current items |
+| Mathrubhumi (Feedburner) | `https://feeds.feedburner.com/mathrubhumi` | ⚠️ Responds but looks stale. Don't use |
+| Manorama, MediaOne, Kerala Kaumudi, Deshabhimani, Asianet (direct) | various | ❌ 403/404, no public RSS. They are covered via the Google News aggregator |
+
+**Query we tested** (URL-encode it):
+```
+(ചൂട് OR താപനില OR ഉഷ്ണതരംഗം OR സൂര്യാതപം OR അലർട്ട്) (കേരളം OR എറണാകുളം OR കൊച്ചി) -യുഎഇ -ഗൾഫ് -സൗദി when:7d
+```
+Without the minus terms, Gulf heat stories (UAE 41–48 °C) leak in.
+
+**Keywords** (a native Malayalam reader on the team should review this list)
+
+| Group | Words |
+|---|---|
+| Heat | ചൂട് (heat), താപനില (temperature), ഉഷ്ണതരംഗം (heatwave), സൂര്യാതപം / സൂര്യാഘാതം (sunburn/sunstroke), ഉയർന്ന താപനില |
+| Alert colours | യെല്ലോ അലർട്ട് (yellow), ഓറഞ്ച് അലർട്ട് (orange), റെഡ് അലർട്ട് (red), ജാഗ്രത (caution) |
+| Place | കേരളം, സംസ്ഥാനത്ത്, the 14 district names (എറണാകുളം, തൃശൂർ, പാലക്കാട് …), കൊച്ചി |
+
+**⚠️ Unicode pitfall:** real headlines spell "alert" two ways: അലർട്ട് (atomic chillu ർ, U+0D7C) and അലര്‍ട്ട് (ര + ് + ZWJ). Before matching:
+- remove U+200D (ZWJ) and U+200C (ZWNJ)
+- map chillu sequences to their atomic forms
+- then apply NFC normalization
+
+**Processing**
+- Parse each item: title, source, pubDate, link.
+- Keep Kerala weather items. Tag heat vs rain.
+- Extract district(s) + alert colour with regex.
+- Group items with the same (date, district, colour). **N sources = "confirmed by N channels"**; a single source = "unconfirmed".
+- **Never empty:** if there are no heat items in 7 days, show "No heat alerts this week" plus the latest Kerala weather alerts. In September, all alerts were rain alerts.
+- Cache: `st.cache_data(ttl=900)`, 5-second timeout, fall back to `data/news_cache.json`.
+
+**Fair use:** show only headline, channel name, time and a link to the original. Never copy article text. Label it "from Malayalam news; official alerts: IMD / KSDMA". This is a non-commercial hackathon prototype; a production version would ask the channels for permission or use official IMD/KSDMA feeds.
+
+**Library:** Python's built-in `xml.etree.ElementTree` is enough; `feedparser` is an optional alternative.
+
+---
+
 ## 3. Kochi / Kerala local data
 
 | Data | Source | Notes |
@@ -157,6 +202,7 @@ Not used: ECOSTRESS. In GEE it only covers Los Angeles tiles.
 - [ ] Python 3.12 + `uv` + all libraries installed and importing on every laptop
 - [ ] Streamlit Cloud hello-world deployed (M3)
 - [ ] Open-Meteo test request for the 8 Kochi points works from a browser (M3), and the coordinates are checked on a map (M1)
+- [ ] Malayalam news feeds open in a browser (Google News query, Mathrubhumi, 24 News), and a native reader reviews the keyword list (M4)
 - [ ] Kochi 74-ward GeoJSON downloaded from BharatLAS (M1)
 - [ ] CPCB Vyttila + Eloor temperature, Feb–Apr, downloaded (M4)
 - [ ] Costs re-verified; sources saved for slides (M4)

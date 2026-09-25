@@ -18,7 +18,7 @@ Most heat projects stop at a heat map. A map shows where it's hot, but it doesn'
 
 VISAT is a web app for **Kochi Corporation's C-HED climate cell and ward councillors**. It uses free satellite data, **live weather data** (no hardware or sensors) and machine learning to:
 
-0. **Warn today (live):** current temperature, humidity and heat index for Kochi, a 72-hour heat forecast, and a ranking of **where to act today** (wards with the most exposed people when today's heat peaks).
+0. **Warn today (live):** current temperature, humidity and heat index for Kochi, a 72-hour heat forecast, **live weather alerts from Malayalam news channels** (Asianet News, 24 News, MediaOne, Manorama, Mathrubhumi and others), and a ranking of **where to act today** (wards with the most exposed people when today's heat peaks).
 1. **Find** where heat hurts the most people, on a 100 m grid of Kochi.
 2. **Explain** why each ward is hot (concrete, missing trees, distance from water).
 3. **Simulate** realistic fixes: street trees, cool roofs, mangrove restoration.
@@ -31,7 +31,8 @@ VISAT is a web app for **Kochi Corporation's C-HED climate cell and ward council
 One web app with 6 tabs, plus a **live strip on top of every tab**:
 
 > **Today in Kochi (live)** · 33 °C · 74% humidity · feels like 41 °C · Heat index: **Danger** · peak 1–4 PM · updated 10:42 · *Weather data: Open-Meteo*
-> (Example values only. The real strip shows live numbers.)
+> 📰 **Kerala alerts (Malayalam news, live):** "എറണാകുളം ഉൾപ്പെടെ 6 ജില്ലകളിൽ യെല്ലോ അലർട്ട്" · *reported by 4 channels* · Asianet News · 2 h ago → link
+> (Example values only. The real strip shows live numbers and real headlines.)
 
 | Tab | What it shows | Demo line |
 |---|---|---|
@@ -45,6 +46,7 @@ One web app with 6 tabs, plus a **live strip on top of every tab**:
 **Honesty rules**
 - Satellite numbers are labelled **"surface °C, ~10:30 AM, Feb–Apr"**. The satellite measures ground temperature at its morning overpass, not the air temperature people feel.
 - Live numbers are labelled **"live weather, city-scale"**. The weather model is several km across, so differences between wards come from the satellite layer, not the live feed.
+- News items are shown as **headline + channel name + time + link only** (never copied article text), labelled "from Malayalam news; official alerts: IMD / KSDMA". An alert reported by **several channels** is marked as confirmed, and a single-source claim is marked as unconfirmed. This helps against rumours like the viral "55 °C" message KSDMA debunked in 2026.
 - The Proof tab has a **data freshness panel**: satellite composite dates, the latest Landsat scene date, the live-weather timestamp, and for every source whether it is *live*, *cached* or *frozen*.
 
 **Why the satellite map itself isn't live:** Landsat passes over Kochi only every 8–16 days, and calling Earth Engine during judging could crash the demo. So the satellite layers are real data frozen at the event, and the weather layer on top is live.
@@ -63,7 +65,8 @@ Satellite data ──► frozen to files ──► ML model ──► Why (SHAP)
 
 LIVE:  Open-Meteo API (every 15 min) ──► heat index + 72 h forecast ──┐
        ward exposure (from satellite + population + OSM sites) ───────┴──► "Where to act today"
-       └── on any failure: last good snapshot (data/live_cache.json) + "showing data from <time>"
+       Malayalam news RSS (every 15 min) ──► filter Kerala weather/heat ──► district + alert colour ──► ticker ("confirmed by N channels")
+       └── on any failure: last good snapshot (data/live_cache.json, data/news_cache.json) + "showing data from <time>"
 ```
 
 1. **Collect the data, then freeze it.** From Google Earth Engine (all free and open):
@@ -94,7 +97,13 @@ LIVE:  Open-Meteo API (every 15 min) ──► heat index + 72 h forecast ──
    - It returns current temperature, humidity, feels-like and wind, plus hourly heat, wet-bulb, UV and sunlight for 72 hours.
    - From these we compute the **heat index**, the humid-heat measure KSDMA's alerts use, and its category band.
    - "Where to act today" = today's forecast peak heat index × each ward's exposure: satellite heat anomaly × population × schools, anganwadis, markets and harbours.
-   - **Never-crash rule:** 3-second timeout, results cached for 15 minutes, and on any failure the app loads the last good snapshot from `data/live_cache.json` with a "showing data from <time>" banner. It is tested with Wi-Fi off.
+   - **Live Malayalam news alerts.** RSS feeds, tested working on 25 Sep 2026:
+     - a **Google News Malayalam** search, which aggregates Asianet News, 24 News, MediaOne, News18 Malayalam, Manorama, Kerala Kaumudi and Indian Express Malayalam
+     - **Mathrubhumi** and **24 News** direct feeds
+
+     We keep only Kerala weather items using Malayalam keywords (ചൂട്, താപനില, ഉഷ്ണതരംഗം, സൂര്യാതപം, അലർട്ട്, plus district names such as എറണാകുളം, കൊച്ചി), and drop Gulf/UAE stories. From each headline we pull out **district + alert colour** (യെല്ലോ / ഓറഞ്ച് / റെഡ്), then group matching headlines to show "confirmed by N channels".
+   - **Heat first, weather always.** Heat alerts are highlighted. If there are no heat alerts in the last 7 days (e.g. during the monsoon), the ticker says "No heat alerts this week" and shows the latest Kerala weather alerts, so it is never empty on demo day.
+   - **Never-crash rule:** 3-second timeout, results cached for 15 minutes, and on any failure the app loads the last good snapshot (`data/live_cache.json`, `data/news_cache.json`) with a "showing data from <time>" banner. It is tested with Wi-Fi off.
 10. **Dashboard.** Streamlit + pydeck, deployed online, with automated tests, a README, 5 slides and a demo video.
 
 ## 5. Why this can win
@@ -131,6 +140,7 @@ We move to the next tier only after the previous checkpoint passes.
 **Tier 2: Prevention + stronger proof (after the 4 PM checkpoint)**
 - ⭐ **Heat Impact Check**, the headline innovation, built first in Tier 2: reverse what-if, neighbourhood spread, cheapest heat-neutral offset, and the "Check a project" tab.
 - **Live 72-hour forecast + "Where to act today" ward ranking** (~2 h), plus the data freshness panel.
+- **Live Malayalam news alert ticker** (~1.5–2 h): RSS fetch, keyword filter, district + alert-colour extraction, "confirmed by N channels", cache/fallback.
 - **Quasi-experimental back-test:** squares that lost trees compared with matched, similar squares that didn't. We never call it "causal".
 - **Error ranges:** 90% intervals on temperature predictions. What-if ranges come from the back-test error spread. A "conservative mode" optimizer uses the low end.
 - **Protect vulnerable places:** schools, anganwadis, hospitals and markets (from OpenStreetMap) get extra weight, adjustable with a slider.
@@ -150,7 +160,7 @@ We move to the next tier only after the previous checkpoint passes.
 | **M1, Data & Model** | Earth Engine exports (frozen by 2 PM) → model + validation + baselines → back-test → hotspots → heat-index helper for the live strip → *(Tier 2)* live ward exposure × forecast ranking, matched back-test, error ranges | Slides 2–3; data and validation questions |
 | **M2, Scenarios & Optimizer** | Analog-transition fixes → budget optimizer + baselines → cool-roof physics check → tests and CI → *(Tier 2)* **Heat Impact Check engine** (reverse transition + offset optimizer), vulnerability weights → *(Tier 3)* Ask VISAT tools | Slide 4; optimizer and physics questions |
 | **M3, Dashboard** | Hello-world deployed by 12 PM → **live strip** (Open-Meteo fetch, 15-min cache, offline fallback) → 6-tab app → public-land and school/market layers → Ward Heat Card → *(Tier 2)* "Check a project" tab (plot click + land-use picker), 72-hour forecast chart, "Where to act today" list, freshness panel → *(Tier 3)* swipe map, printable card | Live demo; ward walkthrough |
-| **M4, Product & Pitch** | Sourced costs → baseline comparison slide → README + AI-use disclosure → 5 slides, demo video, demo script → timekeeping and submission | Slides 1 and 5; costs and impact questions |
+| **M4, Product & Pitch** | Sourced costs → baseline comparison slide → README + AI-use disclosure → *(Tier 2)* **Malayalam news alert feed**: RSS fetch, keyword list and district/alert-colour rules, with AI-assistant help; a native Malayalam reader checks the keywords. M3 builds the ticker UI → 5 slides, demo video, demo script → timekeeping and submission | Slides 1 and 5; costs and impact questions |
 
 ## 9. 24-hour timeline (work starts ~10 AM)
 
@@ -201,6 +211,7 @@ We move to the next tier only after the previous checkpoint passes.
 | How accurate is the Heat Impact Check for a building that doesn't exist yet? | M2 | It uses the same model and analog method we back-tested on real 2017→2024 construction, so its error is the back-test error. We show it as a range, not a single promise. |
 | Doesn't Kawaki already do this? | M4 | Kawaki proves Kochi wants data-driven cooling; it picks tree-grove sites. VISAT adds budget trade-offs (trees vs cool roofs vs mangroves), prevention for new projects, and verification. It's a tool for C-HED to plan the next Kawaki sites. |
 | Is your heat map live? | M3 | The weather and today's risk ranking are live, updated every 15 minutes. The satellite map can't be real-time because Landsat only passes every 8–16 days, so it's real data frozen at the event. It shows *where* land cover makes heat worse; the live layer shows *when* it's dangerous. |
+| Why use news headlines? Aren't they unreliable? | M4 | People in Kerala hear about heat through Malayalam news first, so we show what they're seeing, always with channel name, time and link. An alert reported by several channels is marked as confirmed; a single-source claim is not. Official alerts still come from IMD and KSDMA, and we say so on screen. |
 | What if the live feed fails during the demo? | M3 | It falls back to the last good snapshot with a clear "showing data from <time>" banner. We rehearsed with Wi-Fi off. |
 | Walk me through one ward. | M3 | Open its Ward Heat Card: hotspots, vulnerable sites, what drives the heat, and the top 3 actions with ₹ and °C. |
 
