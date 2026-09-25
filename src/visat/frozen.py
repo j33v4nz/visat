@@ -16,6 +16,8 @@ def load() -> dict:
     if missing:
         raise FileNotFoundError(f"Missing {missing} in data/frozen — run python -m visat.gee_export first")
     cells = pd.read_parquet(f / "cells_static.parquet")
+    cells["pop"] = cells["pop"].clip(lower=0)  # GHS_POP's nodata sentinel (-200); older exports may
+    # still have it baked in even after the gee_export.py fix, since parquet files aren't regenerated
     if (f / "osm.parquet").exists():
         cells = cells.merge(pd.read_parquet(f / "osm.parquet"), on="cell_id", how="left").fillna(0)
     else:

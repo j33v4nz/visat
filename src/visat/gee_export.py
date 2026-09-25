@@ -223,6 +223,7 @@ def run(project: str):
     for c in ("tree_frac", "built_frac", "water_frac", "mangrove_frac", "grass_bare_frac", "pop",
               "built_height", "building_frac"):
         cells[c] = cells[c].fillna(0.0)
+    cells["pop"] = cells["pop"].clip(lower=0)  # GHS_POP's own nodata sentinel (-200) isn't EE-masked
     for c in ("ndvi", "ndbi", "mndwi", "albedo", "elevation"):
         cells[c] = cells[c].fillna(cells[c].median())
     n_rows, n_cols = grid_shape()
