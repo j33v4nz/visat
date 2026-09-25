@@ -20,3 +20,6 @@ data/news_cache.json
 .env
 *.key
 service-account*.json
+
+# Office lock files (LibreOffice leaves these behind)
+.~lock.*#

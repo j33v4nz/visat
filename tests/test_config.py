@@ -10,10 +10,13 @@ def test_backtest_years_are_ordered():
     assert start < end
 
 
-def test_green_roof_excluded_from_costs_used_by_optimizer():
-    # Documented as excluded in PLAN.md and STRATEGY.md — exists for reference
-    # only and must never be wired into the optimizer's cost table.
-    assert config.COST_GREEN_ROOF_PER_SQM > 0
+def test_green_roofs_are_costed_but_flagged_rarely_cost_effective():
+    # PLAN.md §5 keeps green roofs IN the cost table (they must be comparable, not hidden)
+    # but labels them "evaluated, rarely cost-effective" — the honest outcome at ₹7,500/m².
+    spec = config.INTERVENTIONS["green_roofs"]
+    assert spec["cost_per_m2"] == 7_500
+    assert spec["method"] == "formula"
+    assert "cost-effective" in spec["cost_note"]
 
 
 def test_kochi_points_have_eight_locations():
@@ -21,9 +24,15 @@ def test_kochi_points_have_eight_locations():
 
 
 def test_heat_index_bands_cover_caution_to_extreme_danger():
-    assert set(config.HEAT_INDEX_BANDS_C) == {
+    bands = config.HEAT_INDEX_BANDS_C  # [(label, low °C, high °C), ...], consumed by features.py
+    assert [name.lower().replace(" ", "_") for name, _, _ in bands] == [
         "caution",
         "extreme_caution",
         "danger",
         "extreme_danger",
-    }
+    ]
+    lows = [lo for _, lo, _ in bands]
+    highs = [hi for _, _, hi in bands]
+    assert lows[0] == 27  # NWS caution threshold
+    assert highs[:-1] == lows[1:]  # bands are contiguous, no gaps
+    assert highs[-1] == 200  # open-ended top band
