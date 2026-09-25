@@ -10,7 +10,7 @@ submission portal locks at **9:00 AM Day 2**.
 schedule note below).**
 
 **🔒 H+4 DATA FROZEN, done — and now includes the real ward map + matched back-test + canal overlay.**
-`git pull` for all of this. 25 tests pass, CI green.
+`git pull` for all of this. 26 tests pass, CI green.
 - **74 real named Kochi wards** (Mattancheri, Thoppumpady, ...), not the 575-zone fallback — a teammate
   downloaded and fixed a lat/lon-swap bug in the real BharatLAS file (PR #7, merged).
 - **Matched (kNN) back-test** added to the Proof screen: r ≈ 0.39 on 8,000 matched cells, consistent
@@ -21,6 +21,11 @@ schedule note below).**
 - **4 backup demo screenshots** already in `artifacts/m3/` for the deck.
 - A real **pydeck bug fix**: the heat-map image layer needed quoting or pydeck 0.9 misreads it as an
   expression — if you ever see the heat layer fail to render, check this first.
+- **English/Malayalam language switch** merged from a teammate's branch (all 4 tabs + printable Ward
+  Card). Numbers and proper names are never translated (only static UI labels are) — this directly
+  fixes the exact issue the judge vetoed earlier (unchecked numbers in machine translation). The label
+  text itself is still AI-drafted and needs a quick native-speaker skim before demo — not a data-safety
+  risk, just a wording-quality one. Default language is English; Malayalam is opt-in via a selector.
 
 **2 real bugs found and fixed while integrating the above (both mine, from earlier):**
 - `.gitignore`'s `cache/` line had a trailing comment on the same line — `.gitignore` has no
@@ -100,7 +105,7 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 | Public Reaction Preview (Tier 3, simulated personas, number guard) | `src/visat/reactions.py` | Extra |
 | Earth Engine export, OSM features, frozen loader | `gee_export.py`, `osm_features.py`, `frozen.py` | Inputs |
 | 4-screen Streamlit app, dark projector theme | `app/streamlit_app.py`, `.streamlit/config.toml` | UI |
-| 22 tests: budget, never-warms, eligibility, joint vs single, baselines, heat-neutral, fallbacks, Malayalam, number guard, app smoke | `tests/` | Demo safety |
+| 26 tests: budget, never-warms, eligibility, joint vs single, baselines, heat-neutral, fallbacks, Malayalam, number guard, app smoke | `tests/` | Demo safety |
 
 ---
 
@@ -175,6 +180,9 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
       **Already done and verified live** — both `mausam.imd.gov.in/thiruvananthapuram/` and
       `sdma.kerala.gov.in` return 200. Just the checkbox was stale.
 - [ ] **H+2** Malayalam: a **native speaker** fills `report.ML_LABELS` (Ward Card headings). No machine translation.
+      **Implemented in the app:** English/Malayalam switch across all four screens and a Malayalam
+      printable Ward Card, with source numbers unchanged. The Malayalam copy uses KSDMA's
+      `താപസൂചിക` terminology; native-speaker editorial review remains open before calling it final.
 - [ ] **H+2** Review the news keyword lists in `news.py` (HEAT, PLACE, GULF) with a native reader.
 - [ ] **H+3** Deck (5 slides): problem (2026 heat facts) → data → model + proof → plan vs baselines + Heat-Neutral →
       impact/scale. Include the **AI-use disclosure** (Claude-assisted coding; reaction preview uses Claude Opus 5

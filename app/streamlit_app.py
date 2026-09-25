@@ -12,7 +12,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from visat import config, exposure, live, news, report
+from visat import config, exposure, i18n, live, news, report
 
 st.set_page_config(page_title="VISAT · Kochi Heat Action Planner", page_icon="🌡️", layout="wide")
 st.markdown(
@@ -29,10 +29,25 @@ st.markdown(
     [data-testid="stAppViewContainer"] p, [data-testid="stAppViewContainer"] li,
     [data-testid="stAppViewContainer"] label {font-size:1.05rem;}
     [data-baseweb="tab"] {font-size:1.05rem;}
+    .ml-ui, .ml-ui p, .ml-ui label {font-family:'Noto Sans Malayalam',sans-serif;}
     </style>""",
     unsafe_allow_html=True,
 )
 APP = config.APP
+language = st.session_state.get("language", "English")
+lang = "ml" if language == "മലയാളം" else "en"
+t = lambda value: i18n.tr(value, lang)
+local = lambda en, ml: ml if lang == "ml" else en
+if lang == "ml":
+    st.markdown("""<style>
+    [data-testid="stAppViewContainer"] {font-family:'Noto Sans Malayalam',sans-serif;}
+    [data-testid="stAppViewContainer"] h2 {font-size:2rem;line-height:1.35;}
+    [data-testid="stAppViewContainer"] h3 {font-size:1.65rem;line-height:1.4;}
+    [data-testid="stMetricLabel"], [data-testid="stMetricLabel"] * {
+        font-size:0.92rem!important;white-space:normal!important;
+        overflow:visible!important;text-overflow:clip!important;
+    }
+    </style>""", unsafe_allow_html=True)
 TEAL = [70, 196, 190]
 HEAT = [255, 122, 61]
 KOCHI_VIEW = pdk.ViewState(latitude=9.99, longitude=76.30, zoom=11.2, pitch=0)
@@ -73,8 +88,9 @@ wards = wards.set_index("ward_id")
 LIVE = live_data()
 
 # ------------------------------------------------------------------ header + live strip
-left, right = st.columns([3, 2])
-left.markdown("## VISAT · Kochi Heat Action Planner")
+left, right, language_col = st.columns([3, 2, 1])
+left.markdown(f"## VISAT · {t('Kochi Heat Action Planner')}")
+language_col.selectbox("Language / ഭാഷ", ["English", "മലയാളം"], key="language")
 if D["manifest"]["source"] == "demo":
     right.markdown("<span class='demo'>DEMO DATA — synthetic Kochi, not real measurements</span>",
                    unsafe_allow_html=True)
@@ -82,33 +98,37 @@ if D["manifest"]["source"] == "demo":
 band_cls = lambda b: "danger" if b in ("Danger", "Extreme danger") else "warn" if b else "ok"
 if LIVE.get("status") != "unavailable":
     s1, s2, s3, s4, s5 = st.columns([1, 1, 1, 1, 2])
-    s1.metric("Now in Kochi", f"{LIVE['temp_c']} °C")
-    s2.metric("Humidity", f"{LIVE['rh']}%")
-    s3.metric("Feels like", f"{LIVE['feels_c']} °C")
-    s4.metric("Heat index", f"{LIVE['heat_index_c']} °C")
+    s1.metric(t("Now in Kochi"), f"{LIVE['temp_c']} °C")
+    s2.metric(t("Humidity"), f"{LIVE['rh']}%")
+    s3.metric(t("Feels like"), f"{LIVE['feels_c']} °C")
+    s4.metric(t("Heat index"), f"{LIVE['heat_index_c']} °C")
     status = {"live": "live", "cached": "cached", "snapshot": "saved snapshot"}[LIVE["status"]]
+    peak_label = t("Today's peak")
     s5.markdown(
-        f"<span class='chip {band_cls(LIVE['band'])}'>{LIVE['band']}</span>"
-        f"<br>Today's peak: <b>{LIVE['peak_heat_index_c']} °C</b> ({LIVE['peak_band']}) at "
-        f"{LIVE['peak_time'][11:16]}<br><small>{config.LABEL_LIVE} · {status} · "
+        f"<span class='chip {band_cls(LIVE['band'])}'>{t(LIVE['band'])}</span>"
+        f"<br>{peak_label}: <b>{LIVE['peak_heat_index_c']} °C</b> "
+        f"({t(LIVE['peak_band'])}) {local('at', 'സമയം')} "
+        f"{LIVE['peak_time'][11:16]}<br><small>{t(config.LABEL_LIVE)} · {t(status)} · "
         f"{LIVE.get('fetched_at') or LIVE['time']}</small>", unsafe_allow_html=True)
 else:
-    st.info("Live weather unavailable right now — the rest of VISAT works offline.")
+    st.info(local("Live weather unavailable right now — the rest of VISAT works offline.",
+                  "തത്സമയ കാലാവസ്ഥാ വിവരം ഇപ്പോൾ ലഭ്യമല്ല. ബാക്കി വിവരങ്ങൾ ഇന്റർനെറ്റ് ഇല്ലാതെയും കാണാം."))
 
 chips = st.columns([2, 3])
-chips[0].markdown("Official alerts: " + " · ".join(
-    f"[{name}]({url})" for name, url in config.OFFICIAL_ALERT_LINKS.items()))
+chips[0].markdown(f"{t('Official alerts')}: " + " · ".join(
+    f"[{t(name)}]({url})" for name, url in config.OFFICIAL_ALERT_LINKS.items()))
 NEWS = news_data()
 if NEWS:
     with chips[1].popover(NEWS["text"]):
-        st.caption(f"From Malayalam news (supporting evidence only; official alerts: IMD / KSDMA) · "
-                   f"{NEWS['status']} · fetched {NEWS.get('fetched_at')}")
+        st.caption(local("From Malayalam news (supporting evidence only; official alerts: IMD / KSDMA)",
+                         "മലയാളം വാർത്തകൾ അനുബന്ധ വിവരങ്ങൾ മാത്രം; ഔദ്യോഗിക മുന്നറിയിപ്പുകൾ IMD / KSDMA")
+                   + f" · {t(NEWS['status'])} · {NEWS.get('fetched_at')}")
         for it in NEWS["items"]:
             st.markdown(f"- [{it['title']}]({it['link']}) — *{it['channel']}*, {it['time'][:16]}")
 
 today, plan_tab, project_tab, proof_tab = st.tabs([
-    "① Where is heat dangerous today?", "② What should we do with ₹?",
-    "③ Will this project make it hotter?", "④ Can we trust it? · Ward Card",
+    "① " + t("Where is heat dangerous today?"), "② " + t("What should we do with ₹?"),
+    "③ " + t("Will this project make it hotter?"), "④ " + t("Can we trust it? · Ward Card"),
 ])
 
 
@@ -137,13 +157,13 @@ def heat_ledger(result):
     removed = before - after
     scale = max(abs(before), abs(removed), abs(after), 0.01)
     rows = [
-        ("Project adds", f"+{before:.2f} °C", before, "#ff7a3d"),
-        ("Offsets remove", f"−{removed:.2f} °C", removed, "#46c4be"),
-        ("Net change", f"{after:+.2f} °C", abs(after),
+        (t("Project adds"), f"+{before:.2f} °C", before, "#ff7a3d"),
+        (t("Offsets remove"), f"−{removed:.2f} °C", removed, "#46c4be"),
+        (t("Net change"), f"{after:+.2f} °C", abs(after),
          "#ff7a3d" if after > 0.005 else "#46c4be"),
     ]
     markup = """<style>
-    body {margin:0;background:#162020;color:#e4ebe9;font-family:Arial,sans-serif;}
+    body {margin:0;background:#162020;color:#e4ebe9;font-family:Arial,'Noto Sans Malayalam',sans-serif;}
     .heat-ledger {padding:12px 16px;border:1px solid #36504d;border-radius:12px;}
     .heat-ledger-row {display:flex;justify-content:space-between;gap:12px;
                       font-size:20px;margin:5px 0;}
@@ -182,17 +202,30 @@ with today:
     act = exposure.act_today(wards, peak)
     hot_people = cells.loc[cells["hotspot"] & (cells["ward_id"] >= 0), "pop"].sum()
     area_word = "wards" if M["area_kind"] == "wards" else "areas"
-    st.markdown(f"### {len(wards[wards['people_in_hotspots'] > 0])} {area_word} have people in the top-10% "
-                f"heat-stress squares — about **{hot_people:,.0f} people**.")
-    st.markdown(f"**Act today** (peak heat index {act['peak_heat_index_c']} °C, *{act['band']}*): "
-                f"**{', '.join(act['wards'])}** — " + " · ".join(act["advice"]))
+    n_hot_wards = len(wards[wards["people_in_hotspots"] > 0])
+    st.markdown(local(
+        f"### {n_hot_wards} {area_word} have people in the top-10% heat-stress squares — "
+        f"about **{hot_people:,.0f} people**.",
+        f"### ഏറ്റവും കൂടുതൽ ചൂട് അനുഭവിക്കുന്ന 10% പ്രദേശങ്ങളിൽ {n_hot_wards} വാർഡുകളിലായി "
+        f"ഏകദേശം **{hot_people:,.0f} ആളുകൾ** താമസിക്കുന്നു."))
+    advice = " · ".join(t(item) for item in act["advice"])
+    st.markdown(local(
+        f"**Act today** (peak heat index {act['peak_heat_index_c']} °C, *{act['band']}*): "
+        f"**{', '.join(act['wards'])}** — {advice}",
+        f"**ഇന്ന് ചെയ്യേണ്ടത്** (ഉയർന്ന താപസൂചിക {act['peak_heat_index_c']} °C, "
+        f"*{t(act['band'])}*): **{', '.join(act['wards'])}** — {advice}"))
     mcol, pcol = st.columns([2, 1])
     with mcol:
         ev = st.pydeck_chart(deck([heat_layer(), ward_layer()]), on_select="rerun",
                              selection_mode="single-object", key="today_map", height=560)
-        st.caption(f"Heat Stress Map · colour = {config.LABEL_SURFACE} vs city median "
-                   f"(dark = cooler, yellow = hotter) · outlines = "
-                   f"{'wards' if M['area_kind'] == 'wards' else '1 km zones (ward map not loaded)'}")
+        st.caption(local(
+            f"Heat Stress Map · colour = {config.LABEL_SURFACE} vs city median "
+            f"(dark = cooler, yellow = hotter) · outlines = "
+            f"{'wards' if M['area_kind'] == 'wards' else '1 km zones (ward map not loaded)'}",
+            "ചൂട് ഭൂപടം · നിറങ്ങൾ നഗരത്തിലെ ശരാശരിയുമായി താരതമ്യപ്പെടുത്തിയ രാവിലെ ഏകദേശം 10:30-ലെ "
+            "ഉപരിതല താപനിലയാണ് (ഇരുണ്ടത് = തണുപ്പ്; മഞ്ഞ = കൂടുതൽ ചൂട്) · "
+            "അതിരുകൾ = വാർഡുകൾ" if M["area_kind"] == "wards" else
+            "ചൂട് ഭൂപടം · അതിരുകൾ = 1 കി.മീ. മേഖലകൾ (വാർഡ് ഭൂപടം ലഭ്യമല്ല)"))
     picked = None
     try:
         objs = ev.selection["objects"].get("wards", [])
@@ -201,56 +234,73 @@ with today:
         pass
     names = wards.sort_values("heat_stress", ascending=False)["ward"].tolist()
     with pcol:
-        choice = st.selectbox("Ward / area", names, index=names.index(picked) if picked in names else 0)
+        choice = st.selectbox(t("Ward / area"), names,
+                              index=names.index(picked) if picked in names else 0,
+                              key="today_ward")
         w = wards[wards["ward"] == choice].iloc[0]
-        st.metric("People", f"{w['people']:,.0f}", f"{w['lst_anom']:+.1f} °C vs city", delta_color="inverse")
-        st.markdown("**Why it's hot**")
-        for s in report.driver_sentences(w):
+        st.metric(t("People"), f"{w['people']:,.0f}",
+                  local(f"{w['lst_anom']:+.1f} °C vs city",
+                        f"നഗര ശരാശരിയേക്കാൾ {w['lst_anom']:+.1f} °C"), delta_color="inverse")
+        why_hot_label = t("Why it's hot")
+        st.markdown(f"**{why_hot_label}**")
+        for s in i18n.drivers(w, lang):
             st.markdown(f"- {s}")
         drv = {k.split('::', 1)[1]: v for k, v in w.items() if str(k).startswith("drv::")}
         drv.pop("Weather of the day", None)
-        st.bar_chart(pd.Series(drv, name="°C"), horizontal=True, color="#ff7a3d")
-        st.caption(f"{int(w['schools'])} schools · {int(w['markets'])} markets · "
-                   f"{int(w['construction_sites'])} construction sites")
+        st.bar_chart(pd.Series({t(k): v for k, v in drv.items()}, name="°C"),
+                     horizontal=True, color="#ff7a3d")
+        st.caption(local(f"{int(w['schools'])} schools · {int(w['markets'])} markets · "
+                         f"{int(w['construction_sites'])} construction sites",
+                         f"{int(w['schools'])} സ്കൂളുകൾ · {int(w['markets'])} ചന്തകൾ · "
+                         f"{int(w['construction_sites'])} നിർമാണ സ്ഥലങ്ങൾ"))
     if LIVE.get("forecast"):
         fc = pd.DataFrame(LIVE["forecast"]).assign(time=lambda d: pd.to_datetime(d["time"]))
-        st.markdown("**Next 72 hours — heat index (city)**")
+        st.markdown(f"**{t('Next 72 hours — heat index (city)')}**")
         st.line_chart(fc.set_index("time")["heat_index_c"], color="#ff7a3d", height=180)
-    with st.expander("Atmospheric drivers — how the day's weather changes Kochi's surface heat"):
+    with st.expander(t("Atmospheric drivers — how the day's weather changes Kochi's surface heat")):
         at = M["atmospheric"]
-        st.dataframe(pd.DataFrame([{"Change": v["label"], "Surface °C": round(v["effect_c"], 2),
+        st.dataframe(pd.DataFrame([{t("Change"): t(v["label"]), t("Surface °C"): round(v["effect_c"], 2),
                                     "95% CI": f"{v['ci_low']:+.2f} to {v['ci_high']:+.2f}"}
                                    for v in at["effects"].values()]), hide_index=True)
-        st.caption(f"From the scene-panel model across n = {at['n_scenes']} satellite days "
-                   f"(bootstrap over days — small n, so read the intervals).")
+        st.caption(local(f"From the scene-panel model across n = {at['n_scenes']} satellite days "
+                         "(bootstrap over days — small n, so read the intervals).",
+                         f"{at['n_scenes']} ഉപഗ്രഹ നിരീക്ഷണ ദിവസങ്ങളെ അടിസ്ഥാനമാക്കിയ കണക്ക്. "
+                         "ദിവസങ്ങളുടെ എണ്ണം കുറവായതിനാൽ പിശകിന്റെ പരിധിയും പരിഗണിക്കുക."))
 
 # ------------------------------------------------------------------ ② Plan ₹
 with plan_tab:
-    budget = st.segmented_control("Budget", [f"₹{b} crore" for b in config.BUDGET_PRESETS_CR],
-                                  default="₹10 crore", key="budget") or "₹10 crore"
+    budget = st.segmented_control(t("Budget"), [f"₹{b} {t('crore')}" for b in config.BUDGET_PRESETS_CR],
+                                  default=f"₹10 {t('crore')}", key="budget") or f"₹10 {t('crore')}"
     b = budget.split("₹")[1].split(" ")[0]
     P = D["plans"]["presets"][b]
     ours = P["ours"]
     best_base = max(P["baselines"], key=lambda s: s["person_deg_cooling"])
     gain = ours["person_deg_cooling"] / max(best_base["person_deg_cooling"], 1e-9)
-    st.markdown(f"### {budget} → about **{ours['people_cooled']:,.0f} people** cooler by "
-                f"**{abs(ours['mean_dt_cooled']):.2f} °C** on average — **{gain:.1f}×** the best simple "
-                f"strategy.")
-    conservative = st.toggle("Conservative mode · show back-test error band", key="conservative")
-    show_canal_banks = st.toggle("Show OSM canal-bank tree-strip candidates", key="canal_overlay")
+    st.markdown(local(
+        f"### {budget} → about **{ours['people_cooled']:,.0f} people** cooler by "
+        f"**{abs(ours['mean_dt_cooled']):.2f} °C** on average — **{gain:.1f}×** the best simple strategy.",
+        f"### {budget} ബജറ്റിൽ ഏകദേശം **{ours['people_cooled']:,.0f} ആളുകൾക്ക്** "
+        f"ശരാശരി **{abs(ours['mean_dt_cooled']):.2f} °C** ഉപരിതല ചൂടുകുറവ് — "
+        f"ലളിതമായ മികച്ച രീതിയേക്കാൾ **{gain:.1f} മടങ്ങ്** ഫലം."))
+    conservative = st.toggle(t("Conservative mode · show back-test error band"), key="conservative")
+    show_canal_banks = st.toggle(t("Show OSM canal-bank tree-strip candidates"), key="canal_overlay")
     backtest_mae = float(M["backtest"]["mae_c"])
     if conservative:
         lo = ours["mean_dt_cooled"] - backtest_mae
         hi = ours["mean_dt_cooled"] + backtest_mae
-        st.info(f"Mean surface ΔT: {ours['mean_dt_cooled']:+.2f} °C, with an empirical "
-                f"back-test error band of {lo:+.2f} to {hi:+.2f} °C "
-                f"(±{backtest_mae:.2f} °C MAE). This is not a confidence interval or a "
-                "guaranteed cooling range.")
+        st.info(local(
+            f"Mean surface ΔT: {ours['mean_dt_cooled']:+.2f} °C, with an empirical "
+            f"back-test error band of {lo:+.2f} to {hi:+.2f} °C "
+            f"(±{backtest_mae:.2f} °C MAE). This is not a confidence interval or a "
+            "guaranteed cooling range.",
+            f"ശരാശരി ഉപരിതല താപമാറ്റം: {ours['mean_dt_cooled']:+.2f} °C. "
+            f"മുൻപരിശോധനയിലെ ശരാശരി പിശക് (±{backtest_mae:.2f} °C) ചേർത്താൽ "
+            f"{lo:+.2f} മുതൽ {hi:+.2f} °C വരെ. ഇത് വിശ്വാസപരിധിയോ ഉറപ്പുള്ള ചൂടുകുറവോ അല്ല."))
     k1, k2, k3, k4 = st.columns(4)
-    k1.metric("People cooled (≥0.1 °C)", f"{ours['people_cooled']:,.0f}")
-    k2.metric("Avg cooling", f"{ours['mean_dt_cooled']:.2f} °C")
-    k3.metric("₹ per person", f"{ours['cost_rs'] / max(ours['people_cooled'], 1):,.0f}")
-    k4.metric("Sites (100 m)", f"{ours['cells']:,}")
+    k1.metric(t("People cooled (≥0.1 °C)"), f"{ours['people_cooled']:,.0f}")
+    k2.metric(t("Avg cooling"), f"{ours['mean_dt_cooled']:.2f} °C")
+    k3.metric(t("₹ per person"), f"{ours['cost_rs'] / max(ours['people_cooled'], 1):,.0f}")
+    k4.metric(t("Sites (100 m)"), f"{ours['cells']:,}")
     mc, sc = st.columns([2, 1])
     with mc:
         pal = {cfg["label"]: c for cfg, c in zip(config.INTERVENTIONS.values(), [
@@ -273,34 +323,58 @@ with plan_tab:
                 get_fill_color=[70, 140, 255, 150], pickable=False))
         st.pydeck_chart(deck(map_layers, tooltip={"text": "{fix}: {dt} °C"}),
                         key="plan_map", height=520)
-        st.caption("Coloured dots = where each fix goes (public land only). Teal haze = cells cooled "
-                   f"≥0.05 °C, incl. spillover. {config.LABEL_SURFACE}. The plan covers the study area; "
-                   "named wards cover Kochi municipality.")
+        st.caption(local(
+            "Coloured dots = where each fix goes (public land only). Teal haze = cells cooled "
+            f"≥0.05 °C, incl. spillover. {config.LABEL_SURFACE}. The plan covers the study area; "
+            "named wards cover Kochi municipality.",
+            "നിറമുള്ള ബിന്ദുക്കൾ = ഓരോ ഇടപെടലിന്റെയും സ്ഥലം (പൊതുഭൂമിയിൽ മാത്രം). "
+            "നീലപ്പച്ച ഭാഗങ്ങൾ = ചുറ്റുപാടിലേക്കുള്ള സ്വാധീനമുൾപ്പെടെ ≥0.05 °C ഉപരിതല ചൂടുകുറവ്. "
+            "പദ്ധതി പഠനപ്രദേശം മുഴുവൻ ഉൾക്കൊള്ളുന്നു; പേരുള്ള വാർഡുകൾ കൊച്ചി കോർപ്പറേഷനിൽ മാത്രം."))
         if show_canal_banks:
-            st.caption("Blue dots = 100 m cells near OSM canals, drains or ditches where tree strips "
-                       "could be checked on site. These are not verified IURWTS alignments; "
-                       "canals receive 0 °C credit in this plan.")
+            st.caption(local(
+                "Blue dots = 100 m cells near OSM canals, drains or ditches where tree strips "
+                "could be checked on site. These are not verified IURWTS alignments; "
+                "canals receive 0 °C credit in this plan.",
+                "നീല ബിന്ദുക്കൾ = OSM രേഖകളിലെ കനാൽ, ഓട, ചാൽ എന്നിവയ്ക്ക് സമീപമുള്ള 100 മീ. സ്ഥലങ്ങൾ. "
+                "വൃക്ഷനിര നടാൻ നേരിട്ട് പരിശോധിക്കേണ്ട സാധ്യതകളാണിവ; സ്ഥിരീകരിച്ച IURWTS പാതകളല്ല. "
+                "കനാലിന് ഈ പദ്ധതിയിൽ 0 °C ചൂടുകുറവ് മാത്രമാണ് കണക്കാക്കിയത്."))
     with sc:
-        comp = pd.DataFrame([{"Strategy": s["strategy"], "People cooled": s["people_cooled"],
+        comp = pd.DataFrame([{"Strategy": t(s["strategy"]), "People cooled": s["people_cooled"],
                               "Person-°C": s["person_deg_cooling"]} for s in [ours, *P["baselines"]]])
-        st.markdown("**Same money, three strategies**")
+        st.markdown(f"**{t('Same money, three strategies')}**")
         st.bar_chart(comp.set_index("Strategy")["Person-°C"], color="#46c4be", horizontal=True)
-        st.dataframe(pd.DataFrame([{"Fix": k, "Sites": v["cells"], "₹ lakh": round(v["cost_rs"] / 1e5, 1)}
+        st.dataframe(pd.DataFrame([{t("Fix"): t(k), t("Sites"): v["cells"],
+                                    t("₹ lakh"): round(v["cost_rs"] / 1e5, 1)}
                                    for k, v in ours["mix"].items()]), hide_index=True)
-    with st.expander("Budget curve & scenario evaluation (every intervention PS1 lists)"):
+    with st.expander(t("Budget curve & scenario evaluation (every intervention PS1 lists)")):
         curve = pd.DataFrame(D["plans"]["curve"]).set_index("budget_cr")
         st.line_chart(curve, height=260)
-        st.caption("Estimated person-°C (sum of per-site effects); the three presets above use a full "
-                   "joint re-prediction.")
-        st.dataframe(pd.DataFrame(M["validity_matrix"]), hide_index=True)
-        st.caption(config.CANAL_CREDIT_NOTE)
-    with st.expander("Site-by-site plan · fix, ward, people, surface °C and cost"):
+        st.caption(local(
+            "Estimated person-°C (sum of per-site effects); the three presets above use a full "
+            "joint re-prediction.",
+            "ആൾ-°C ഒരു ഏകദേശ കണക്കാണ്. മുകളിലെ മൂന്ന് ബജറ്റ് പദ്ധതികൾക്കായി എല്ലാ ഇടപെടലുകളും "
+            "ഒരുമിച്ച് ചേർത്ത് വീണ്ടും പ്രവചിച്ചിട്ടുണ്ട്."))
+        validity = pd.DataFrame(M["validity_matrix"])
+        if lang == "ml":
+            for column in ("intervention", "ps1_category", "method", "cost_note"):
+                validity[column] = validity[column].map(t)
+            validity = validity.rename(columns={"intervention": "ഇടപെടൽ", "ps1_category": "വിഭാഗം",
+                                                "method": "രീതി", "eligible_cells": "യോഗ്യമായ സ്ഥലങ്ങൾ",
+                                                "median_dt_c": "മധ്യ താപമാറ്റം (°C)",
+                                                "within_support_pct": "സമാനസ്ഥല പിന്തുണ (%)",
+                                                "cost_note": "ചെലവിന്റെ അടിസ്ഥാനം"})
+        st.dataframe(validity, hide_index=True)
+        st.caption(local(config.CANAL_CREDIT_NOTE,
+                         "IURWTS-ലെ ആറു കനാലുകൾ KMRL-ന്റെ നിലവിലുള്ള പദ്ധതിയാണ്. "
+                         "100 മീ. ഗ്രിഡിനെക്കാൾ ഇടുങ്ങിയതിനാൽ കനാൽ പണിക്ക് 0 °C ചൂടുകുറവ് മാത്രം "
+                         "കണക്കാക്കുന്നു; കനാൽക്കര വൃക്ഷനിരകൾ വേറെ പരിഗണിക്കുന്നു."))
+    with st.expander(t("Site-by-site plan · fix, ward, people, surface °C and cost")):
         locations = cells[["lat", "lon", "ward_id", "pop"]].copy()
         locations[["lat", "lon"]] = locations[["lat", "lon"]].round(5)
         site_table = picks.merge(locations, on=["lat", "lon"], how="left",
                                  validate="many_to_one")
         site_table["Ward / area"] = site_table["ward_id"].map(wards["ward"])
-        site_table["Ward / area"] = site_table["Ward / area"].fillna("Outside Kochi wards")
+        site_table["Ward / area"] = site_table["Ward / area"].fillna(t("Outside Kochi wards"))
         site_table["Surface ΔT (°C)"] = site_table["dt"].map(lambda x: f"{x:+.2f}")
         if conservative:
             site_table["Back-test band (°C)"] = site_table["dt"].map(
@@ -310,12 +384,20 @@ with plan_tab:
             columns.append("Back-test band (°C)")
         site_table["People at site"] = site_table["pop"].round(0)
         site_table["₹ lakh"] = (site_table["cost"] / 1e5).round(2)
-        st.dataframe(site_table[columns + ["People at site", "₹ lakh", "lat", "lon"]]
-                     .rename(columns={"fix": "Fix", "lat": "Latitude", "lon": "Longitude"}),
-                     hide_index=True)
-        st.caption("Each row is one selected 100 m cell. People at site use GHSL 2020; the total plan "
-                   "also counts spillover. Per-site surface ΔT is the saved joint prediction. "
-                   "The empirical back-test MAE is not a statistical confidence interval.")
+        display_sites = site_table[columns + ["People at site", "₹ lakh", "lat", "lon"]].copy()
+        display_sites["fix"] = display_sites["fix"].map(t)
+        display_sites = display_sites.rename(columns={
+            "fix": "Fix", "lat": "Latitude", "lon": "Longitude"})
+        if lang == "ml":
+            display_sites = display_sites.rename(columns={column: t(column) for column in display_sites})
+        st.dataframe(display_sites, hide_index=True)
+        st.caption(local(
+            "Each row is one selected 100 m cell. People at site use GHSL 2020; the total plan "
+            "also counts spillover. Per-site surface ΔT is the saved joint prediction. "
+            "The empirical back-test MAE is not a statistical confidence interval.",
+            "ഓരോ വരിയും തെരഞ്ഞെടുത്ത 100 മീ. സ്ഥലമാണ്. ഇവിടത്തെ ആളുകളുടെ കണക്ക് GHSL 2020-ൽ നിന്നാണ്; "
+            "ആകെ പദ്ധതിയിൽ സമീപപ്രദേശങ്ങളിലേക്കുള്ള സ്വാധീനവും ഉൾപ്പെടും. സ്ഥലത്തെ താപമാറ്റം "
+            "എല്ലാ ഇടപെടലുകളും ചേർത്തുള്ള പ്രവചനമാണ്. മുൻപരിശോധനയിലെ ശരാശരി പിശക് വിശ്വാസപരിധിയല്ല."))
 
 # ------------------------------------------------------------------ ③ Check a Project
 with project_tab:
@@ -326,26 +408,39 @@ with project_tab:
     c1, c2 = st.columns([1, 2])
     with c1:
         site_names = [s["site"] for s in sites]
-        site = st.selectbox("Proposed site", site_names, key="site")
+        site = st.selectbox(t("Proposed site"), site_names, key="site", format_func=t)
         uses = {v["label"]: k for k, v in config.PROJECT_USES.items()}
-        use = st.segmented_control("Proposed use", list(uses), default="IT park", key="use") or "IT park"
+        use = st.segmented_control(t("Proposed use"), list(uses), default="IT park",
+                                   key="use", format_func=t) or "IT park"
         R = D["hn"]["results"][f"{site}|{uses[use]}"]
-        neutral = st.toggle("Apply available offsets", key="neutral")
+        neutral = st.toggle(t("Apply available offsets"), key="neutral")
         if not neutral:
             st.markdown(f"<div class='ledger hot'>+{R['before']['mean_dt_c']:.1f} °C</div>"
-                        f"<b>{R['before']['people']:,} people</b> within ~500 m", unsafe_allow_html=True)
+                        f"<b>{R['before']['people']:,} {local('people', 'ആളുകൾ')}</b> "
+                        f"{local('within ~500 m', 'ഏകദേശം 500 മീ. പരിധിയിൽ')}",
+                        unsafe_allow_html=True)
         else:
             components.html(heat_ledger(R), height=160, scrolling=False)
-            st.markdown(f"**Offset package: ₹{R['offset_cost_rs'] / 1e5:,.1f} lakh**")
+            st.markdown(f"**{t('Offset package')}: ₹{R['offset_cost_rs'] / 1e5:,.1f} {t('lakh')}**")
             if R["after"]["mean_dt_c"] > 0.005:
-                st.warning("Heat remains after these offsets. This proposal does not pass the "
-                           "heat-neutral screen yet.")
+                st.warning(local("Heat remains after these offsets. This proposal does not pass the "
+                                 "heat-neutral screen yet.",
+                                 "ഈ നടപടികൾക്കുശേഷവും ചൂട് കൂടുതലാണ്. നിർദിഷ്ട പദ്ധതി നിലവിൽ "
+                                 "ചൂട്-നിഷ്പക്ഷ പരിശോധനയിൽ വിജയിക്കുന്നില്ല."))
             else:
-                st.success("This proposal passes the modelled heat-neutral screen.")
+                st.success(local("This proposal passes the modelled heat-neutral screen.",
+                                 "മാതൃക കണക്കനുസരിച്ച് ഈ പദ്ധതി ചൂട്-നിഷ്പക്ഷ പരിശോധനയിൽ വിജയിക്കുന്നു."))
             for k, v in R["offset_mix"].items():
-                st.markdown(f"- {k}: {v['cells']} sites · ₹{v['cost_rs'] / 1e5:,.1f} lakh")
-        st.caption(R["label"])
-        st.info(R["policy"])
+                st.markdown(f"- {t(k)}: {v['cells']} {t('Sites').lower()} · "
+                            f"₹{v['cost_rs'] / 1e5:,.1f} {t('lakh')}")
+        st.caption(local(R["label"], "രാവിലെ അളക്കുന്ന, ഏകദേശം 500 മീ. പരിധിയിലെ ആളുകളുടെ എണ്ണം "
+                         "അനുസരിച്ച് തൂക്കിയ ഉപരിതല താപമാറ്റം (°C)"))
+        st.info(local(R["policy"],
+                      "ഇത് അനുമതിയല്ല; പ്രാഥമിക പരിശോധനയ്ക്കും നയ നിർദ്ദേശത്തിനുമുള്ള ഉപകരണം മാത്രം. "
+                      "സാധ്യമായ വഴി: KMBR 2019-ലെ അധിക FSI പ്രോത്സാഹനത്തിന് സ്വമേധയാ ചൂട് കുറയ്ക്കൽ; "
+                      "20,000–150,000 ച.മീ. പദ്ധതികളുടെ SEIAA Form-1A-യിൽ ചേർക്കൽ; "
+                      "കൊച്ചി മാസ്റ്റർ പ്ലാൻ 2040-ലെ കാലാവസ്ഥാ പ്രതിരോധ മാർഗ്ഗനിർദ്ദേശം. "
+                      "അവസാന തീരുമാനം കോർപ്പറേഷന്റെ കെട്ടിടാനുമതി വിഭാഗത്തിനോ നഗരാസൂത്രണ സമിതിക്കോ."))
     with c2:
         heat = pd.DataFrame(R["heat_cells"], columns=["lat", "lon", "dt"])
         layers = [heat_layer(0.3),
@@ -364,19 +459,25 @@ with project_tab:
         st.pydeck_chart(pdk.Deck(layers=layers, initial_view_state=view, map_provider="carto",
                                  map_style="dark", tooltip={"text": "{name}{fix}"}),
                         key="project_map", height=560)
-        st.caption("Orange = where the project adds surface heat. Teal = modelled offset sites "
-                   "(trees nearby + cool/green roofs on the project).")
-    with st.expander("Compare the modelled heat before and after offsets"):
-        st.caption("Same site and map scale in both views. Orange marks added heat; teal marks "
-                   "offset locations. The ledger above gives the net surface °C change.")
+        st.caption(local(
+            "Orange = where the project adds surface heat. Teal = modelled offset sites "
+            "(trees nearby + cool/green roofs on the project).",
+            "ഓറഞ്ച് = പദ്ധതി ഉപരിതല ചൂട് കൂട്ടുന്ന സ്ഥലം. നീലപ്പച്ച = മാതൃകയിൽ കണക്കാക്കിയ "
+            "ചൂട് കുറയ്ക്കൽ സ്ഥലങ്ങൾ (സമീപത്തെ മരങ്ങളും പദ്ധതിയിലെ മേൽക്കൂര നടപടികളും)."))
+    with st.expander(t("Compare the modelled heat before and after offsets")):
+        st.caption(local(
+            "Same site and map scale in both views. Orange marks added heat; teal marks "
+            "offset locations. The ledger above gives the net surface °C change.",
+            "രണ്ട് ഭൂപടങ്ങളിലും ഒരേ സ്ഥലവും അളവുമാണ്. ഓറഞ്ച് = കൂടുന്ന ചൂട്; "
+            "നീലപ്പച്ച = ചൂട് കുറയ്ക്കൽ നടപടികൾ. മുകളിലെ പട്ടികയിൽ അവസാന ഉപരിതല താപമാറ്റം കാണാം."))
         before_map, after_map = st.columns(2)
         with before_map:
-            st.markdown("**Project only**")
+            st.markdown(f"**{t('Project only')}**")
             st.pydeck_chart(pdk.Deck(layers=layers[:3], initial_view_state=view,
                                      map_provider="carto", map_style="dark"),
                             key="project_before_map", height=320)
         with after_map:
-            st.markdown("**Project + available offsets**")
+            st.markdown(f"**{t('Project + available offsets')}**")
             comparison_layers = layers[:3] + [pdk.Layer(
                 "ScatterplotLayer", id="comparison_offsets",
                 data=pd.DataFrame(R["offset_cells"], columns=["lat", "lon", "fix"]),
@@ -388,12 +489,15 @@ with project_tab:
     if D["reactions"]:
         rx = D["reactions"].get(f"{site}|{uses[use]}")
         if rx:
-            with st.expander("How might residents react? (SIMULATED)"):
-                st.warning("Simulated personas built from aggregate statistics — not real people or "
-                           "survey data. For preparing public consultation only; never changes any number.")
+            with st.expander(t("How might residents react? (SIMULATED)")):
+                st.warning(local("Simulated personas built from aggregate statistics — not real people or "
+                                 "survey data. For preparing public consultation only; never changes any number.",
+                                 "ഇവ യഥാർത്ഥ ആളുകളുടെയോ സർവേകളുടെയോ അഭിപ്രായങ്ങളല്ല. "
+                                 "പൊതുചർച്ചയ്ക്ക് തയ്യാറാകാൻ കണക്കുകൾ അടിസ്ഥാനമാക്കി സൃഷ്ടിച്ച "
+                                 "സാങ്കൽപ്പിക പ്രതികരണങ്ങൾ മാത്രം; ഇവ ഒരു കണക്കും മാറ്റുന്നില്ല."))
                 df = pd.DataFrame(rx["personas"])
                 st.bar_chart(df["stance"].value_counts(), color="#46c4be")
-                st.markdown("**Top concerns:** " + "; ".join(rx.get("top_concerns", [])))
+                st.markdown(f"**{t('Top concerns')}:** " + "; ".join(rx.get("top_concerns", [])))
                 st.dataframe(df[["persona", "stance", "top_concern", "quote_en"]], hide_index=True)
 
 # ------------------------------------------------------------------ ④ Proof & Ward Card
@@ -401,50 +505,77 @@ with proof_tab:
     bt = M["backtest"]
     a, b2 = st.columns([3, 2])
     with a:
-        st.markdown("### We predicted 2024 from 2017 — here's how close we got")
+        st.markdown("### " + t("We predicted 2024 from 2017 — here's how close we got"))
         if "points" in bt:
-            pts = pd.DataFrame(bt["points"], columns=["Predicted Δ °C", "Observed Δ °C"])
+            predicted, observed = t("Predicted Δ °C"), t("Observed Δ °C")
+            pts = pd.DataFrame(bt["points"], columns=[predicted, observed])
             lim = [min(pts.min()), max(pts.max())]
             chart = alt.Chart(pts).mark_circle(size=18, opacity=0.5, color="#ff7a3d").encode(
-                x="Predicted Δ °C", y="Observed Δ °C")
+                x=predicted, y=observed)
             line = alt.Chart(pd.DataFrame({"x": lim, "y": lim})).mark_line(color="#46c4be").encode(
                 x="x", y="y")
             st.altair_chart(chart + line, width="stretch")
-            st.caption(f"{bt['label']} · {bt['n_changed_cells']:,} cells that really changed · "
-                       f"r = {bt['pearson_r']:.2f} · error ±{bt['mae_c']:.2f} °C · teal = perfect match")
+            st.caption(local(
+                f"{bt['label']} · {bt['n_changed_cells']:,} cells that really changed · "
+                f"r = {bt['pearson_r']:.2f} · error ±{bt['mae_c']:.2f} °C · teal = perfect match",
+                f"2017→2024 ഉപരിതല താപമാറ്റം · യഥാർത്ഥത്തിൽ മാറിയ {bt['n_changed_cells']:,} സ്ഥലങ്ങൾ · "
+                f"ബന്ധം r = {bt['pearson_r']:.2f} · ശരാശരി പിശക് ±{bt['mae_c']:.2f} °C · "
+                "നീലപ്പച്ച രേഖ = കൃത്യമായ പ്രവചനം"))
         else:
-            st.info(bt.get("note", "Back-test unavailable."))
+            st.info(local(bt.get("note", "Back-test unavailable."),
+                          "മുൻകാല വിവരങ്ങളുമായുള്ള പരിശോധന ഇപ്പോൾ ലഭ്യമല്ല."))
     with b2:
         cv = M["cv"]
-        st.markdown("**Honest accuracy (areas the model never saw)**")
-        st.dataframe(pd.DataFrame([{"Model": k, "R²": round(v["r2"], 3), "Error (°C)": round(v["rmse"], 2)}
+        st.markdown(f"**{t('Honest accuracy (areas the model never saw)')}**")
+        st.dataframe(pd.DataFrame([{t("Model"): k, "R²": round(v["r2"], 3),
+                                    t("Error (°C)"): round(v["rmse"], 2)}
                                    for k, v in cv["spatial_cv"].items()]), hide_index=True)
-        st.caption(f"Grouped spatial-block CV (2 km blocks across {cv['n_scenes']} scenes). Random CV "
-                   f"(easier, not what we report): R² {cv['random_cv_ours']['r2']:.3f}.")
+        st.caption(local(
+            f"Grouped spatial-block CV (2 km blocks across {cv['n_scenes']} scenes). Random CV "
+            f"(easier, not what we report): R² {cv['random_cv_ours']['r2']:.3f}.",
+            f"{cv['n_scenes']} ഉപഗ്രഹ നിരീക്ഷണങ്ങളിലെ 2 കി.മീ. പ്രദേശങ്ങൾ വേർതിരിച്ച് കൃത്യത "
+            f"പരിശോധിച്ചു. ലളിതമായ റാൻഡം പരിശോധനയിൽ R² = {cv['random_cv_ours']['r2']:.3f}; "
+            "അതാണ് ഇവിടെ പ്രധാന കൃത്യതയായി കാണിക്കാത്തത്."))
         if M.get("ecostress"):
             e = M["ecostress"]
-            st.metric("Afternoon check (ECOSTRESS 12:00–15:30)",
+            st.metric(t("Afternoon check (ECOSTRESS 12:00–15:30)"),
                       f"{e['top_decile_overlap_pct']:.0f}% of hotspots hold",
                       f"Spearman {e['spearman_cells']:.2f}", delta_color="off")
         if M.get("cpcb"):
             c = M["cpcb"]
             if "mae_heat_index_c" in c:
-                st.metric("CPCB stations vs ERA5 heat index", f"±{c['mae_heat_index_c']:.1f} °C",
+                st.metric(t("CPCB stations vs ERA5 heat index"), f"±{c['mae_heat_index_c']:.1f} °C",
                           f"{c['n_days']} days", delta_color="off")
         matched = bt.get("matched")
         if matched and "mae_c" in matched:
-            st.metric("Matched 2017→2024 check", f"±{matched['mae_c']:.2f} °C",
-                      f"{matched['n_changed_matched']:,} changed cells", delta_color="off")
-            st.caption("Changed cells vs k nearest unchanged cells on 2017 land features. "
-                       "Exploratory comparison; not a causal estimate.")
-    with st.expander("Physics check · validity matrix · data freshness · limits"):
+            st.metric(t("Matched 2017→2024 check"), f"±{matched['mae_c']:.2f} °C",
+                      local(f"{matched['n_changed_matched']:,} changed cells",
+                            f"മാറിയ {matched['n_changed_matched']:,} സ്ഥലങ്ങൾ"), delta_color="off")
+            st.caption(local("Changed cells vs k nearest unchanged cells on 2017 land features. "
+                             "Exploratory comparison; not a causal estimate.",
+                             "2017-ലെ ഭൂപ്രകൃതിയിൽ സമാനമായ, മാറ്റമില്ലാത്ത സ്ഥലങ്ങളുമായുള്ള താരതമ്യം. "
+                             "ഇത് കാരണബന്ധത്തിന്റെ തെളിവല്ല."))
+    with st.expander(t("Physics check · validity matrix · data freshness · limits")):
         ph = M["physics_check"]
         if ph:
-            st.markdown(f"**Cool roofs:** model {ph['median_model_c']:+.2f} °C vs energy-balance formula "
-                        f"{ph['median_formula_c']:+.2f} °C per cell (median, n={ph['n_cells']}). "
-                        f"{ph['note']}")
-        st.dataframe(pd.DataFrame(M["validity_matrix"]), hide_index=True)
-        st.dataframe(pd.DataFrame([
+            st.markdown(local(
+                f"**Cool roofs:** model {ph['median_model_c']:+.2f} °C vs energy-balance formula "
+                f"{ph['median_formula_c']:+.2f} °C per cell (median, n={ph['n_cells']}). {ph['note']}",
+                f"**ചൂട് കുറയ്ക്കുന്ന മേൽക്കൂരകൾ:** ഓരോ സ്ഥലത്തും മാതൃകയുടെ മധ്യകണക്ക് "
+                f"{ph['median_model_c']:+.2f} °C; ഊർജസമതുലന സൂത്രത്തിന്റെ കണക്ക് "
+                f"{ph['median_formula_c']:+.2f} °C (സ്ഥലങ്ങൾ: {ph['n_cells']}). "
+                "ഇരു രീതികളിലും വ്യത്യാസമുണ്ട്; അതുകൊണ്ട് സൂത്രത്തിന്റെ കണക്കും പ്രത്യേകം കാണിക്കുന്നു."))
+        validity = pd.DataFrame(M["validity_matrix"])
+        if lang == "ml":
+            for column in ("intervention", "ps1_category", "method", "cost_note"):
+                validity[column] = validity[column].map(t)
+            validity = validity.rename(columns={"intervention": "ഇടപെടൽ", "ps1_category": "വിഭാഗം",
+                                                "method": "രീതി", "eligible_cells": "യോഗ്യമായ സ്ഥലങ്ങൾ",
+                                                "median_dt_c": "മധ്യ താപമാറ്റം (°C)",
+                                                "within_support_pct": "സമാനസ്ഥല പിന്തുണ (%)",
+                                                "cost_note": "ചെലവിന്റെ അടിസ്ഥാനം"})
+        st.dataframe(validity, hide_index=True)
+        freshness = pd.DataFrame([
             {"Layer": "Satellite heat (Landsat 8/9)", "Status": "frozen",
              "Detail": f"{M['n_scenes']} scenes, Jan–Apr {config.SCENE_YEARS[0]}–{config.SCENE_YEARS[1]}"},
             {"Layer": "ECOSTRESS afternoon check", "Status": "available" if M.get("ecostress") else "pending",
@@ -461,22 +592,37 @@ with proof_tab:
             {"Layer": "Built", "Status": D["manifest"]["source"], "Detail": D["manifest"]["built_at"]},
             {"Layer": "Ward rollup", "Status": M["area_kind"],
              "Detail": D["manifest"].get("ward_rollup_built_at", "from full pipeline")},
-        ]), hide_index=True)
-        st.markdown("**Limits:** surface temperature at ~10:30 AM is not the air people feel; weather is "
-                    "city-scale (~9 km); population is GHSL 2020; we never call results causal; "
-                    "Heat-Neutral Check is a screening tool, not an approval.")
+        ])
+        if lang == "ml":
+            freshness = freshness.rename(columns={column: t(column) for column in freshness})
+            freshness[t("Status")] = freshness[t("Status")].map(t)
+            freshness[t("Layer")] = freshness[t("Layer")].map(t)
+            freshness[t("Detail")] = freshness[t("Detail")].map(t)
+        st.dataframe(freshness, hide_index=True)
+        st.markdown(local(
+            "**Limits:** surface temperature at ~10:30 AM is not the air people feel; weather is "
+            "city-scale (~9 km); population is GHSL 2020; we never call results causal; "
+            "Heat-Neutral Check is a screening tool, not an approval.",
+            "**പരിമിതികൾ:** രാവിലെ ഏകദേശം 10:30-ലെ ഉപരിതല താപനില ശരീരത്തിന് അനുഭവപ്പെടുന്ന "
+            "വായുചൂടല്ല. കാലാവസ്ഥാ വിവരം ഏകദേശം 9 കി.മീ. നഗരതലത്തിലാണ്; ജനസംഖ്യ GHSL 2020-ൽ "
+            "നിന്നാണ്. ഈ ഫലങ്ങൾ കാരണബന്ധം തെളിയിക്കുന്നതല്ല. ചൂട്-നിഷ്പക്ഷ പരിശോധന അനുമതിയല്ല."))
 
-    st.markdown("### Ward Heat Card")
-    wc = st.selectbox("Ward / area for the card", names, key="card_ward")
+    st.markdown("### " + t("Ward Heat Card"))
+    wc = st.selectbox(t("Ward / area for the card"), names, key="card_ward")
     wid = wards.index[wards["ward"] == wc][0]
     rank = names.index(wc) + 1
     acts = D["plans"]["presets"]["10"]["ward_actions"].get(str(wid), [])
-    card = report.ward_card(wards.loc[wid].to_dict(), rank, len(names), acts, D["manifest"]["source"])
-    st.download_button("⬇ Download Ward Heat Card (open → print to PDF)", card,
+    card = report.ward_card(wards.loc[wid].to_dict(), rank, len(names), acts,
+                            D["manifest"]["source"], language=lang)
+    st.download_button("⬇ " + t("Download Ward Heat Card (open → print to PDF)"), card,
                        file_name=f"ward_heat_card_{wc.replace(' ', '_')}.html", mime="text/html")
     st.iframe("data:text/html;base64," + base64.b64encode(card.encode()).decode(), height=520)
 
 st.divider()
-st.caption(f"{live.ATTRIBUTION} · Satellite: USGS Landsat, ESA Sentinel-2/WorldCover, Google Dynamic "
-           "World, JRC GHSL, ECMWF ERA5-Land, NASA ECOSTRESS · Built at HackMe'26 with AI-assisted "
-           "coding (disclosed in our presentation).")
+st.caption(local(
+    f"{live.ATTRIBUTION} · Satellite: USGS Landsat, ESA Sentinel-2/WorldCover, Google Dynamic "
+    "World, JRC GHSL, ECMWF ERA5-Land, NASA ECOSTRESS · Built at HackMe'26 with AI-assisted "
+    "coding (disclosed in our presentation).",
+    "കാലാവസ്ഥ: Open-Meteo · ഉപഗ്രഹ / ഭൂപട വിവരങ്ങൾ: USGS Landsat, ESA Sentinel-2/WorldCover, "
+    "Google Dynamic World, JRC GHSL, ECMWF ERA5-Land. HackMe'26-ൽ AI സഹായത്തോടെ നിർമിച്ചത്; "
+    "അത് അവതരണത്തിൽ വെളിപ്പെടുത്തുന്നു."))
