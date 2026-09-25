@@ -11,18 +11,38 @@ It is analysis and pre-event decisions only, with no project code (PLAN.md §14)
 
 ---
 
+## 0. Corrections verified against the official event site's source
+
+Pulled directly from `chsrikar/hackme-26` (the site's own source, `src/pages/RubricPage.jsx`, `src/data/schedule.js`, `src/pages/RulesPage.jsx`) rather than the rendered page, since the site is a client-rendered SPA that doesn't show its text to a normal fetch. Two corrections to what's below and to PLAN.md:
+
+**1. The rubric has exactly 5 weighted pillars, not 6 — "UI/UX" isn't a separate line.** Confirmed verbatim from the rubric page: Innovation & Originality 30%, Technical Complexity & Depth 25%, Working Execution & Live Demo 20%, Practical Utility & Impact 15%, Presentation Craft & Jury Q&A 10%. These sum to exactly 100%. §1's table below folds UI/UX in as if it had its own "remainder" weight — it doesn't; UI quality is judged as part of *Working Execution* (does the live demo work well) and *Presentation* (does it communicate clearly), not as a sixth pillar. Don't budget extra effort assuming UI/UX has independent scoring weight beyond that.
+
+**2. The real pitch format is a 5-minute pitch + 2-minute jury Q&A, not the 3-minute demo PLAN.md §10 rehearses.** Confirmed from the rubric page: "Functioning prototype during the **5-minute team pitch**" and "Crisp, confident responses... during **2 min Q&A**." PLAN.md §10's "3-minute demo" script should be rewritten for the actual 5-minute window — there's 2 extra minutes to use, likely best spent slowing down on the Proof screen (the back-test is the hardest thing to rush) and giving the Check-a-Project moment more room to land, rather than compressing everything to fit an assumed shorter slot.
+
+**3. Real hacking time is split by a 4.5-hour mandatory social block, not continuous — this still isn't reflected in PLAN.md §9.** From the actual timed schedule (`src/data/schedule.js`):
+
+| Real block | Time | What it is |
+|---|---|---|
+| Work block 1 | 2:00–4:30 PM | 2.5 hours |
+| Ice-breaking, live music band, games | **5:00–9:30 PM** | **4.5 hours, no work — organizer-scheduled** |
+| Work block 2 | 9:30 PM–9:00 AM | 11.5 hours, the real main build window |
+| Hard submission deadline | 9:00 AM Day 2 | Portal locks strictly; no commits after count |
+
+Total real build time is **~14 hours**, not the ~23 continuous hours PLAN.md §9's checkpoint schedule (4 PM, 7 PM, 11 PM, 1 AM, 5 AM, 6 AM) currently assumes. **Action needed:** either shrink the 4 PM checkpoint 1 bar (PLAN.md currently expects "scene-panel model + exposure map on screen" from a block that only has 2.5 hours including setup), or move checkpoint 1 to right after the 9:30 PM restart. Decide as a team before 2 PM whether anyone skips part of the 5–9:30 PM block — nothing in the rules forbids it, but losing the time by default versus choosing to is a real difference given how tight Tier 1+2 already are.
+
+---
+
 ## 1. Judging criteria: what actually gets scored
 
-The HackMe'26 site ([hackme-26.vercel.app](https://hackme-26.vercel.app/)) publishes a rubric. Its stated philosophy is **"Judged on what you built, not how you pitched it."** The weights are listed only partly, so the figures below are the best reading of the site.
+The HackMe'26 site ([hackme-26.vercel.app](https://hackme-26.vercel.app/)) publishes a rubric with **5 weighted pillars summing to 100%** (verified against the site's source — see §0.1, which corrects the "6 categories with a remainder" framing this table used before):
 
 | Criterion | Weight | What judges check (site wording) | Where VISAT v5 stands |
 |---|---|---|---|
-| **Technical depth** | ~25–30% | Engineering depth, system architecture, robust algorithms, code quality, non-trivial algorithmic logic | **Strong.** Scene-panel physics-informed XGBoost (cells × scenes with per-scene ERA5), grouped spatial-block CV against baselines, validity matrix, joint re-prediction with tests, an optimizer that beats naive baselines, and a 2017→2024 back-test. |
-| **Innovation** | ~30% | Creative synthesis across domains; *differentiation from existing off-the-shelf solutions* | **Strong.** The Heat-Neutral Development Check (a screening tool tied to KMBR/SEIAA hooks) plus a warn / plan / prevent / prove story. Kochi-specific pieces: IURWTS canal overlay, Labour-order-linked "act today". |
-| **Working execution & live demo** | 20% | Handles edge cases and live input without crashing; test passes; reproducible deployment | **The main risk (§3–4).** Mitigated by data frozen by 2 PM, cached ₹1/10/50 crore presets, a fallback for every live item, pre-drawn project sites, CI, a backup recording, and warming the app up before the slot. |
-| **UI/UX** | remainder | Execution quality | Four plain-language screens, dark projector theme, heat ledger, printable Ward Card. |
-| **Impact & scalability** | remainder | Viability; potential to scale beyond the sprint | Named user (C-HED), sourced costs, public land only, a "which rule / who signs" line, and config-driven so it can scale to other cities. |
-| **Presentation & jury Q&A** | remainder | *Equal participation of all members*; crisp answers | Each member presents one screen and owns set Q&A topics (PLAN.md §11). |
+| **Innovation & Originality** | 30% | Novel architecture, creative synthesis across domains, *differentiation from existing off-the-shelf solutions* | **Strong.** The Heat-Neutral Development Check (a screening tool tied to KMBR/SEIAA hooks) plus a warn / plan / prevent / prove story. Kochi-specific pieces: IURWTS canal overlay, Labour-order-linked "act today". |
+| **Technical Complexity & Depth** | 25% | Engineering depth, system architecture, robust algorithms, code quality, non-trivial algorithmic logic | **Strong.** Scene-panel physics-informed XGBoost (cells × scenes with per-scene ERA5), grouped spatial-block CV against baselines, validity matrix, joint re-prediction with tests, an optimizer that beats naive baselines, and a 2017→2024 back-test. |
+| **Working Execution & Live Demo** | 20% | Functioning prototype during the 5-min pitch; handles edge cases without crashing; test passes; reproducible deployment | **The main risk (§3–4).** Mitigated by data frozen by 2 PM, cached ₹1/10/50 crore presets, a fallback for every live item, pre-drawn project sites, a backup recording, and warming the app up before the slot. UI quality (four plain-language screens, dark projector theme, printable Ward Card) is judged here, not as a separate category. |
+| **Practical Utility & Impact** | 15% | Target users defined; viability; potential to scale beyond the sprint | Named user (C-HED), sourced costs, public land only, a "which rule / who signs" line, and config-driven so it can scale to other cities. |
+| **Presentation Craft & Jury Q&A** | 10% | Clarity, 5-min time adherence, equal participation, crisp 2-min Q&A answers | Each member presents one screen and owns set Q&A topics (PLAN.md §11). Rehearse for the real 5+2 minute window (§0.2), not 3 minutes. |
 
 The judge-panel estimate for v5 is **about 84/100 with Tier 1+2 and about 86 with everything.** A perfect 10/10 isn't realistic, but 9s are reachable in technical depth, innovation and impact. **The deciders are a demo that doesn't crash and all four members answering questions.**
 
@@ -33,7 +53,7 @@ The judge-panel estimate for v5 is **about 84/100 with Tier 1+2 and about 86 wit
 - **ECOSTRESS.** It is not in Earth Engine for Kochi (only Los Angeles tiles), but **PS1 lists it as an input**, so v5 keeps it through **NASA AppEEARS**. Tier 1 shows an afternoon (12:00–15:30) map on the Proof screen. Tier 2 adds rank agreement with Landsat (Spearman correlation + top-decile overlap). *(The v4 version of this file said "correctly dropped". That would have left a PS1 gap.)*
 - **ESA WorldCover time series.** There is no 2017 or 2024 edition, so the back-test uses Dynamic World and WorldCover is used only for the present-day map.
 - **Sentinel-2 in 2017.** Surface reflectance over India reportedly starts around Dec 2018, so the 2017 back-test uses **Landsat NDVI**. M1 confirms this in GEE before the event.
-- **ERA5 is now a real model input.** The scene-panel model gives each satellite scene its own ERA5 weather, so (1 − albedo) × incoming sunlight varies by scene and is actually learned. *(The v4 note "ERA5 not a model feature" is out of date. `src/visat/config.py` still says it, so update that when code is written at the event.)*
+- **ERA5 is now a real model input.** The scene-panel model gives each satellite scene its own ERA5 weather, so (1 − albedo) × incoming sunlight varies by scene and is actually learned. *(The v4 note "ERA5 not a model feature" is out of date — no longer an issue now that the pre-event `config.py` has been removed, see §4.)*
 - **Canals** get **no °C credit**, because they are narrower than the 100 m grid. Instead, the KMRL IURWTS canal project is shown as an overlay, and tree strips along the canal banks are offered as the actual intervention.
 
 One additional gap needs only a one-line Q&A answer, not a rebuild:
@@ -67,7 +87,7 @@ The roles table spreads these across M1–M4. What remains is sequencing *within
 
 | Risk | Likelihood | Impact | Mitigation | Owner |
 |---|---|---|---|---|
-| **Pre-event code in the repo.** The rules say all project *code, schemas and configurations* must be written during the event. The repo already has `src/visat/config.py`, `pyproject.toml`, CI and tests | Medium | Could be read as a rules breach, possibly disqualification | **Team decision needed before the event.** Move these to a `prep` branch or delete them from `main`, and recreate them at the event. Docs (PLAN/RESOURCES/STRATEGY) are plans, not code | Team |
+| ~~Pre-event code in the repo~~ **Fixed.** `src/visat/config.py`, `pyproject.toml`, the CI workflow and tests were removed from `main` — the rules explicitly name "code, schemas and configurations" as things that must be written during the event, with disqualification as the stated consequence for pre-existing code. Recreate all of it live at the event; only PLAN/RESOURCES/STRATEGY (plans, not code) stay pre-event | — | — | Resolved | Team |
 | Scene-panel model underperforms or is late | Medium | Weakens the physics-informed and atmospheric-driver story | 4 PM checkpoint fallback to the composite model, described honestly. Report n scenes and confidence intervals either way | M1 |
 | pydeck can't register clicks on arbitrary land (`on_select` returns only picked objects), and reruns reset the view | High if unplanned | The hero screen breaks live | **5–8 pre-drawn candidate sites** as a pickable polygon layer, `st.segmented_control` for the use type, `view_state` kept in `session_state`, and all results cached | M3 |
 | Budget interaction lags on rerun | Medium | The wow moment stutters | **Preset buttons for ₹1/10/50 crore** with precomputed results, no drag slider | M3 |

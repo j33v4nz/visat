@@ -14,11 +14,7 @@
 
 ## Repo layout
 
-```
-src/visat/       # pipeline code — written live during the hackathon
-tests/           # tests — written live during the hackathon
-.github/         # CI — lint + test on every push, running from hour 2 per PLAN.md §7
-```
+Pre-event, this repo is documentation only (PLAN.md, RESOURCES.md, STRATEGY.md). No `src/`, `tests/`, or CI config — the rules require **all project code, schemas and configurations to be written during the event itself** (see PLAN.md §14 and the official rules), so those get created live at the hackathon, not before.
 
 ## Team
 
@@ -33,4 +29,4 @@ See PLAN.md for the full role breakdown and 24-hour timeline.
 
 ## Status
 
-Pre-event. Per PLAN.md §14, all project code is written during HackMe'26 itself — this repo currently holds the plan, resource research, win strategy, and CI/config scaffolding only.
+Pre-event. Per PLAN.md §14, all project code is written during HackMe'26 itself — this repo currently holds only the plan, resource research and win strategy documents.
