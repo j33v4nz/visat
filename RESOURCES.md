@@ -13,6 +13,7 @@ This is everything the team needs to get ready for HackMe'26: accounts, datasets
 | GitHub + repo access | All | Repo: github.com/j33v4nz/visat |
 | Python 3.12 + `uv` on every laptop | All | Pin versions (section 4) and test the install before the event |
 | CPCB CCR portal login | M4 | For station temperature data (section 3) |
+| **NASA Earthdata login** (for AppEEARS) | M1 | Needed for **ECOSTRESS** LST, a PS1 input dataset. [AppEEARS ECOSTRESS tutorial (PDF)](https://ecostress.jpl.nasa.gov/downloads/tutorials/06-Downloading_from_AppEEARS.pdf) |
 | Anthropic API key (Tier 3 "Ask VISAT" only) | M2 | Optional. Skip it if Tier 3 isn't reached |
 
 ---
@@ -29,10 +30,10 @@ This is everything the team needs to get ready for HackMe'26: accounts, datasets
 | Population | `JRC/GHSL/P2023A/GHS_POP` | 100 m. Epochs every 5 years to 2020, plus 2025/2030 projections. P2023A is still the latest release. [Catalog](https://developers.google.com/earth-engine/datasets/catalog/JRC_GHSL_P2023A_GHS_POP) |
 | Building height / built surface | `JRC/GHSL/P2023A/GHS_BUILT_H`, `…/GHS_BUILT_S` | Morphology features. [Built surface](https://developers.google.com/earth-engine/datasets/catalog/JRC_GHSL_P2023A_GHS_BUILT_S) |
 | Elevation | `USGS/SRTMGL1_003` | Mangrove eligibility (low-lying land) |
-| Weather (**not a model feature**) | `ECMWF/ERA5_LAND/HOURLY` | ~9 km, so only used for heat index / UTCI labels and the physics check |
+| **Meteorological (PS1 input)** | `ECMWF/ERA5_LAND/HOURLY` | ~9 km. Bands: `temperature_2m`, `dewpoint_temperature_2m` (for humidity), `u/v_component_of_wind_10m`, `surface_solar_radiation_downwards`, `potential_evaporation`. Used for:<br>• the **heat stress map** (Feb–Apr afternoon heat index)<br>• **atmospheric drivers** (values at each Landsat overpass)<br>• **physics features** (absorbed shortwave, evaporative potential)<br>Not used as a raw per-pixel predictor (too coarse) |
+| Urban morphology | UT-GLOBUS building heights / urban canopy parameters | GEE community catalog ([page](https://gee-community-catalog.org/projects/utglobus/)). Covers 1,200+ cities; **check Kochi coverage before the event**, otherwise fall back to GHSL + OSM buildings and say so |
+| **ECOSTRESS LST (PS1 input)** | `ECO_L2T_LSTE.002` via **NASA AppEEARS** (not in GEE for Kochi; GEE only has Los Angeles tiles) | 70 m, varying overpass times, so it gives the **afternoon** scenes Landsat can't. Output is GeoTIFF with a cloud mask. **Note:** the `lst_err` layer is missing for 16 Dec 2025 – 10 Jun 2026, so prefer Feb–Apr 2024–2025 scenes. [Product page](https://lpdaac.usgs.gov/products/eco_l2t_lstev002/) · [VITALS notebook](https://nasa.github.io/VITALS/python/Exploring_ECOSTRESS_L2T_LSTE.html) · [Quality-flag notice](https://www.earthdata.nasa.gov/data/alerts-outages/ecostress-version-2-level-2-quality-flags-action-required) |
 | Mangrove reference | Global Mangrove Watch v4.1 (1985–2025) | In the community catalog. [GEE community catalog](https://gee-community-catalog.org/projects/mangrove/) |
-
-Not used: ECOSTRESS. In GEE it only covers Los Angeles tiles.
 
 ---
 
@@ -144,6 +145,7 @@ Without the minus terms, Gulf heat stories (UAE 41–48 °C) leak in.
 | `streamlit` + `pydeck` | Dashboard | `st.pydeck_chart(..., on_select="rerun")` returns the clicked ward. **Every layer needs an `id`.** [Docs](https://docs.streamlit.io/develop/api-reference/charts/st.pydeck_chart) · [2026 release notes](https://docs.streamlit.io/develop/quick-reference/release-notes/2026) |
 | `osmnx` (2.1) + `networkx` | OSM features, Cool Routes | **v2 API:** `graph_from_bbox(bbox=(left, bottom, right, top))`; routing lives in `ox.routing`. [User reference](https://osmnx.readthedocs.io/en/stable/user-reference.html) |
 | `pythermalcomfort` | UTCI "feels-like" heat stress | UTCI valid ranges: air temp −50 to 50 °C; radiant temp within air temp −70/+30; wind 0.5–17 m/s. [Docs](https://pythermalcomfort.readthedocs.io/) |
+| `natcap.invest` (Tier 3) | **InVEST Urban Cooling** benchmark (optional PS1 tool) | Needs a land-cover raster (projected CRS), a reference ET₀ raster, an AOI, a biophysical table (`lucode, kc, green_area`, plus `shade, albedo` for the "factors" method) and a reference air temperature. [API](https://invest.readthedocs.io/en/latest/api/natcap.invest.urban_cooling_model.html) |
 | `requests` | Live Open-Meteo fetch | Always pass `timeout=3`; never let an exception reach the UI |
 | `pytest`, `ruff` | Tests and lint in CI | GitHub Actions, set up in hour 2. Include a test that mocks a network failure and checks that the cache fallback loads |
 | `anthropic` (Tier 3) | "Ask VISAT" parser | Claude only turns text into optimizer parameters, and every number comes from our code |
@@ -176,7 +178,9 @@ Without the minus terms, Gulf heat stories (UAE 41–48 °C) leak in.
 | Cool roof | ₹300 / m² | [Telangana Cool Roof Policy 2023](https://telanganatoday.com/indias-first-cool-roof-policy-launched-in-telangana) |
 | Cool roof recoat | ₹150 / m² every 3 years | Our estimate (humid-climate soiling) |
 | Mangrove restoration | ₹1–8 lakh / ha | [CEEW](https://www.ceew.in/ecological-mangrove-restoration); [One Earth 2025](https://www.sciencedirect.com/science/article/pii/S259033222500168X) |
-| Green roof (excluded) | ₹7,500 / m² | [IndiaSpend](https://www.indiaspend.com/explainers/explained-as-indoor-heat-rises-can-india-turn-to-green-roofs-867308) |
+| Cool pavement | **To research** | M4 |
+| Canal / pond restoration | **To research** | M4 |
+| Green roof (simulated, rarely chosen) | ₹7,500 / m² | [IndiaSpend](https://www.indiaspend.com/explainers/explained-as-indoor-heat-rises-can-india-turn-to-green-roofs-867308) |
 
 ---
 
@@ -205,7 +209,10 @@ Without the minus terms, Gulf heat stories (UAE 41–48 °C) leak in.
 - [ ] Malayalam news feeds open in a browser (Google News query, Mathrubhumi, 24 News), and a native reader reviews the keyword list (M4)
 - [ ] Kochi 74-ward GeoJSON downloaded from BharatLAS (M1)
 - [ ] CPCB Vyttila + Eloor temperature, Feb–Apr, downloaded (M4)
-- [ ] Costs re-verified; sources saved for slides (M4)
+- [ ] Costs re-verified, plus cool-pavement and canal-restoration costs found; sources saved for slides (M4)
+- [ ] NASA Earthdata account works; a test AppEEARS ECOSTRESS request for Kochi is done (M1)
+- [ ] UT-GLOBUS Kochi coverage checked (M1)
+- [ ] **PS1 compliance checklist (PLAN.md section 0) re-checked by the whole team**
 - [ ] C-HED / councillor / KSDMA contacted (M4). **Use only genuine quotes.** If there's no reply, say "awaiting response"
 - [ ] Slide template, pitch script and AI-use disclosure drafted (M4)
 - [ ] Ward-card and tab sketches (M3)

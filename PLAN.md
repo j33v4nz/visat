@@ -6,6 +6,33 @@
 
 ---
 
+## 0. Problem Statement 1 compliance checklist
+
+Every requirement from PS1 in the hackathon doc, and where VISAT covers it. **Re-check this table after every plan change and again before submission.**
+
+| PS1 requirement (doc wording) | Where VISAT covers it | Tier |
+|---|---|---|
+| **Description:** geospatial AI/ML system, *physics-informed decision making*, hotspots, drivers, optimized scenario-based interventions | The whole pipeline; physics-informed model (step 2); optimizer (step 6) | 1 |
+| **Obj 1:** heat stress maps using **satellite *and* meteorological data** | **Heat Stress Map** = Landsat LST (satellite, 100 m) + ERA5-Land Feb–Apr afternoon **heat index** (meteorological), combined into a Heat Stress Index, plus the live heat index layer | 1 |
+| **Obj 2:** quantify drivers: **LULC, urban morphology, vegetation, atmospheric conditions** | SHAP for land cover, morphology (GHSL height/volume, OSM building density, UT-GLOBUS if Kochi is covered) and vegetation. **Atmospheric:** scene-by-scene analysis of city LST vs ERA5 air temp, humidity, wind and radiation at overpass time | 1 |
+| **Obj 3:** LST ↔ factors with **physics-informed ML** | XGBoost with **physics-derived features** (absorbed shortwave (1−α)·S from ERA5 radiation, evaporative-cooling potential from NDVI × ET₀) + **monotone physics constraints** + an **energy-balance cross-check**. It is physics-informed ML, not a physics-informed neural network (PINN) | 1 |
+| **Obj 4:** simulate **urban greening, cool roofs, albedo changes, water bodies**; evaluate effectiveness in reducing heat stress | What-ifs for **street trees, mangroves, green roofs, cool roofs, cool pavements (albedo), water-body/canal restoration**. All are simulated and scored in °C; the optimizer picks among the cost-effective ones | 1 (trees, cool roofs, water, green roofs) / 2 (cool pavements, mangroves) |
+| **Input:** Landsat 8 LST | Landsat 8 **and** 9 Collection 2 L2 | 1 |
+| **Input:** ECOSTRESS LST | Downloaded through **NASA AppEEARS** (not in GEE for Kochi): Feb–Apr 2024–25 **afternoon** scenes, used to check that hotspots hold at 1–3 PM, not only at 10:30 AM | 2 |
+| **Input:** LULC from Sentinel-2 / Landsat | Sentinel-2 indices + ESA WorldCover + Dynamic World | 1 |
+| **Input:** ERA5 & CPCB air temp, humidity, wind | ERA5-Land (heat stress map, atmospheric drivers, physics features) + **CPCB Vyttila and Eloor** stations (validation) | 1 |
+| **Input:** OSM, GHSL, UT-GLOBUS (if available) | OSM buildings, roads and sites; GHSL; UT-GLOBUS through the GEE community catalog **if Kochi is covered** (checked before the event; otherwise stated) | 1 |
+| **Optional:** SOLWEIG & InVEST | **InVEST Urban Cooling** (Python `natcap.invest`) as a process-based benchmark to compare with our ML ranking. SOLWEIG is skipped (needs a detailed surface model; future scope) | 3 |
+| **Outcome:** heat stress maps identifying hotspots | Tab 1 | 1 |
+| **Outcome:** quantitative assessment of key drivers | Tab 2 (spatial SHAP + atmospheric scene analysis) | 1 |
+| **Outcome:** validated AI/ML model | Tab 5 (spatial CV, baselines, 2017→2024 back-test, CPCB, ECOSTRESS) | 1–2 |
+| **Outcome:** scenario-based evaluation of interventions | Tab 3: every intervention's °C effect per ward, including ones not chosen | 1 |
+| **Outcome:** optimal strategy with **type, spatial placement, °C reduction** | Tab 3 plan table: intervention type · ward + map location · estimated °C reduction (with range) · people · ₹ | 1 |
+
+Extra, beyond PS1: live weather and Malayalam news alerts, the Heat Impact Check, and Ward Heat Cards.
+
+---
+
 ## 1. The problem
 
 - Kerala's heat is becoming dangerous. In April 2026, IMD issued heatwave warnings, Ernakulam was forecast to reach ~38 °C, and schools in Kollam and Thrissur were closed. KSDMA even had to debunk a viral "55 °C" rumour.
@@ -36,9 +63,9 @@ One web app with 6 tabs, plus a **live strip on top of every tab**:
 
 | Tab | What it shows | Demo line |
 |---|---|---|
-| **1. Heat** | **Live:** 72-hour heat-index forecast and **"Where to act today"**, ranking wards by today's forecast peak × exposed people × vulnerable sites. **Satellite:** Kochi in 100 m squares coloured by surface temperature, with the top 10% by heat × population highlighted | "Right now it feels like X °C. These wards need water points and shifted work hours today, and this is where heat hurts most all season." |
-| **2. Why** | Click a ward to see what's driving its heat (SHAP explanations) | "Ward X is hot mainly because of concrete and missing trees." |
-| **3. Plan** | Budget slider (₹1–50 crore) → map of which fix goes where, with "−X °C for Y people". Compared live against simple strategies | "Our plan cools more people than spreading the money evenly." |
+| **1. Heat** | **Heat Stress Map** (satellite LST + ERA5 meteorological heat index), toggled with plain surface temperature, with the top 10% by heat stress × population highlighted. **Live:** 72-hour heat-index forecast and **"Where to act today"**, ranking wards by today's forecast peak × exposed people × vulnerable sites | "Right now it feels like X °C. These wards need water points and shifted work hours today, and this is where heat hurts most all season." |
+| **2. Why** | Click a ward to see what's driving its heat (SHAP: land cover, morphology, vegetation), plus a city panel on **atmospheric drivers** (how air temperature, humidity, wind and sunlight shift Kochi's heat from day to day) | "Ward X is hot mainly because of concrete and missing trees, and on humid, still days the whole city gets Y °C worse." |
+| **3. Plan** | **Scenario evaluation:** °C effect of every intervention (trees, mangroves, green roofs, cool roofs, cool pavements, water bodies) per ward. **Optimal strategy:** a budget slider (₹1–50 crore) → table and map of *type · placement · estimated °C reduction · people · ₹*, compared live against simple strategies | "Our plan cools more people than spreading the money evenly." |
 | **4. Check a project** ⭐ | **Heat Impact Check.** Click any plot and choose what's proposed (e.g. green plot → IT park). See the heat spread on the map: "+X °C for Y people within 500 m". Then press **"Make it heat-neutral"** to get the cheapest offset plan (trees + cool roofs, with ₹) | "Before Kochi approves this building, it knows the heat bill and how to pay it." |
 | **5. Proof** | Predicted vs actual temperature change for places that really changed 2017→2024, plus honest accuracy scores and a physics check | "We predicted X; reality did Y." |
 | **6. Ward Heat Card** | One page per ward: hotspots, schools, anganwadis and markets inside them, the top 3 actions with ₹ and °C, native tree species | "A councillor can take this to the next council meeting." |
@@ -77,22 +104,44 @@ LIVE:  Open-Meteo API (every 15 min) ──► heat index + 72 h forecast ──
    - SRTM elevation
    - neighbourhood features (what is within 300 m and 500 m of each square)
    - 2017 and 2024 snapshots for the back-test
+   - **ERA5-Land**: Feb–Apr afternoon air temperature, humidity, wind and solar radiation, plus values at each Landsat overpass time
+   - **Urban morphology**: GHSL building height and volume, OSM building footprint density, and **UT-GLOBUS** if Kochi is covered
+   - **CPCB** Vyttila and Eloor station air temperature and humidity (downloaded as data before the event)
+   - **ECOSTRESS** afternoon LST from NASA AppEEARS (Tier 2; request submitted at hour 0)
 
    Everything is saved to files early, so the live demo never depends on Wi-Fi.
 2. **Model.** XGBoost predicts each square's surface temperature from what's on the ground.
-   - **Physics rules are built in** as monotone constraints: concrete can only warm a place, and trees, water and reflective roofs can only cool it. We call this *physically consistent*.
+   - **Physics-informed ML** (PS1 Objective 3), with three physics ingredients:
+     - **physics-derived features** from the surface energy balance: absorbed shortwave radiation (1 − albedo) × incoming sunlight (ERA5), and evaporative-cooling potential (greenness × reference evapotranspiration)
+     - **monotone physics constraints**: concrete can only warm a place; trees, water and reflective surfaces can only cool it
+     - an **energy-balance cross-check** of the model's cool-roof results
+
+     We say exactly this and never call it a PINN.
    - It is validated honestly on **whole neighbourhoods it never saw** (2 km spatial block cross-validation) and compared with simpler baseline models.
-3. **Danger zones.** Heat × population, top 10%, rolled up to Kochi's 74 wards (2024 ward map; the 2025 delimitation increased this to 76).
+   - **Atmospheric drivers** (PS1 Objective 2): for each clean Landsat scene, relate Kochi's city-wide heat and its urban–rural difference to ERA5 air temperature, humidity, wind and radiation at overpass. This tells us how much the weather shifts the whole city on a given day. Land cover explains *where* it's hot; the atmosphere explains *how hot the day is*.
+3. **Heat stress map and danger zones** (PS1 Objective 1). Heat Stress Index = satellite surface-temperature anomaly (100 m) combined with the ERA5-Land Feb–Apr afternoon **heat index** (meteorological). Checked against CPCB station readings. Heat stress × population, top 10%, rolled up to Kochi's 74 wards (2024 ward map; the 2025 delimitation increased this to 76).
 4. **Realistic what-ifs (analog transitions).** To simulate "this street with trees", we don't just change one number. We find 20 real Kochi squares that already look like that and move the square's whole profile toward them. We never go beyond what exists in the real data.
-   - Trees go on **public land only**: roads, schools, parks. Paddy land and wetlands are protected under the Kerala Conservation of Paddy Land and Wetland Act, 2008.
-   - Cool roofs go on buildings only.
-   - Mangroves go only on government or Coastal Regulation Zone (CRZ) shoreline, never on open water.
+   These are all the intervention types PS1 lists (urban greening, cool roofs, albedo changes, water bodies):
+
+   | Intervention (PS1 category) | Where it's allowed |
+   |---|---|
+   | **Street trees** (greening) | **Public land only**: roads, schools, parks. Paddy land and wetlands are protected under the Kerala Conservation of Paddy Land and Wetland Act, 2008 |
+   | **Mangroves** (greening) | Government or Coastal Regulation Zone (CRZ) shoreline only, never on open water |
+   | **Green roofs** (greening) | Buildings. Simulated and scored in °C; the optimizer usually skips them because of cost (₹7,500/m²) |
+   | **Cool roofs** (cool roofs / albedo) | Buildings only |
+   | **Cool pavements** (albedo changes) | Road cells (OSM roads) |
+   | **Water bodies: canal / pond restoration** (water bodies) | Cells along existing canals and drains (OSM `waterway=canal/drain`) and low-lying non-built land. Kochi's canal rejuvenation work makes this realistic |
+
+   Every intervention is **simulated and evaluated** (°C effect per ward, PS1 Objective 4), even when the optimizer doesn't choose it.
 5. **Back-test: the key proof.** Find squares where Kochi *really* lost trees or gained concrete between 2017 and 2024. Compare the change our model predicts with the change the satellite actually measured.
 6. **Budget optimizer.** Picks the fixes with the most °C × people per rupee, counting the cooling that spreads to neighbouring squares. We show that it beats "spread the money evenly" and "plant trees everywhere". The budget curve is precomputed, so the slider responds instantly.
 7. **Heat Impact Check (prevention).** Runs the what-if in reverse. A planner picks a plot and a proposed land use (IT park, mall, housing, parking), and the plot's profile moves toward real Kochi squares that already look like that. Because the model uses 300/500 m neighbourhood features, it predicts the heat **spreading to neighbouring squares**, not just the plot itself. The optimizer then finds the **cheapest heat offset**: trees on nearby public land plus cool roofs on the project, until the net change is ≤ 0 °C. It reuses the analog transitions and the optimizer, so it's about 2–3 hours of new work.
    - Output: "+1.3 °C for 4,200 people within 500 m. To be heat-neutral: 40 street trees + 6,000 m² cool roof ≈ ₹38 lakh." (Illustrative only; the real numbers come from the model.)
    - Why it matters: GCDA and Kochi Corporation already approve building permits. Cities abroad require canopy or cool roofs on new development, but we found no Kerala equivalent. This gives Kochi a way to start **heat-neutral development**, like carbon offsets but for heat.
-8. **Physics check.** For cool roofs, compare the model's answer with a textbook surface energy-balance calculation.
+8. **Physics check and extra validation.**
+   - For cool roofs, compare the model's answer with a textbook surface energy-balance calculation.
+   - *(Tier 2)* **ECOSTRESS afternoon LST** checks whether our hotspot ranking holds at 1–3 PM.
+   - *(Tier 3)* **InVEST Urban Cooling**, a process-based model and optional PS1 tool, is run on the same land cover to compare its cooling ranking with ours.
 9. **Live layer.** One request to the free **Open-Meteo** forecast API (no key) covers ~8 Kochi points: Fort Kochi, Mattancherry, Ernakulam South, Kaloor, Edappally, Vyttila, Kakkanad, Kalamassery.
    - It returns current temperature, humidity, feels-like and wind, plus hourly heat, wet-bulb, UV and sunlight for 72 hours.
    - From these we compute the **heat index**, the humid-heat measure KSDMA's alerts use, and its category band.
@@ -110,7 +159,7 @@ LIVE:  Open-Meteo API (every 15 min) ──► heat index + 72 h forecast ──
 
 | Judging area | What we bring |
 |---|---|
-| **Technical depth** | Physically consistent ML, spatial cross-validation against baselines, analog-transition simulation, a budget optimizer with spatial spillover, and a real-world back-test |
+| **Technical depth** | Physics-informed ML (energy-balance features + monotone constraints + energy-balance check), satellite + meteorological heat stress map, atmospheric driver analysis, spatial cross-validation against baselines, analog-transition simulation, a budget optimizer with spatial spillover, and a real-world back-test |
 | **Innovation** | Most teams stop at a heat map. We **warn today** (live), decide **where to spend**, **prevent new heat** with the Heat Impact Check (heat-neutral development, new for Kerala), and prove it on real change |
 | **Working demo** | Live weather with an offline fallback, satellite data frozen to files, a deployed live URL, CI-tested code, and a rehearsed demo that doesn't crash |
 | **UI/UX** | Six clear tabs, a live budget slider, a one-click "Check a project" flow, and a Ward Heat Card anyone can read |
@@ -125,14 +174,16 @@ LIVE:  Open-Meteo API (every 15 min) ──► heat index + 72 h forecast ──
 | Cool roof coating | ₹300 per m² | Telangana Cool Roof Policy 2023 |
 | Cool roof recoat (humid climate) | ₹150 per m², every 3 years | Our estimate |
 | Mangrove restoration | ₹1–8 lakh per hectare | CEEW (Odisha); One Earth, 2025 |
-| Green roof | ₹7,500 per m² → **evaluated and excluded** (never cost-effective) | IndiaSpend |
+| Green roof | ₹7,500 per m² → **simulated and scored**, but rarely chosen because of cost | IndiaSpend |
+| Cool pavement (reflective road coating) | **To research (M4)** | Indian cool-pavement pilots / CPWD rates |
+| Canal / pond restoration (water bodies) | **To research (M4)** | Kochi canal rejuvenation project costs / AMRUT water-body rejuvenation rates |
 
 ## 7. Build tiers
 
 We move to the next tier only after the previous checkpoint passes.
 
 **Tier 1: Core (must ship)**
-- The core pipeline above (steps 1–6, 8 and 10).
+- The core pipeline above (steps 1–6, 8 and 10), which covers **every PS1 objective and outcome** (see the checklist in section 0). That includes the **satellite + meteorological heat stress map**, **atmospheric drivers**, **physics-informed features**, and scenarios for **trees, green roofs, cool roofs and water bodies**.
 - **Live strip + cache/fallback** (~1.5 h): current Kochi weather, heat index, update time and Open-Meteo credit, working with Wi-Fi off.
 - CI with GitHub Actions: tests and lint from hour 2.
 - A data manifest listing dataset IDs and file hashes, for reproducibility.
@@ -140,6 +191,8 @@ We move to the next tier only after the previous checkpoint passes.
 **Tier 2: Prevention + stronger proof (after the 4 PM checkpoint)**
 - ⭐ **Heat Impact Check**, the headline innovation, built first in Tier 2: reverse what-if, neighbourhood spread, cheapest heat-neutral offset, and the "Check a project" tab.
 - **Live 72-hour forecast + "Where to act today" ward ranking** (~2 h), plus the data freshness panel.
+- **ECOSTRESS afternoon LST check** (~1 h once the AppEEARS files arrive): do hotspots hold at 1–3 PM?
+- **Cool pavements and mangroves** added to the scenarios.
 - **Live Malayalam news alert ticker** (~1.5–2 h): RSS fetch, keyword filter, district + alert-colour extraction, "confirmed by N channels", cache/fallback.
 - **Quasi-experimental back-test:** squares that lost trees compared with matched, similar squares that didn't. We never call it "causal".
 - **Error ranges:** 90% intervals on temperature predictions. What-if ranges come from the back-test error spread. A "conservative mode" optimizer uses the low end.
@@ -150,6 +203,7 @@ We move to the next tier only after the previous checkpoint passes.
 - A before/after swipe map and a printable Ward Heat Card, including a Malayalam version translated by a team member.
 - **"Ask VISAT":** type a request such as "₹2 crore for ward 23, protect schools". An AI model only turns the request into optimizer settings, and every number comes from our own code. A typed form stays available as a fallback. This is shown after the main demo, never instead of it.
 - Thiruvananthapuram hotspots, generated from the same config, to show that it scales.
+- **InVEST Urban Cooling benchmark** (an optional PS1 tool): run on the same land cover and compare its cooling ranking with ours.
 
 **Deliberately avoided:** machine-translated text with unchecked numbers, calling correlation "causal", false certainty on what-if numbers, and flashy animations.
 
@@ -157,8 +211,8 @@ We move to the next tier only after the previous checkpoint passes.
 
 | Member | Builds | Presents / Q&A |
 |---|---|---|
-| **M1, Data & Model** | Earth Engine exports (frozen by 2 PM) → model + validation + baselines → back-test → hotspots → heat-index helper for the live strip → *(Tier 2)* live ward exposure × forecast ranking, matched back-test, error ranges | Slides 2–3; data and validation questions |
-| **M2, Scenarios & Optimizer** | Analog-transition fixes → budget optimizer + baselines → cool-roof physics check → tests and CI → *(Tier 2)* **Heat Impact Check engine** (reverse transition + offset optimizer), vulnerability weights → *(Tier 3)* Ask VISAT tools | Slide 4; optimizer and physics questions |
+| **M1, Data & Model** | Submit the ECOSTRESS AppEEARS request at hour 0 → Earth Engine exports incl. ERA5-Land and morphology (frozen by 2 PM) → heat stress map + atmospheric driver analysis → model + validation + baselines → back-test → hotspots → heat-index helper for the live strip → *(Tier 2)* live ward exposure × forecast ranking, matched back-test, error ranges | Slides 2–3; data and validation questions |
+| **M2, Scenarios & Optimizer** | Physics-derived features → analog-transition fixes for all PS1 intervention types (trees, green roofs, cool roofs, water bodies; *Tier 2* cool pavements, mangroves) → budget optimizer + baselines → cool-roof physics check → tests and CI → *(Tier 2)* **Heat Impact Check engine** (reverse transition + offset optimizer), vulnerability weights → *(Tier 3)* Ask VISAT tools | Slide 4; optimizer and physics questions |
 | **M3, Dashboard** | Hello-world deployed by 12 PM → **live strip** (Open-Meteo fetch, 15-min cache, offline fallback) → 6-tab app → public-land and school/market layers → Ward Heat Card → *(Tier 2)* "Check a project" tab (plot click + land-use picker), 72-hour forecast chart, "Where to act today" list, freshness panel → *(Tier 3)* swipe map, printable card | Live demo; ward walkthrough |
 | **M4, Product & Pitch** | Sourced costs → baseline comparison slide → README + AI-use disclosure → *(Tier 2)* **Malayalam news alert feed**: RSS fetch, keyword list and district/alert-colour rules, with AI-assistant help; a native Malayalam reader checks the keywords. M3 builds the ticker UI → 5 slides, demo video, demo script → timekeeping and submission | Slides 1 and 5; costs and impact questions |
 
@@ -203,7 +257,8 @@ We move to the next tier only after the previous checkpoint passes.
 | Question | Who answers | Short answer |
 |---|---|---|
 | Why should we believe planting trees *causes* your ΔT? | M1 | Physics rules fix the direction of each effect, what-ifs move toward real Kochi squares, and the 2017→2024 back-test compares predictions with reality. |
-| Where exactly is the physics? | M2 | Monotone constraints on every land-cover feature plus an energy-balance check for cool roofs. We call it "physically consistent", not "physics-informed". |
+| Where exactly is the physics? | M2 | Three places: (1) features built from the surface energy balance: absorbed sunlight (1 − albedo) × incoming radiation, and evaporative-cooling potential; (2) monotone constraints so concrete can only warm and trees, water and reflective surfaces can only cool; (3) an energy-balance cross-check of cool-roof results. It's physics-informed ML, not a physics-informed neural network, and we say that plainly. |
+| Did you cover everything in the problem statement? | M4 | Yes. Section 0 of our plan maps every PS1 objective, dataset and outcome to a feature: satellite + meteorological heat stress maps, all four driver groups, physics-informed ML, all four intervention types, and the optimal strategy with type, placement and °C. |
 | Satellite surface temperature isn't the heat people feel. | M1 | Correct, and every number is labelled as surface temperature. It's the only open, city-wide 100 m data. We use it to rank options, not to forecast air temperature. |
 | Where do the costs come from? What if they're off by 2×? | M4 | Every cost has a source. The optimizer re-runs instantly, so we can show whether the ranking changes. |
 | Any independent check beyond satellite data? | M1 | CPCB/IMD station comparison. Only a few stations, so it's a sanity check, and we say so. |
@@ -218,10 +273,10 @@ We move to the next tier only after the previous checkpoint passes.
 ## 12. Before the event (no code is written before the event)
 
 - **Everyone:** register for Google Earth Engine now (approval can take days), install Python + `uv`, set up GitHub.
-- **M1:** list dataset IDs, bands and scaling factors; download the Kochi ward map (OpenCity).
+- **M1:** list dataset IDs, bands and scaling factors; download the Kochi ward map (BharatLAS/OpenCity); create a **NASA Earthdata** account and practise an AppEEARS ECOSTRESS request; **check whether UT-GLOBUS covers Kochi**.
 - **M2:** practise XGBoost monotone constraints, spatial cross-validation and nearest-neighbour search.
 - **M3:** practise Streamlit + pydeck; deploy a hello-world; sketch the 6 tabs, the "Check a project" flow and the ward card.
-- **M4:** verify costs; collect heat news; contact Kochi Corporation's C-HED, a ward councillor or KSDMA for real feedback (only genuine quotes); download CPCB/IMD station temperatures; prepare the slide template.
+- **M4:** verify costs, and **research cool-pavement and canal/pond-restoration costs**; collect heat news; contact Kochi Corporation's C-HED, a ward councillor or KSDMA for real feedback (only genuine quotes); download CPCB/IMD station temperatures; prepare the slide template.
 
 ## 13. Backup plans
 
