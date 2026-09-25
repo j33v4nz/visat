@@ -1,0 +1,130 @@
+# VISAT resource pack (verified September 2026)
+
+This is everything the team needs to get ready for HackMe'26: accounts, datasets, libraries, local Kochi data, costs and pitch facts. It is research only. All code gets written at the event.
+
+---
+
+## 1. Do this week (setup)
+
+| Task | Who | Notes |
+|---|---|---|
+| **Google Earth Engine account** | All 4 | A Google Cloud project is required, and a **noncommercial** registration needs no billing. Since **27 Apr 2026** every noncommercial project runs on a quota tier (**Community** by default). Hitting the monthly limit slows you down rather than stopping you. Register now, because approval can take days. [Access guide](https://developers.google.com/earth-engine/guides/access) · [Noncommercial tiers](https://developers.google.com/earth-engine/guides/noncommercial_tiers) · [Quota explainer](https://spatialthoughts.com/2026/02/09/gee-quota-monitoring/) |
+| Streamlit Community Cloud account | M3 | Free tier has a **~1 GB resource limit**, so the app must read small precomputed files. [Manage your app](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app) |
+| GitHub + repo access | All | Repo: github.com/j33v4nz/visat |
+| Python 3.12 + `uv` on every laptop | All | Pin versions (section 4) and test the install before the event |
+| CPCB CCR portal login | M4 | For station temperature data (section 3) |
+| Anthropic API key (Tier 3 "Ask VISAT" only) | M2 | Optional. Skip it if Tier 3 isn't reached |
+
+---
+
+## 2. Satellite datasets (Google Earth Engine IDs)
+
+| Use | Dataset ID | Key details |
+|---|---|---|
+| **Surface temperature (target)** | `LANDSAT/LC09/C02/T1_L2`, `LANDSAT/LC08/C02/T1_L2` | `ST_B10 × 0.00341802 + 149.0` = kelvin, then subtract 273.15 for °C. Mask clouds with `QA_PIXEL`. Drop pixels where `ST_QA × 0.01` > 2 K. Overpass is ~10:30 AM local time. Landsat 9 L2 is available through Sep 2026. [L9 catalog](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC09_C02_T1_L2) · [USGS scale factors](https://www.usgs.gov/faqs/how-do-i-use-a-scale-factor-landsat-level-2-science-products) · [Science product guide](https://www.usgs.gov/media/files/landsat-8-9-collection-2-level-2-science-product-guide) |
+| Albedo | Same Landsat SR bands | Liang's formula on SR_B2–B7 |
+| Greenery / concrete / water indices | `COPERNICUS/S2_SR_HARMONIZED` | NDVI, NDBI, MNDWI from **Sentinel-2 only**, because Landsat surface temperature already uses NDVI-based emissivity and would leak into the target. For clouds, use the SCL band or `GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED` |
+| Land cover fractions | `ESA/WorldCover/v200` (2021) | Classes: 10 tree · 50 built · 80 water · **95 mangroves** |
+| **Land-cover change (back-test)** | `GOOGLE/DYNAMICWORLD/V1` | 10 m, **2015 to present**, 9 class probabilities. Compare Feb–Apr 2017 with Feb–Apr 2024. [Catalog](https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1) · [Change-monitoring workshop](https://courses.spatialthoughts.com/gee-dw-monitoring.html) |
+| Population | `JRC/GHSL/P2023A/GHS_POP` | 100 m. Epochs every 5 years to 2020, plus 2025/2030 projections. P2023A is still the latest release. [Catalog](https://developers.google.com/earth-engine/datasets/catalog/JRC_GHSL_P2023A_GHS_POP) |
+| Building height / built surface | `JRC/GHSL/P2023A/GHS_BUILT_H`, `…/GHS_BUILT_S` | Morphology features. [Built surface](https://developers.google.com/earth-engine/datasets/catalog/JRC_GHSL_P2023A_GHS_BUILT_S) |
+| Elevation | `USGS/SRTMGL1_003` | Mangrove eligibility (low-lying land) |
+| Weather (**not a model feature**) | `ECMWF/ERA5_LAND/HOURLY` | ~9 km, so only used for heat index / UTCI labels and the physics check |
+| Mangrove reference | Global Mangrove Watch v4.1 (1985–2025) | In the community catalog. [GEE community catalog](https://gee-community-catalog.org/projects/mangrove/) |
+
+Not used: ECOSTRESS. In GEE it only covers Los Angeles tiles.
+
+---
+
+## 3. Kochi / Kerala local data
+
+| Data | Source | Notes |
+|---|---|---|
+| **Ward boundaries** | [BharatLAS: Kochi 74 wards](https://bharatlas.com/view/wards_kochi) (Parquet / GeoJSON / Shapefile) | The 2025 delimitation raised the count to **76** ([Wikipedia](https://en.wikipedia.org/wiki/Kochi_Municipal_Corporation)). No open 76-ward GIS file was found, so use 74 and say so on stage |
+| Schools, hospitals, markets, bus stops, parks, roads | OpenStreetMap via `osmnx` | Tags: `amenity=school/hospital/marketplace/bus_station`, `highway=bus_stop`, `leisure=park`. Anganwadis are often unmapped, so check `amenity=kindergarten` / name search |
+| Station air temperature (independent check) | [CPCB CCR portal](https://app.cpcbccr.com/ccr/#/): Vyttila, Eloor (Udyogamandal) | Registration needed. Downloads are limited to about 1 week per query at 15-minute resolution, so pull Feb–Apr in chunks. [How to access Indian AQ data](https://urbanemissions.info/blog-pieces/resources-how-to-access-aqdata-in-india/) |
+| Coastal Regulation Zone | [KCZMA CZMP 2019, Ernakulam maps (PDF)](https://keralaczma.gov.in/index.php/zone-maps/coastal-zone-maps-2019) | PDF only, not GIS. Use it as a visual reference. The mangrove mask is a proxy: barren/grass cells within 200 m of water, below 3 m elevation, not built, near existing Global Mangrove Watch extent |
+| Kawaki programme | [C-HED: Kawaki](https://c-hed.org/kawaki-project-inaugurated/) · [NbS4India case study](https://www.nbs4india.org/case-studies/the-kawaki-initiative/) | Launched in 2020 by Kochi Municipal Corporation with WRI-India and C-HED. Native-tree groves placed with data in heat-vulnerable areas |
+| C-HED | [Climate change](https://c-hed.org/climate-change-2/) · [Designated climate-action cell](https://c-hed.org/workshop-on-advancing-climate-action-in-kochi-facilitating-c-heds-priorities-as-kochis-designated-cell-for-climate-action/) | Centre for Heritage, Environment & Development, **Kochi's designated cell for climate action**. This is our target user |
+
+---
+
+## 4. Libraries (current versions to practise with)
+
+| Library | Why | Gotchas |
+|---|---|---|
+| `earthengine-api` | Data export | `ee.Authenticate()` then `ee.Initialize(project="<cloud-project>")` |
+| `pandas`, `pyarrow`, `numpy`, `scipy`, `scikit-learn` | Tables, focal filters, `NearestNeighbors`, `GroupKFold` | `scipy.ndimage.uniform_filter` for 300/500 m neighbourhood features |
+| `xgboost` | Model | `monotone_constraints` per feature. Constrain all correlated partners |
+| `shap` | Drivers | Use native TreeSHAP (`pred_contribs=True`), precomputed offline |
+| `streamlit` + `pydeck` | Dashboard | `st.pydeck_chart(..., on_select="rerun")` returns the clicked ward. **Every layer needs an `id`.** [Docs](https://docs.streamlit.io/develop/api-reference/charts/st.pydeck_chart) · [2026 release notes](https://docs.streamlit.io/develop/quick-reference/release-notes/2026) |
+| `osmnx` (2.1) + `networkx` | OSM features, Cool Routes | **v2 API:** `graph_from_bbox(bbox=(left, bottom, right, top))`; routing lives in `ox.routing`. [User reference](https://osmnx.readthedocs.io/en/stable/user-reference.html) |
+| `pythermalcomfort` | UTCI "feels-like" heat stress | UTCI valid ranges: air temp −50 to 50 °C; radiant temp within air temp −70/+30; wind 0.5–17 m/s. [Docs](https://pythermalcomfort.readthedocs.io/) |
+| `pytest`, `ruff` | Tests and lint in CI | GitHub Actions, set up in hour 2 |
+| `anthropic` (Tier 3) | "Ask VISAT" parser | Claude only turns text into optimizer parameters, and every number comes from our code |
+
+---
+
+## 5. Resources per feature
+
+| Feature | What to read / reuse |
+|---|---|
+| Heat map | Landsat ST scaling (above), [GEE Landsat guide](https://developers.google.com/earth-engine/guides/landsat), [Digital Earth Africa LST notebook](https://docs.digitalearthafrica.org/en/latest/sandbox/notebooks/Datasets/Landsat_Surface_Temperature.html) (same Collection 2 logic) |
+| Model + honest validation | XGBoost monotone constraints; `GroupKFold` on 2 km block IDs; compare against random KFold and a linear baseline |
+| Why (SHAP) | Group correlated features (greenery = NDVI + tree fraction) before showing bars |
+| Analog transitions | `sklearn.neighbors.NearestNeighbors` (k=20) on context features, then move toward the neighbours' median. Cap at the observed 90th percentile |
+| Back-test | Dynamic World 2017 vs 2024 (Feb–Apr) + Landsat LST for both periods, then plot predicted vs observed ΔLST |
+| Optimizer | Greedy on (ΔT × people × vulnerability weight) / ₹, re-scoring neighbours via focal features. Precompute the ₹1–50 crore curve |
+| Physics check | ΔT_roof ≈ Δα × S / h, with S ≈ 750 W/m² and h ≈ 25 W/m²K, scaled by roof fraction |
+| **Heat Impact Check** (new) | Reverse analog transition (green → built) + optimizer for the cheapest offset. Precedent: cities abroad require canopy/cool-roof measures for new development ([ACEEE UHI policy database](https://database.aceee.org/city/mitigation-urban-heat-islands), [OCRAP model policy](https://ocrap.net/policies/urban-heat-model/)). We found no Kerala equivalent |
+| Cool Routes (Tier 3) | `osmnx` walk graph; edge weight = length × (1 + heat penalty) |
+| Feels-like heat (Tier 3) | `pythermalcomfort` UTCI with ERA5 air temp, humidity and wind, and radiant temperature adjusted for shade. Label as an estimate |
+| Ward Heat Card | HTML template printed from the browser; Malayalam in **Noto Sans Malayalam** (Google Fonts), translated by a team member |
+
+---
+
+## 6. Intervention costs (re-verify before the event)
+
+| Fix | Cost | Source |
+|---|---|---|
+| Street tree, incl. 5-year care | ₹3,100 / tree | BBMP tender ([Deccan Herald](https://www.deccanherald.com/amp/story/india%2Fkarnataka%2Fgreen-lessons-past-2227715)) |
+| Cool roof | ₹300 / m² | [Telangana Cool Roof Policy 2023](https://telanganatoday.com/indias-first-cool-roof-policy-launched-in-telangana) |
+| Cool roof recoat | ₹150 / m² every 3 years | Our estimate (humid-climate soiling) |
+| Mangrove restoration | ₹1–8 lakh / ha | [CEEW](https://www.ceew.in/ecological-mangrove-restoration); [One Earth 2025](https://www.sciencedirect.com/science/article/pii/S259033222500168X) |
+| Green roof (excluded) | ₹7,500 / m² | [IndiaSpend](https://www.indiaspend.com/explainers/explained-as-indoor-heat-rises-can-india-turn-to-green-roofs-867308) |
+
+---
+
+## 7. Fresh facts for the pitch (use 2026, not 2024)
+
+- **April 2026:** IMD issued heatwave warnings for Palakkad, Thrissur and Kollam, with **Ernakulam forecast up to ~38 °C**. ([Onmanorama, 23 Apr 2026](https://www.onmanorama.com/news/kerala/2026/04/23/kerala-heatwave-warning-palakkad-thrissur-kollam.html))
+- **24 April 2026:** orange alert in 3 districts, and **holidays declared for educational institutions** in Kollam and Thrissur. ([Onmanorama](https://www.onmanorama.com/news/kerala/2026/04/24/kerala-heatwave-alert-temperature-orange-holiday-kollam-thrissur-palakkad.amp.html))
+- Yellow alerts in 12 districts through March–April 2026. ([Onmanorama, 25 Mar 2026](https://www.onmanorama.com/news/kerala/2026/03/25/maximum-temperature-go-up-in-kerala-weather-today.html))
+- KSDMA advisory: highest risk for infants, the elderly, the chronically ill and **outdoor workers**. KSDMA also debunked a viral "55 °C" WhatsApp message ([Kerala Kaumudi](https://keralakaumudi.com/en/news/news.php?id=1731308&u=)). That's a good hook: *"people need real heat data, not rumours."*
+- Kochi Corporation wards went from 74 to 76 in the 2025 delimitation.
+
+---
+
+## 8. New Q&A item: "Doesn't Kawaki already do this?"
+
+> "Kawaki proves Kochi already wants data-driven cooling. It picks grove sites in heat-vulnerable areas. VISAT is the next layer. It compares trees against cool roofs and mangroves under a ₹ budget, checks new projects so they don't add heat, and verifies predictions against real 2017→2024 change. It gives C-HED a tool to plan the next Kawaki sites, not a replacement."
+
+---
+
+## 9. Pre-event checklist
+
+- [ ] GEE noncommercial project working for **all 4** members (run one tiny export to confirm)
+- [ ] Python 3.12 + `uv` + all libraries installed and importing on every laptop
+- [ ] Streamlit Cloud hello-world deployed (M3)
+- [ ] Kochi 74-ward GeoJSON downloaded from BharatLAS (M1)
+- [ ] CPCB Vyttila + Eloor temperature, Feb–Apr, downloaded (M4)
+- [ ] Costs re-verified; sources saved for slides (M4)
+- [ ] C-HED / councillor / KSDMA contacted (M4). **Use only genuine quotes.** If there's no reply, say "awaiting response"
+- [ ] Slide template, pitch script and AI-use disclosure drafted (M4)
+- [ ] Ward-card and tab sketches (M3)
+- [ ] Practice run of the full pipeline (practice code stays off the event repo)
+- [ ] Two phone hotspots with data packs
+
+---
+
+*Compiled by Jeevan George*
