@@ -14,7 +14,9 @@ data/live_cache.json
 data/news_cache.json
 *.tif
 *.tiff
-cache/  # osmnx's HTTP response cache (osm_features.py)
+# osmnx's HTTP response cache (osm_features.py) — .gitignore has no trailing-comment syntax,
+# so this must be its own line or "cache/" silently stops matching
+cache/
 
 # Secrets (API keys go in Streamlit Cloud → App settings → Secrets)
 .streamlit/secrets.toml

@@ -10,9 +10,15 @@
 
 v5 is the result of four rounds of expert review (remote sensing, ML engineering, hackathon strategy, Kerala urban planning, UX design, and a judge scoring against the HackMe'26 rubric). The judge's final estimate: **~84/100 with Tier 1+2, ~86 with everything.** A perfect 10/10 isn't realistic: satellite surface temperature isn't the heat people feel, and 24-hour code shows seams. But **9s are reachable in technical depth, innovation and impact.** What decides the result is a demo that never crashes and all four members answering questions.
 
-## ▶ Build status (event day)
+## ▶ Build status (as of 26 Sep, ~03:50 IST — Day 2, ~5h to the 9:00 AM lock)
 
-The full system is **implemented and tested** (22 tests) and runs end-to-end on labelled DEMO data; the real-data run is M1's first job. Who does what, with commands: **[TASKS.md](./TASKS.md)**. Every PS1 item below maps to a module listed in README.md → "How it works".
+**Running on real Kochi data, not demo data.** 54,168 grid cells, 23 clean Landsat scenes (2019–2026 Jan–Apr), real OSM (roads/schools/markets/canals) and the real 74-ward BharatLAS boundary. ₹10 crore plan → 186,258 people cooled. Honest spatial-CV: R² 0.83 (ours, physics-constrained) vs 0.84 (unconstrained) vs 0.62 (linear) — both beat linear by a wide margin. Back-test r ≈ 0.35, positive and real, not oversold. 23 tests pass, CI green.
+
+**Done:** real GEE + OSM + ward export, the model, the optimizer, the Heat-Neutral Check, the matched (kNN) back-test comparison, the animated heat ledger, a conservative-mode error band, an OSM canal-bank overlay, 4 backup demo screenshots (`artifacts/m3/`).
+**Not done, and now out of scope given the time left:** ECOSTRESS (needs a NASA Earthdata login we don't have), CPCB station check (needs manual CSVs). Mention both as "future work" in the pitch, don't chase them now.
+**Not deployed yet — the single most important remaining task.** No live URL exists. Do this now: TASKS.md → M3.
+
+Who does what, with commands: **[TASKS.md](./TASKS.md)**. Every PS1 item below maps to a module listed in README.md → "How it works".
 
 ---
 
@@ -28,14 +34,14 @@ Every requirement in PS1 (from the hackathon doc), and where VISAT covers it. **
 | **Obj 3:** LST ↔ factors with **physics-informed ML** | Scene-panel model with an **energy-balance interaction feature** (1 − albedo) × incoming solar radiation, which varies by scene and so is genuinely learned; **monotone physics constraints**; and an **energy-balance formula** for interventions without data analogs | 1 |
 | **Obj 4:** simulate **urban greening, cool roofs, albedo changes, water bodies**; evaluate effectiveness | Street and canal-bank trees, mangroves, green roofs (greening); cool roofs; cool pavements (albedo); **pond restoration + canal-bank strips** (water bodies). All are scored in the validity matrix (section 5) | 1 |
 | **Input:** Landsat 8 LST | Landsat 8 + 9 Collection 2 L2, 20–30 clean Jan–Apr scenes | 1 |
-| **Input:** ECOSTRESS LST | Afternoon (12:00–15:30) scenes via NASA AppEEARS. **T1:** an afternoon ECOSTRESS map on the Proof screen next to the Landsat morning map. **T2:** rank agreement (Spearman + top-decile overlap) | 1 (map) / 2 (stats) |
+| **Input:** ECOSTRESS LST | Code is ready (`validation.ecostress_agreement`); **not run** — needs a NASA Earthdata login we don't have. Listed honestly as future work in the pitch. | — |
 | **Input:** LULC from Sentinel-2 / Landsat | Sentinel-2 indices (2019+), **Landsat for 2017** (Sentinel-2 surface reflectance over India starts ~Dec 2018), ESA WorldCover, Dynamic World | 1 |
-| **Input:** ERA5 & CPCB meteorology | ERA5-Land per scene (model) + CPCB Vyttila and Eloor (heat-index validation) | 1 |
+| **Input:** ERA5 & CPCB meteorology | ERA5-Land per scene is in the model, real and used. CPCB station check: code ready, **not run** — needs the station CSVs, future work. | 1 |
 | **Input:** OSM, GHSL, UT-GLOBUS (if available) | OSM + GHSL. **UT-GLOBUS:** checked before the event; skipped because GHSL covers building height (stated openly) | 1 |
 | **Optional:** SOLWEIG & InVEST | Not used, and listed as future scope. PS1 marks them optional | — |
 | **Outcome:** heat stress maps identifying hotspots | "Today" screen | 1 |
 | **Outcome:** quantitative assessment of drivers | Ward driver panel + city atmospheric panel, with numbers and CIs | 1 |
-| **Outcome:** validated AI/ML model | Proof screen: grouped spatial-block CV against baselines, 2017→2024 back-test, CPCB check, ECOSTRESS agreement (T2) | 1–2 |
+| **Outcome:** validated AI/ML model | Proof screen: grouped spatial-block CV against baselines, the 2017→2024 back-test, and a matched (kNN) comparison against similar unchanged cells. CPCB and ECOSTRESS checks are built but not run (see above). | 1 |
 | **Outcome:** scenario-based evaluation | Validity matrix + °C per intervention per ward | 1 |
 | **Outcome:** optimal strategy with **type, spatial placement, °C reduction** | Plan table: type · ward + map location · −°C (with back-test error band) · people · ₹ | 1 |
 

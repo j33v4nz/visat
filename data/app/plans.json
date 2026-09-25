@@ -9393,29 +9393,6 @@
     ]
    ],
    "ward_actions": {
-    "-1": [
-     {
-      "label": "Cool roofs",
-      "cells": 37,
-      "cost_rs": 25474350.035190582,
-      "dt": -2.7665939331054688,
-      "person_deg": 51349.57333348566
-     },
-     {
-      "label": "Street trees",
-      "cells": 78,
-      "cost_rs": 7254000.0,
-      "dt": -0.9232786297798157,
-      "person_deg": 23211.171942710876
-     },
-     {
-      "label": "Mangrove restoration",
-      "cells": 3,
-      "cost_rs": 150000.0,
-      "dt": -3.0084304809570312,
-      "person_deg": 324.9071344428521
-     }
-    ],
     "0": [
      {
       "label": "Street trees",

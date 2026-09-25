@@ -71,7 +71,7 @@ def ward_actions(engine, selection, dt, cells) -> dict:
     sel = selection.assign(ward_id=cells.loc[selection.index, "ward_id"].to_numpy(),
                            dt=dt[selection.index], pop=cells.loc[selection.index, "pop"].to_numpy())
     out = {}
-    for w, g in sel.groupby("ward_id"):
+    for w, g in sel[sel["ward_id"] >= 0].groupby("ward_id"):  # -1 = outside the named wards
         rows = []
         for k, gg in g.groupby("intervention"):
             rows.append({"label": config.INTERVENTIONS[k]["label"], "cells": len(gg),
@@ -160,6 +160,11 @@ def run(source: str) -> dict:
             "ward_id", "water_frac", "eco_anom"]
     app_cells = cells[[k for k in keep if k in cells]].join(drivers.round(3))
     app_cells.to_parquet(config.APP / "cells.parquet", index=False)
+
+    if "canal_bank" in cells:
+        cells.loc[cells["canal_bank"] > 0, ["lat", "lon"]].to_parquet(
+            config.APP / "canal_banks.parquet", index=False)
+        log(f"canal-bank cells: {int((cells['canal_bank'] > 0).sum())}")
 
     geo = winfo["geojson"] or exposure.zones_geojson(cells, cells["ward_id"], winfo["names"])
     wmap = wards.reset_index().set_index("ward_id")

@@ -9,6 +9,7 @@ import altair as alt
 import pandas as pd
 import pydeck as pdk
 import streamlit as st
+import streamlit.components.v1 as components
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from visat import config, exposure, live, news, report
@@ -17,6 +18,7 @@ st.set_page_config(page_title="VISAT · Kochi Heat Action Planner", page_icon="�
 st.markdown(
     """<style>
     header[data-testid="stHeader"] {visibility:hidden;} #MainMenu, footer {visibility:hidden;}
+    [data-testid="stMainBlockContainer"] {padding-top:1rem;}
     html, body, [class*="css"] {font-size:20px;}
     [data-testid="stMetricValue"] {font-size:44px;}
     .chip {display:inline-block;padding:4px 12px;border-radius:999px;margin-right:8px;font-size:17px;}
@@ -24,6 +26,9 @@ st.markdown(
     .ok {background:#1f6f6d;color:#fff;} .demo {background:#e8c35a;color:#111;padding:6px 12px;
     border-radius:6px;font-weight:700;}
     .ledger {font-size:60px;font-weight:800;line-height:1.1;} .hot {color:#ff7a3d;} .cool {color:#46c4be;}
+    [data-testid="stAppViewContainer"] p, [data-testid="stAppViewContainer"] li,
+    [data-testid="stAppViewContainer"] label {font-size:1.05rem;}
+    [data-baseweb="tab"] {font-size:1.05rem;}
     </style>""",
     unsafe_allow_html=True,
 )
@@ -38,6 +43,8 @@ def load():
     j = lambda n: json.loads((APP / n).read_text())
     return {
         "cells": pd.read_parquet(APP / "cells.parquet"),
+        "canal_banks": pd.read_parquet(APP / "canal_banks.parquet")
+        if (APP / "canal_banks.parquet").exists() else pd.DataFrame(),
         "wards": pd.read_parquet(APP / "wards.parquet"),
         "wards_geo": j("wards.geojson"), "plans": j("plans.json"), "hn": j("heat_neutral.json"),
         "metrics": j("metrics.json"), "manifest": j("manifest.json"),
@@ -113,7 +120,9 @@ def ward_layer(selectable=True):
 
 def heat_layer(opacity=0.85):
     b = M["heat_png_bounds"]
-    return pdk.Layer("BitmapLayer", id="heat", image=D["heat_png"], bounds=b, opacity=opacity)
+    # pydeck 0.9 treats an unquoted data URL as an accessor expression.
+    return pdk.Layer("BitmapLayer", id="heat", image=f"'{D['heat_png']}'",
+                     bounds=b, opacity=opacity)
 
 
 def deck(layers, tooltip=None):
@@ -121,12 +130,59 @@ def deck(layers, tooltip=None):
                     map_style="dark", tooltip=tooltip or {"text": "{name}"})
 
 
+def heat_ledger(result):
+    """Animate the net number while preserving the actual saved before/after values."""
+    before = float(result["before"]["mean_dt_c"])
+    after = float(result["after"]["mean_dt_c"])
+    removed = before - after
+    scale = max(abs(before), abs(removed), abs(after), 0.01)
+    rows = [
+        ("Project adds", f"+{before:.2f} °C", before, "#ff7a3d"),
+        ("Offsets remove", f"−{removed:.2f} °C", removed, "#46c4be"),
+        ("Net change", f"{after:+.2f} °C", abs(after),
+         "#ff7a3d" if after > 0.005 else "#46c4be"),
+    ]
+    markup = """<style>
+    body {margin:0;background:#162020;color:#e4ebe9;font-family:Arial,sans-serif;}
+    .heat-ledger {padding:12px 16px;border:1px solid #36504d;border-radius:12px;}
+    .heat-ledger-row {display:flex;justify-content:space-between;gap:12px;
+                      font-size:20px;margin:5px 0;}
+    .heat-ledger-track {height:9px;background:#29403d;border-radius:10px;overflow:hidden;}
+    .heat-ledger-fill {height:100%;width:var(--ledger-width);background:var(--ledger-color);
+                       animation:ledger-fill .9s ease-out both;}
+    @keyframes ledger-fill {from {width:0;} to {width:var(--ledger-width);}}
+    </style><div class='heat-ledger'>"""
+    for i, (label, value, amount, color) in enumerate(rows):
+        width = min(100, max(0, amount / scale * 100))
+        number_id = " id='net-number'" if i == 2 else ""
+        markup += (f"<div class='heat-ledger-row'><span>{label}</span>"
+                   f"<strong{number_id} style='color:{color}'>{value}</strong></div>"
+                   f"<div class='heat-ledger-track'><div class='heat-ledger-fill' "
+                   f"style='--ledger-width:{width:.1f}%;--ledger-color:{color}'></div></div>")
+    markup += f"""</div><script>
+    const start = {before:.4f}, end = {after:.4f}, duration = 900;
+    const output = document.getElementById('net-number');
+    const format = value => `${{value >= 0 ? '+' : ''}}${{value.toFixed(2)}} °C`;
+    let began;
+    function tick(now) {{
+      if (began === undefined) began = now;
+      const p = Math.min(1, (now - began) / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      output.textContent = format(start + (end - start) * eased);
+      if (p < 1) requestAnimationFrame(tick);
+    }}
+    requestAnimationFrame(tick);
+    </script>"""
+    return markup
+
+
 # ------------------------------------------------------------------ ① Today
 with today:
     peak = LIVE.get("peak_heat_index_c") or M["season_heat_index_c"]
     act = exposure.act_today(wards, peak)
-    hot_people = cells.loc[cells["hotspot"], "pop"].sum()
-    st.markdown(f"### {len(wards[wards['people_in_hotspots'] > 0])} areas have people in the top-10% "
+    hot_people = cells.loc[cells["hotspot"] & (cells["ward_id"] >= 0), "pop"].sum()
+    area_word = "wards" if M["area_kind"] == "wards" else "areas"
+    st.markdown(f"### {len(wards[wards['people_in_hotspots'] > 0])} {area_word} have people in the top-10% "
                 f"heat-stress squares — about **{hot_people:,.0f} people**.")
     st.markdown(f"**Act today** (peak heat index {act['peak_heat_index_c']} °C, *{act['band']}*): "
                 f"**{', '.join(act['wards'])}** — " + " · ".join(act["advice"]))
@@ -180,6 +236,16 @@ with plan_tab:
     st.markdown(f"### {budget} → about **{ours['people_cooled']:,.0f} people** cooler by "
                 f"**{abs(ours['mean_dt_cooled']):.2f} °C** on average — **{gain:.1f}×** the best simple "
                 f"strategy.")
+    conservative = st.toggle("Conservative mode · show back-test error band", key="conservative")
+    show_canal_banks = st.toggle("Show OSM canal-bank tree-strip candidates", key="canal_overlay")
+    backtest_mae = float(M["backtest"]["mae_c"])
+    if conservative:
+        lo = ours["mean_dt_cooled"] - backtest_mae
+        hi = ours["mean_dt_cooled"] + backtest_mae
+        st.info(f"Mean surface ΔT: {ours['mean_dt_cooled']:+.2f} °C, with an empirical "
+                f"back-test error band of {lo:+.2f} to {hi:+.2f} °C "
+                f"(±{backtest_mae:.2f} °C MAE). This is not a confidence interval or a "
+                "guaranteed cooling range.")
     k1, k2, k3, k4 = st.columns(4)
     k1.metric("People cooled (≥0.1 °C)", f"{ours['people_cooled']:,.0f}")
     k2.metric("Avg cooling", f"{ours['mean_dt_cooled']:.2f} °C")
@@ -193,15 +259,27 @@ with plan_tab:
         picks = pd.DataFrame(P["picks"], columns=["lat", "lon", "fix", "dt", "cost"])
         picks["color"] = picks["fix"].map(pal)
         cool = pd.DataFrame(P["cooling"], columns=["lat", "lon", "dt"])
-        st.pydeck_chart(deck([
+        map_layers = [
             heat_layer(0.35),
             pdk.Layer("ScatterplotLayer", id="cooling", data=cool, get_position=["lon", "lat"],
                       get_radius=45, get_fill_color=TEAL + [70]),
             pdk.Layer("ScatterplotLayer", id="picks", data=picks, get_position=["lon", "lat"],
                       get_radius=40, get_fill_color="color", pickable=True),
-        ], tooltip={"text": "{fix}: {dt} °C"}), key="plan_map", height=520)
+        ]
+        if show_canal_banks and not D["canal_banks"].empty:
+            map_layers.append(pdk.Layer(
+                "ScatterplotLayer", id="canal_banks", data=D["canal_banks"],
+                get_position=["lon", "lat"], get_radius=18,
+                get_fill_color=[70, 140, 255, 150], pickable=False))
+        st.pydeck_chart(deck(map_layers, tooltip={"text": "{fix}: {dt} °C"}),
+                        key="plan_map", height=520)
         st.caption("Coloured dots = where each fix goes (public land only). Teal haze = cells cooled "
-                   f"≥0.05 °C, incl. spillover. {config.LABEL_SURFACE}.")
+                   f"≥0.05 °C, incl. spillover. {config.LABEL_SURFACE}. The plan covers the study area; "
+                   "named wards cover Kochi municipality.")
+        if show_canal_banks:
+            st.caption("Blue dots = 100 m cells near OSM canals, drains or ditches where tree strips "
+                       "could be checked on site. These are not verified IURWTS alignments; "
+                       "canals receive 0 °C credit in this plan.")
     with sc:
         comp = pd.DataFrame([{"Strategy": s["strategy"], "People cooled": s["people_cooled"],
                               "Person-°C": s["person_deg_cooling"]} for s in [ours, *P["baselines"]]])
@@ -216,6 +294,28 @@ with plan_tab:
                    "joint re-prediction.")
         st.dataframe(pd.DataFrame(M["validity_matrix"]), hide_index=True)
         st.caption(config.CANAL_CREDIT_NOTE)
+    with st.expander("Site-by-site plan · fix, ward, people, surface °C and cost"):
+        locations = cells[["lat", "lon", "ward_id", "pop"]].copy()
+        locations[["lat", "lon"]] = locations[["lat", "lon"]].round(5)
+        site_table = picks.merge(locations, on=["lat", "lon"], how="left",
+                                 validate="many_to_one")
+        site_table["Ward / area"] = site_table["ward_id"].map(wards["ward"])
+        site_table["Ward / area"] = site_table["Ward / area"].fillna("Outside Kochi wards")
+        site_table["Surface ΔT (°C)"] = site_table["dt"].map(lambda x: f"{x:+.2f}")
+        if conservative:
+            site_table["Back-test band (°C)"] = site_table["dt"].map(
+                lambda x: f"{x - backtest_mae:+.2f} to {x + backtest_mae:+.2f}")
+        columns = ["Ward / area", "fix", "Surface ΔT (°C)"]
+        if conservative:
+            columns.append("Back-test band (°C)")
+        site_table["People at site"] = site_table["pop"].round(0)
+        site_table["₹ lakh"] = (site_table["cost"] / 1e5).round(2)
+        st.dataframe(site_table[columns + ["People at site", "₹ lakh", "lat", "lon"]]
+                     .rename(columns={"fix": "Fix", "lat": "Latitude", "lon": "Longitude"}),
+                     hide_index=True)
+        st.caption("Each row is one selected 100 m cell. People at site use GHSL 2020; the total plan "
+                   "also counts spillover. Per-site surface ΔT is the saved joint prediction. "
+                   "The empirical back-test MAE is not a statistical confidence interval.")
 
 # ------------------------------------------------------------------ ③ Check a Project
 with project_tab:
@@ -230,14 +330,18 @@ with project_tab:
         uses = {v["label"]: k for k, v in config.PROJECT_USES.items()}
         use = st.segmented_control("Proposed use", list(uses), default="IT park", key="use") or "IT park"
         R = D["hn"]["results"][f"{site}|{uses[use]}"]
-        neutral = st.toggle("Make it heat-neutral", key="neutral")
+        neutral = st.toggle("Apply available offsets", key="neutral")
         if not neutral:
             st.markdown(f"<div class='ledger hot'>+{R['before']['mean_dt_c']:.1f} °C</div>"
                         f"<b>{R['before']['people']:,} people</b> within ~500 m", unsafe_allow_html=True)
         else:
-            after = R["after"]["mean_dt_c"]
-            st.markdown(f"<div class='ledger cool'>{max(after, 0.0):.1f} °C</div>"
-                        f"offset ₹{R['offset_cost_rs'] / 1e5:,.0f} lakh", unsafe_allow_html=True)
+            components.html(heat_ledger(R), height=160, scrolling=False)
+            st.markdown(f"**Offset package: ₹{R['offset_cost_rs'] / 1e5:,.1f} lakh**")
+            if R["after"]["mean_dt_c"] > 0.005:
+                st.warning("Heat remains after these offsets. This proposal does not pass the "
+                           "heat-neutral screen yet.")
+            else:
+                st.success("This proposal passes the modelled heat-neutral screen.")
             for k, v in R["offset_mix"].items():
                 st.markdown(f"- {k}: {v['cells']} sites · ₹{v['cost_rs'] / 1e5:,.1f} lakh")
         st.caption(R["label"])
@@ -260,8 +364,27 @@ with project_tab:
         st.pydeck_chart(pdk.Deck(layers=layers, initial_view_state=view, map_provider="carto",
                                  map_style="dark", tooltip={"text": "{name}{fix}"}),
                         key="project_map", height=560)
-        st.caption("Orange = where the project adds surface heat. Teal = the cheapest offset "
+        st.caption("Orange = where the project adds surface heat. Teal = modelled offset sites "
                    "(trees nearby + cool/green roofs on the project).")
+    with st.expander("Compare the modelled heat before and after offsets"):
+        st.caption("Same site and map scale in both views. Orange marks added heat; teal marks "
+                   "offset locations. The ledger above gives the net surface °C change.")
+        before_map, after_map = st.columns(2)
+        with before_map:
+            st.markdown("**Project only**")
+            st.pydeck_chart(pdk.Deck(layers=layers[:3], initial_view_state=view,
+                                     map_provider="carto", map_style="dark"),
+                            key="project_before_map", height=320)
+        with after_map:
+            st.markdown("**Project + available offsets**")
+            comparison_layers = layers[:3] + [pdk.Layer(
+                "ScatterplotLayer", id="comparison_offsets",
+                data=pd.DataFrame(R["offset_cells"], columns=["lat", "lon", "fix"]),
+                get_position=["lon", "lat"], get_radius=40,
+                get_fill_color=TEAL + [230], pickable=True)]
+            st.pydeck_chart(pdk.Deck(layers=comparison_layers, initial_view_state=view,
+                                     map_provider="carto", map_style="dark"),
+                            key="project_after_map", height=320)
     if D["reactions"]:
         rx = D["reactions"].get(f"{site}|{uses[use]}")
         if rx:
@@ -308,6 +431,12 @@ with proof_tab:
             if "mae_heat_index_c" in c:
                 st.metric("CPCB stations vs ERA5 heat index", f"±{c['mae_heat_index_c']:.1f} °C",
                           f"{c['n_days']} days", delta_color="off")
+        matched = bt.get("matched")
+        if matched and "mae_c" in matched:
+            st.metric("Matched 2017→2024 check", f"±{matched['mae_c']:.2f} °C",
+                      f"{matched['n_changed_matched']:,} changed cells", delta_color="off")
+            st.caption("Changed cells vs k nearest unchanged cells on 2017 land features. "
+                       "Exploratory comparison; not a causal estimate.")
     with st.expander("Physics check · validity matrix · data freshness · limits"):
         ph = M["physics_check"]
         if ph:
@@ -318,12 +447,20 @@ with proof_tab:
         st.dataframe(pd.DataFrame([
             {"Layer": "Satellite heat (Landsat 8/9)", "Status": "frozen",
              "Detail": f"{M['n_scenes']} scenes, Jan–Apr {config.SCENE_YEARS[0]}–{config.SCENE_YEARS[1]}"},
+            {"Layer": "ECOSTRESS afternoon check", "Status": "available" if M.get("ecostress") else "pending",
+             "Detail": "Requires AppEEARS scenes" if not M.get("ecostress") else "see metric above"},
+            {"Layer": "CPCB station check", "Status": "available" if M.get("cpcb") else "pending",
+             "Detail": "Requires station CSVs" if not M.get("cpcb") else "see metric above"},
+            {"Layer": "Matched back-test", "Status": "available" if matched else "pending",
+             "Detail": "Requires raw back-test export" if not matched else "see metric above"},
             {"Layer": "Weather per scene (ERA5-Land)", "Status": "frozen", "Detail": "at overpass hour"},
             {"Layer": "Live weather (Open-Meteo)", "Status": LIVE.get("status"),
              "Detail": LIVE.get("fetched_at") or LIVE.get("time", "")},
             {"Layer": "Malayalam news", "Status": (NEWS or {}).get("status", "hidden"),
              "Detail": (NEWS or {}).get("fetched_at") or ""},
             {"Layer": "Built", "Status": D["manifest"]["source"], "Detail": D["manifest"]["built_at"]},
+            {"Layer": "Ward rollup", "Status": M["area_kind"],
+             "Detail": D["manifest"].get("ward_rollup_built_at", "from full pipeline")},
         ]), hide_index=True)
         st.markdown("**Limits:** surface temperature at ~10:30 AM is not the air people feel; weather is "
                     "city-scale (~9 km); population is GHSL 2020; we never call results causal; "
