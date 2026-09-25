@@ -49,6 +49,15 @@ features.**
 **🚨 Biggest real gap right now, not a code problem: nothing is deployed.** No live URL exists anywhere
 in this repo or in chat history. M3's deploy step below is the single highest-priority remaining task.
 
+**✅ Visually verified in a real browser (not just automated tests) — all 4 tabs, real data, no bugs
+found:** heat map, ward driver panel, 72 h forecast, budget plan + map, Check a Project (Kakkanad IT
+park: +0.5 °C for 489 people, real number), Proof screen (back-test scatter, honest CV table, matched
+check). Screenshots taken with Playwright (`uv add --dev playwright && uv run playwright install
+chromium`, then run against a local `streamlit run`) — worth doing yourselves once before the demo.
+**One thing to know:** the heat map layer needs ~10–15 seconds after page load to paint (it's decoding
+a large image client-side) — don't screenshot or judge it too early, and warm the app up before judging
+as the plan already says.
+
 **Fixed today, already pushed (see `git log` for details), you don't need to redo this:**
 - Earth Engine login hung on this machine (tries to detect if it's a Google server) → fixed with `force=True`.
 - `computePixels` hit "User memory limit exceeded" on the full-size grid → now split into row tiles
