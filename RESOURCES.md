@@ -1,6 +1,6 @@
 # VISAT resource pack (verified September 2026)
 
-This is everything the team needs to get ready for HackMe'26: accounts, datasets, libraries, local Kochi data, costs and pitch facts. It is research only. All code gets written at the event.
+This is everything the team needs to get ready for HackMe'26: accounts, datasets, live weather, libraries, local Kochi data, costs and pitch facts. It is research only. All code gets written at the event.
 
 ---
 
@@ -36,6 +36,45 @@ Not used: ECOSTRESS. In GEE it only covers Los Angeles tiles.
 
 ---
 
+## 2b. Live data: Open-Meteo weather API
+
+| Item | Detail |
+|---|---|
+| Endpoint | `https://api.open-meteo.com/v1/forecast` ([docs](https://open-meteo.com/en/docs)) |
+| Key / cost | **No API key**, free for non-commercial use. Limits: under **10,000 calls/day, 5,000/hour, 600/minute** ([terms](https://open-meteo.com/en/terms), [pricing](https://open-meteo.com/en/pricing)) |
+| Licence | **CC-BY 4.0**. The app footer must say "Weather data: Open-Meteo" |
+| Multiple points, one call | `latitude=9.965,9.958,9.968,9.997,10.024,9.968,10.016,10.055&longitude=76.242,76.259,76.284,76.291,76.308,76.320,76.352,76.321` (Fort Kochi, Mattancherry, Ernakulam South, Kaloor, Edappally, Vyttila, Kakkanad, Kalamassery; approximate centres, M1 checks them on a map) |
+| Other params | `timezone=Asia/Kolkata&forecast_days=3` |
+| `current=` | `temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m` |
+| `hourly=` | `temperature_2m,relative_humidity_2m,apparent_temperature,wet_bulb_temperature_2m,uv_index,shortwave_radiation,wind_speed_10m` |
+| Resolution | Several km. **Tested 25 Sep 2026:** all 8 points and all variables returned (72 hourly steps), but the 8 points snapped to only **4 distinct model cells** (~7 km apart). Treat it as **city-scale**; ward-level differences come from the satellite layer |
+
+**Heat index**
+- Compute it ourselves from temperature + humidity with the NWS (Rothfusz) formula, or use `pythermalcomfort`'s `heat_index`.
+- Check: 32 °C at 70% humidity should come out ≈ **41 °C**.
+- Open-Meteo's `apparent_temperature` uses a different "feels-like" formula (Steadman). Show it as "feels like", and use the heat index for the risk band.
+
+**Heat-index bands (NWS)**
+| Band | Range |
+|---|---|
+| Caution | 27–32 °C |
+| Extreme caution | 32–39 °C |
+| Danger | 39–51 °C |
+| Extreme danger | ≥ 52 °C |
+
+**Never-crash pattern**
+- Wrap the fetch in `st.cache_data(ttl=900)` with a 3-second timeout, so it makes only ~4 calls/hour.
+- On success, overwrite `data/live_cache.json`.
+- On any error, load that file and show a "Live feed unavailable, showing data from <time>" banner.
+- Commit a snapshot at data freeze so the fallback always exists.
+- Test it with Wi-Fi off.
+
+**"Where to act today"**
+- Formula: `today_peak_heat_index × ward_exposure`, where `ward_exposure` = satellite heat anomaly × population × vulnerable-site weight (schools, anganwadis, markets, harbours from OSM).
+- The live part is *when* and *how bad*; the satellite part is *where*.
+
+---
+
 ## 3. Kochi / Kerala local data
 
 | Data | Source | Notes |
@@ -60,7 +99,8 @@ Not used: ECOSTRESS. In GEE it only covers Los Angeles tiles.
 | `streamlit` + `pydeck` | Dashboard | `st.pydeck_chart(..., on_select="rerun")` returns the clicked ward. **Every layer needs an `id`.** [Docs](https://docs.streamlit.io/develop/api-reference/charts/st.pydeck_chart) · [2026 release notes](https://docs.streamlit.io/develop/quick-reference/release-notes/2026) |
 | `osmnx` (2.1) + `networkx` | OSM features, Cool Routes | **v2 API:** `graph_from_bbox(bbox=(left, bottom, right, top))`; routing lives in `ox.routing`. [User reference](https://osmnx.readthedocs.io/en/stable/user-reference.html) |
 | `pythermalcomfort` | UTCI "feels-like" heat stress | UTCI valid ranges: air temp −50 to 50 °C; radiant temp within air temp −70/+30; wind 0.5–17 m/s. [Docs](https://pythermalcomfort.readthedocs.io/) |
-| `pytest`, `ruff` | Tests and lint in CI | GitHub Actions, set up in hour 2 |
+| `requests` | Live Open-Meteo fetch | Always pass `timeout=3`; never let an exception reach the UI |
+| `pytest`, `ruff` | Tests and lint in CI | GitHub Actions, set up in hour 2. Include a test that mocks a network failure and checks that the cache fallback loads |
 | `anthropic` (Tier 3) | "Ask VISAT" parser | Claude only turns text into optimizer parameters, and every number comes from our code |
 
 ---
@@ -116,6 +156,7 @@ Not used: ECOSTRESS. In GEE it only covers Los Angeles tiles.
 - [ ] GEE noncommercial project working for **all 4** members (run one tiny export to confirm)
 - [ ] Python 3.12 + `uv` + all libraries installed and importing on every laptop
 - [ ] Streamlit Cloud hello-world deployed (M3)
+- [ ] Open-Meteo test request for the 8 Kochi points works from a browser (M3), and the coordinates are checked on a map (M1)
 - [ ] Kochi 74-ward GeoJSON downloaded from BharatLAS (M1)
 - [ ] CPCB Vyttila + Eloor temperature, Feb–Apr, downloaded (M4)
 - [ ] Costs re-verified; sources saved for slides (M4)
