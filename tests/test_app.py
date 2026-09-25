@@ -16,3 +16,5 @@ def test_app_runs_all_four_screens_without_errors():
     at.segmented_control(key="budget").set_value("₹50 crore").run()
     at.toggle(key="neutral").set_value(True).run()
     assert not at.exception
+    assert any("does not pass the heat-neutral screen" in warning.value
+               for warning in at.warning)

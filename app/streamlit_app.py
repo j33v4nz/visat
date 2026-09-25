@@ -17,6 +17,7 @@ st.set_page_config(page_title="VISAT · Kochi Heat Action Planner", page_icon="�
 st.markdown(
     """<style>
     header[data-testid="stHeader"] {visibility:hidden;} #MainMenu, footer {visibility:hidden;}
+    [data-testid="stMainBlockContainer"] {padding-top:1rem;}
     html, body, [class*="css"] {font-size:20px;}
     [data-testid="stMetricValue"] {font-size:44px;}
     .chip {display:inline-block;padding:4px 12px;border-radius:999px;margin-right:8px;font-size:17px;}
@@ -24,6 +25,17 @@ st.markdown(
     .ok {background:#1f6f6d;color:#fff;} .demo {background:#e8c35a;color:#111;padding:6px 12px;
     border-radius:6px;font-weight:700;}
     .ledger {font-size:60px;font-weight:800;line-height:1.1;} .hot {color:#ff7a3d;} .cool {color:#46c4be;}
+    [data-testid="stAppViewContainer"] p, [data-testid="stAppViewContainer"] li,
+    [data-testid="stAppViewContainer"] label {font-size:1.05rem;}
+    [data-baseweb="tab"] {font-size:1.05rem;}
+    .heat-ledger {padding:16px 18px;border:1px solid #36504d;border-radius:12px;
+                  background:#162020;margin:12px 0;}
+    .heat-ledger-row {display:flex;justify-content:space-between;gap:12px;font-size:20px;
+                      margin:6px 0;}
+    .heat-ledger-track {height:10px;background:#29403d;border-radius:10px;overflow:hidden;}
+    .heat-ledger-fill {height:100%;width:var(--ledger-width);background:var(--ledger-color);
+                       animation:ledger-fill .8s ease-out both;}
+    @keyframes ledger-fill {from {width:0;} to {width:var(--ledger-width);}}
     </style>""",
     unsafe_allow_html=True,
 )
@@ -38,6 +50,8 @@ def load():
     j = lambda n: json.loads((APP / n).read_text())
     return {
         "cells": pd.read_parquet(APP / "cells.parquet"),
+        "canal_banks": pd.read_parquet(APP / "canal_banks.parquet")
+        if (APP / "canal_banks.parquet").exists() else pd.DataFrame(),
         "wards": pd.read_parquet(APP / "wards.parquet"),
         "wards_geo": j("wards.geojson"), "plans": j("plans.json"), "hn": j("heat_neutral.json"),
         "metrics": j("metrics.json"), "manifest": j("manifest.json"),
@@ -113,12 +127,36 @@ def ward_layer(selectable=True):
 
 def heat_layer(opacity=0.85):
     b = M["heat_png_bounds"]
-    return pdk.Layer("BitmapLayer", id="heat", image=D["heat_png"], bounds=b, opacity=opacity)
+    # pydeck 0.9 treats an unquoted data URL as an accessor expression.
+    return pdk.Layer("BitmapLayer", id="heat", image=f"'{D['heat_png']}'",
+                     bounds=b, opacity=opacity)
 
 
 def deck(layers, tooltip=None):
     return pdk.Deck(layers=layers, initial_view_state=KOCHI_VIEW, map_provider="carto",
                     map_style="dark", tooltip=tooltip or {"text": "{name}"})
+
+
+def heat_ledger(result):
+    """Show the actual change, including any heat still left after the offset package."""
+    before = float(result["before"]["mean_dt_c"])
+    after = float(result["after"]["mean_dt_c"])
+    removed = before - after
+    scale = max(abs(before), abs(removed), abs(after), 0.01)
+    rows = [
+        ("Project adds", f"+{before:.2f} °C", before, "#ff7a3d"),
+        ("Offsets remove", f"−{removed:.2f} °C", removed, "#46c4be"),
+        ("Net change", f"{after:+.2f} °C", abs(after),
+         "#ff7a3d" if after > 0.005 else "#46c4be"),
+    ]
+    markup = "<div class='heat-ledger'>"
+    for label, value, amount, color in rows:
+        width = min(100, max(0, amount / scale * 100))
+        markup += (f"<div class='heat-ledger-row'><span>{label}</span>"
+                   f"<strong style='color:{color}'>{value}</strong></div>"
+                   f"<div class='heat-ledger-track'><div class='heat-ledger-fill' "
+                   f"style='--ledger-width:{width:.1f}%;--ledger-color:{color}'></div></div>")
+    return markup + "</div>"
 
 
 # ------------------------------------------------------------------ ① Today
@@ -180,6 +218,7 @@ with plan_tab:
     st.markdown(f"### {budget} → about **{ours['people_cooled']:,.0f} people** cooler by "
                 f"**{abs(ours['mean_dt_cooled']):.2f} °C** on average — **{gain:.1f}×** the best simple "
                 f"strategy.")
+    show_canal_banks = st.toggle("Show OSM canal-bank tree-strip candidates", key="canal_overlay")
     k1, k2, k3, k4 = st.columns(4)
     k1.metric("People cooled (≥0.1 °C)", f"{ours['people_cooled']:,.0f}")
     k2.metric("Avg cooling", f"{ours['mean_dt_cooled']:.2f} °C")
@@ -193,15 +232,26 @@ with plan_tab:
         picks = pd.DataFrame(P["picks"], columns=["lat", "lon", "fix", "dt", "cost"])
         picks["color"] = picks["fix"].map(pal)
         cool = pd.DataFrame(P["cooling"], columns=["lat", "lon", "dt"])
-        st.pydeck_chart(deck([
+        map_layers = [
             heat_layer(0.35),
             pdk.Layer("ScatterplotLayer", id="cooling", data=cool, get_position=["lon", "lat"],
                       get_radius=45, get_fill_color=TEAL + [70]),
             pdk.Layer("ScatterplotLayer", id="picks", data=picks, get_position=["lon", "lat"],
                       get_radius=40, get_fill_color="color", pickable=True),
-        ], tooltip={"text": "{fix}: {dt} °C"}), key="plan_map", height=520)
+        ]
+        if show_canal_banks and not D["canal_banks"].empty:
+            map_layers.append(pdk.Layer(
+                "ScatterplotLayer", id="canal_banks", data=D["canal_banks"],
+                get_position=["lon", "lat"], get_radius=18,
+                get_fill_color=[70, 140, 255, 150], pickable=False))
+        st.pydeck_chart(deck(map_layers, tooltip={"text": "{fix}: {dt} °C"}),
+                        key="plan_map", height=520)
         st.caption("Coloured dots = where each fix goes (public land only). Teal haze = cells cooled "
                    f"≥0.05 °C, incl. spillover. {config.LABEL_SURFACE}.")
+        if show_canal_banks:
+            st.caption("Blue dots = 100 m cells near OSM canals, drains or ditches where tree strips "
+                       "could be checked on site. These are not verified IURWTS alignments; "
+                       "canals receive 0 °C credit in this plan.")
     with sc:
         comp = pd.DataFrame([{"Strategy": s["strategy"], "People cooled": s["people_cooled"],
                               "Person-°C": s["person_deg_cooling"]} for s in [ours, *P["baselines"]]])
@@ -230,14 +280,18 @@ with project_tab:
         uses = {v["label"]: k for k, v in config.PROJECT_USES.items()}
         use = st.segmented_control("Proposed use", list(uses), default="IT park", key="use") or "IT park"
         R = D["hn"]["results"][f"{site}|{uses[use]}"]
-        neutral = st.toggle("Make it heat-neutral", key="neutral")
+        neutral = st.toggle("Apply available offsets", key="neutral")
         if not neutral:
             st.markdown(f"<div class='ledger hot'>+{R['before']['mean_dt_c']:.1f} °C</div>"
                         f"<b>{R['before']['people']:,} people</b> within ~500 m", unsafe_allow_html=True)
         else:
-            after = R["after"]["mean_dt_c"]
-            st.markdown(f"<div class='ledger cool'>{max(after, 0.0):.1f} °C</div>"
-                        f"offset ₹{R['offset_cost_rs'] / 1e5:,.0f} lakh", unsafe_allow_html=True)
+            st.markdown(heat_ledger(R), unsafe_allow_html=True)
+            st.markdown(f"**Offset package: ₹{R['offset_cost_rs'] / 1e5:,.1f} lakh**")
+            if R["after"]["mean_dt_c"] > 0.005:
+                st.warning("Heat remains after these offsets. This proposal does not pass the "
+                           "heat-neutral screen yet.")
+            else:
+                st.success("This proposal passes the modelled heat-neutral screen.")
             for k, v in R["offset_mix"].items():
                 st.markdown(f"- {k}: {v['cells']} sites · ₹{v['cost_rs'] / 1e5:,.1f} lakh")
         st.caption(R["label"])
@@ -260,8 +314,27 @@ with project_tab:
         st.pydeck_chart(pdk.Deck(layers=layers, initial_view_state=view, map_provider="carto",
                                  map_style="dark", tooltip={"text": "{name}{fix}"}),
                         key="project_map", height=560)
-        st.caption("Orange = where the project adds surface heat. Teal = the cheapest offset "
+        st.caption("Orange = where the project adds surface heat. Teal = modelled offset sites "
                    "(trees nearby + cool/green roofs on the project).")
+    with st.expander("Compare the modelled heat before and after offsets"):
+        st.caption("Same site and map scale in both views. Orange marks added heat; teal marks "
+                   "offset locations. The ledger above gives the net surface °C change.")
+        before_map, after_map = st.columns(2)
+        with before_map:
+            st.markdown("**Project only**")
+            st.pydeck_chart(pdk.Deck(layers=layers[:3], initial_view_state=view,
+                                     map_provider="carto", map_style="dark"),
+                            key="project_before_map", height=320)
+        with after_map:
+            st.markdown("**Project + available offsets**")
+            comparison_layers = layers[:3] + [pdk.Layer(
+                "ScatterplotLayer", id="comparison_offsets",
+                data=pd.DataFrame(R["offset_cells"], columns=["lat", "lon", "fix"]),
+                get_position=["lon", "lat"], get_radius=40,
+                get_fill_color=TEAL + [230], pickable=True)]
+            st.pydeck_chart(pdk.Deck(layers=comparison_layers, initial_view_state=view,
+                                     map_provider="carto", map_style="dark"),
+                            key="project_after_map", height=320)
     if D["reactions"]:
         rx = D["reactions"].get(f"{site}|{uses[use]}")
         if rx:

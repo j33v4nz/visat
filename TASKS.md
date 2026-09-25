@@ -169,12 +169,18 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
       branch `main`, main file **`app/streamlit_app.py`**, Python **3.12**. It installs from `requirements.txt`.
       Share the live URL in the team chat. (If the build picks `pyproject.toml`/`uv.lock` instead and fails,
       check the "dependency file" note in RESOURCES.md §4b.)
-- [ ] **H+1** Projector test: 20 px text, dark theme, map ≥65% width. Hide anything not in the demo in expanders.
+- [x] **H+1** Projector test: 20 px text, dark theme, map ≥65% width. Hide anything not in the demo in expanders.
 - [ ] **H+4** After M1's real data lands: re-check every screen; click wards; the **₹10 crore** preset and the
       **Kakkanad → IT park → heat-neutral** flow must look perfect.
-- [ ] **H+6** Screenshots of the 4 key moments for the deck backup.
+- [x] **H+6** Screenshots of the 4 key moments for the deck backup (`artifacts/m3/`).
 - [ ] **T3** Heat-ledger count-down animation; before/after image comparison (`streamlit-image-comparison`,
       2017 vs 2024 or before/after offset); IURWTS canal overlay (OSM `waterway=canal` names).
+- **M3 progress:** The project screen now animates a three-line heat ledger and compares the modelled
+  project/offset maps. It shows the actual remaining heat when an offset package fails the neutral screen
+  (Kakkanad IT park: +0.26 °C). The Plan map can overlay OSM canal/drain/ditch bank candidate cells,
+  labelled as candidates with 0 °C canal credit; named IURWTS canal geometry is still unavailable.
+  The current app build still has 575 zones; M1's frozen-data rebuild is required for the 74 real wards.
+  The live Cloud deployment still needs an authenticated Streamlit Community Cloud account.
 - **Presents:** live demo (screens 1–4). **Q&A:** "walk me through one ward", "what if Wi-Fi fails?"
 
 ## M4 — Product & Pitch (Design)
