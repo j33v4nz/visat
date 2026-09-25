@@ -7,7 +7,7 @@ submission portal locks at **9:00 AM Day 2**.
 ## 🔴 Live status — update this section as things finish
 
 **Now:** Earth Engine login is done (project `sinuous-wording-468112-s2`) and the real Kochi export
-(`visat.gee_export`) is running. Static features (all 54,168 cells) confirmed working. Waiting on the
+(`visat.gee_export`) is running. Static features (all 54,168 cells) confirmed working (again, on the fixed run). Waiting on the
 28 satellite scenes + weather + the 2017/2024 back-test images.
 
 **Fixed today, already pushed (see `git log` for details), you don't need to redo this:**
