@@ -6,15 +6,48 @@ submission portal locks at **9:00 AM Day 2**.
 
 ## 🔴 Live status — update this section as things finish
 
-**🔒 H+4 DATA FROZEN, done.** Real Kochi data is in `data/app/` (committed) and the app runs on it —
-`git pull` and you're working against real data now, not demo data. Earth Engine is no longer needed
-by anyone except M1 for the optional ECOSTRESS/wards follow-ups below. **App looks/behaves the same
-either way** — same 4 screens, just real numbers now (₹10cr plan → 186,258 people cooled, for real).
+**As of 26 Sep, ~03:55 IST (Day 2, ~5h to the 9:00 AM lock, ~3h of that is real coding time — see the
+schedule note below).**
+
+**🔒 H+4 DATA FROZEN, done — and now includes the real ward map + matched back-test + canal overlay.**
+`git pull` for all of this. 25 tests pass, CI green.
+- **74 real named Kochi wards** (Mattancheri, Thoppumpady, ...), not the 575-zone fallback — a teammate
+  downloaded and fixed a lat/lon-swap bug in the real BharatLAS file (PR #7, merged).
+- **Matched (kNN) back-test** added to the Proof screen: r ≈ 0.39 on 8,000 matched cells, consistent
+  with the simple back-test's r ≈ 0.35 — a second, honest confirmation the model isn't just noise.
+- **Animated heat ledger** on Check a Project (the +1.3 → 0.0 °C moment the judge panel wanted).
+- **Conservative-mode toggle** (Plan tab): shows the back-test error band on the cooling estimate.
+- **OSM canal-bank overlay toggle** (Plan tab), labelled honestly — canals still get 0 °C credit.
+- **4 backup demo screenshots** already in `artifacts/m3/` for the deck.
+- A real **pydeck bug fix**: the heat-map image layer needed quoting or pydeck 0.9 misreads it as an
+  expression — if you ever see the heat layer fail to render, check this first.
+
+**2 real bugs found and fixed while integrating the above (both mine, from earlier):**
+- `.gitignore`'s `cache/` line had a trailing comment on the same line — `.gitignore` has no
+  trailing-comment syntax, so the whole line silently never matched. osmnx's 22 MB HTTP cache was never
+  actually being ignored. Fixed: comment on its own line now.
+- The saved plan data had a stray "-1" (outside-Kochi) entry in its per-ward action list. Harmless to
+  the app (the UI only ever looks up real ward IDs) but wrong data. Fixed in `pipeline.py`.
+
+**Not merged: PR #10.** It documents an older state (before the ward rebuild above) and would make
+TASKS.md *less* accurate if merged now. Leave it; close it if you want to tidy up later.
 
 **Still open, none of these block M2/M3/M4:**
-- Kochi ward map not loaded (using 575 1-km zones instead — see M1's list below for why + the fix)
-- ECOSTRESS afternoon check not run yet (M1, needs the AppEEARS download)
-- CPCB station check not run yet (M4, optional download)
+- ECOSTRESS afternoon check not run (needs a NASA Earthdata login nobody has — **drop this, out of
+  time now**, mention as future work only)
+- CPCB station check not run (needs manual CSVs — same call, drop it)
+- `ward_rollup.py` exists as a fast ward-only rebuild path but wasn't needed this time (the full
+  pipeline already had real wards) — ignore unless you need a quick ward-only refresh later
+
+**⏰ Real schedule correction (verified against the event's own source code, not the rendered page):**
+Day 1 had a mandatory no-coding block, 5:00–9:30 PM (band, games). If your team's timeline assumed
+continuous work from kickoff to the 9:00 AM deadline, it didn't — real work windows were roughly
+11 AM–4:30 PM, then 9:30 PM–7:00 AM. We're in the second window now. **After ~7:00 AM, fresh-up and
+breakfast eat into coding time before the hard 9:00 AM lock — plan the last hour for polish, not new
+features.**
+
+**🚨 Biggest real gap right now, not a code problem: nothing is deployed.** No live URL exists anywhere
+in this repo or in chat history. M3's deploy step below is the single highest-priority remaining task.
 
 **Fixed today, already pushed (see `git log` for details), you don't need to redo this:**
 - Earth Engine login hung on this machine (tries to detect if it's a Google server) → fixed with `force=True`.
@@ -72,11 +105,10 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 - [x] **H+0.5** `visat.gee_export` done for real: 54,168 cells, **23 clean scenes** (Jan-2019–Feb-2026),
       2017/2024 back-test composites. Took ~20 min after 2 Earth Engine fixes (see below).
 - [x] **H+2** OSM features done: 28,378 roads, 542 schools, 62 markets, 390 hospitals, 16 construction, 5 harbours, 243 parks, 5,525 canal-bank cells.
-- [ ] **H+2** Kochi 74-ward map: **not loaded yet.** OSM doesn't have Kochi's municipal wards well-tagged
-      (tried; only found district/state boundaries). App currently falls back to **575 1-km zones**
-      (labelled honestly, this fallback was always in the plan). **Nice-to-have, not a blocker:** manually
-      download the GeoJSON from [BharatLAS](https://bharatlas.com/view/wards_kochi) (their site needs a
-      click-through, no public API found) → `data/raw/wards.geojson`, then rerun `visat.pipeline`.
+- [x] **H+2** Kochi 74-ward map: **done.** OSM doesn't have Kochi's municipal wards well-tagged, but a
+      teammate downloaded the real BharatLAS GeoJSON, found and fixed a lat/lon-swap bug (their file
+      stores coordinates backwards) and a ward-name property mismatch, then it was rebuilt into
+      `data/app/` — see "Live status" at the top of this file. 74 real ward names now, not zones.
 - [ ] **H+2.5** (optional, M4 downloads) CPCB Vyttila/Eloor CSVs → `data/raw/cpcb/`. Also optional: the
       AppEEARS ECOSTRESS download (M1, still pending — see top of file).
 - [x] **H+3** `visat.pipeline --source frozen` run — **real `data/app/` built and committed.**
