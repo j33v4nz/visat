@@ -38,8 +38,12 @@ def assign_wards(cells: pd.DataFrame, wards_geojson: dict | None) -> tuple[pd.Se
         names = {}
         for i, f in enumerate(feats):
             p = f.get("properties", {})
-            names[i] = str(p.get("ward_name") or p.get("name") or p.get("Ward_Name")
-                           or p.get("WARD_NAME") or f"Ward {p.get('ward_no', i + 1)}")
+            # "ward_lgd_name" is what BharatLAS's actual Kochi wards.geojson uses (verified
+            # against the real downloaded file) — without it every real ward silently falls
+            # back to "Ward N" and the genuine LGD ward names never reach the Ward Card.
+            names[i] = str(p.get("ward_lgd_name") or p.get("ward_name") or p.get("name")
+                           or p.get("Ward_Name") or p.get("WARD_NAME")
+                           or f"Ward {p.get('ward_no', i + 1)}")
         return pd.Series(ward, index=cells.index), {"kind": "wards", "names": names,
                                                     "geojson": wards_geojson}
     zr, zc = cells["row"] // 10, cells["col"] // 10
