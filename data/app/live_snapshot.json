@@ -1,0 +1,14 @@
+{
+  "data": {
+    "temperature_c": 32.0,
+    "relative_humidity_pct": 70.0,
+    "apparent_temperature_c": 36.5,
+    "wind_speed_kmh": 8.0,
+    "heat_index_c": 40.6,
+    "heat_index_band": "extreme_caution",
+    "n_points": 8,
+    "attribution": "Weather data: Open-Meteo",
+    "PLACEHOLDER": "Illustrative only — replace by committing a real fetch at data freeze (RESOURCES.md §2b). The app must never show these numbers as if they were live."
+  },
+  "fetched_at": 0
+}

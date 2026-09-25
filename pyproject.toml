@@ -1,6 +1,6 @@
 [project]
 name = "visat"
-version = "0.0.0"
+version = "0.1.0"
 description = "VISAT: Kochi Heat Action Planner — HackMe'26 PS1"
 requires-python = ">=3.12"
 dependencies = [
@@ -14,7 +14,7 @@ dependencies = [
     "numpy",
     "scipy",
     "geopandas",
-    "osmnx",
+    "osmnx>=2.1",
     "networkx",
     "streamlit",
     "pydeck",
@@ -23,14 +23,17 @@ dependencies = [
     "pythermalcomfort",
 ]
 
+[project.optional-dependencies]
+tier3 = ["anthropic", "streamlit-image-comparison"]
+
 [dependency-groups]
-dev = [
-    "pytest",
-    "ruff",
-]
+dev = ["pytest", "ruff"]
 
 [tool.ruff]
 line-length = 100
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
 
 [build-system]
 requires = ["hatchling"]

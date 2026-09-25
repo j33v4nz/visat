@@ -27,3 +27,18 @@ def test_heat_index_bands_cover_caution_to_extreme_danger():
         "danger",
         "extreme_danger",
     }
+
+
+def test_study_months_are_jan_through_apr():
+    # v5: 20-30 clean scenes, Jan-Apr (not Feb-Apr) — RESOURCES.md §2.
+    assert config.STUDY_MONTHS == (1, 2, 3, 4)
+
+
+def test_backtest_compare_months_are_feb_through_apr():
+    # Dynamic World comparison specifically: Feb-Apr 2017 vs Feb-Apr 2024.
+    assert config.BACKTEST_COMPARE_MONTHS == (2, 3, 4)
+
+
+def test_green_roof_and_iurwts_have_costs_but_are_display_only():
+    assert config.COST_GREEN_ROOF_PER_SQM > 0
+    assert config.COST_IURWTS_TOTAL_CRORE > 0

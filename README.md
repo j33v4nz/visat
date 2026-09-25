@@ -15,10 +15,29 @@
 ## Repo layout
 
 ```
-src/visat/       # pipeline code — written live during the hackathon
-tests/           # tests — written live during the hackathon
-.github/         # CI — lint + test on every push, running from hour 2 per PLAN.md §7
+app.py                 # Streamlit entry point — 4 screens, dark theme, live strip
+src/visat/
+  config.py             # dataset IDs, live-API config, costs, study params (constants only)
+  heat_index.py          # NWS heat index + band, verified against RESOURCES.md's check value
+  live_weather.py        # Open-Meteo fetch, 3-layer fallback (runtime cache -> snapshot -> banner)
+  news_ticker.py          # Malayalam RSS chip, Unicode chillu normalisation, same fallback pattern
+  physics.py               # energy-balance formula for cool roofs/pavements/green roofs
+  validity_matrix.py        # every intervention: method, where allowed, cost function
+  optimizer.py                # greedy budget optimizer + 2 naive baselines
+  model.py                     # scene-panel feature engineering, monotone constraints, spatial-block CV
+  ee_export.py                  # Earth Engine queries — run yourself after `ee.Authenticate()`
+tests/                  # pytest — the pure-logic modules (everything except ee_export, live app)
+data/app/               # small, tracked, app-ready files (Streamlit Cloud only sees git-tracked files)
+requirements.txt        # lean, app-only deps for Streamlit Cloud (see its comment — RESOURCES.md §4b)
+pyproject.toml          # full pipeline deps (uv) — NOT used by Streamlit Cloud
 ```
+
+**What's real vs. what needs your own credentials:** `heat_index.py`, `optimizer.py`, `validity_matrix.py`,
+`physics.py`, `news_ticker.py`'s parsing/matching, and `model.py`'s feature engineering + spatial-CV
+splitting are working code with passing tests (`pytest`, all green). `live_weather.py` and
+`news_ticker.py`'s live fetch, `model.py`'s actual training, and all of `ee_export.py` need a live
+network / your own GEE, NASA Earthdata, and Streamlit Cloud sessions to run for real — wire in your
+frozen scene stack and re-run once the data exists.
 
 ## Team
 
@@ -31,6 +50,19 @@ tests/           # tests — written live during the hackathon
 
 See PLAN.md for the full role breakdown and 24-hour timeline.
 
+## Running it
+
+```
+uv sync --all-groups
+uv run pytest          # 36 tests, pure logic only, no credentials needed
+uv run streamlit run app.py   # placeholder data until the real scene stack is wired in
+```
+
 ## Status
 
-Pre-event. Per PLAN.md §14, all project code is written during HackMe'26 itself — this repo currently holds the plan, resource research, win strategy, and CI/config scaffolding only.
+Written live during HackMe'26. Working: heat index, live-weather + news fallback chains (tested by
+simulating total network failure), the validity matrix, the optimizer (beats both naive baselines
+on the test fixtures), and the scene-panel model's feature engineering + spatial-block CV split
+(verified: no spatial block ever appears in both train and test). Not yet real: the actual GEE scene
+export has to be run with your own authenticated session, and the app screens are placeholders until
+that data exists.

@@ -1,0 +1,19 @@
+# App-only, for Streamlit Community Cloud (RESOURCES.md §4b).
+# Community Cloud does not read uv.lock and treats pyproject.toml as Poetry
+# format, so this file is what actually gets installed at deploy time.
+# No Earth Engine, geopandas/GDAL, or training libraries here — those break
+# the cloud build. Add xgboost only if the app itself re-predicts live;
+# add anthropic + streamlit-image-comparison only if Tier 3 ships.
+#
+# NOT version-pinned here — I can't verify current exact release numbers
+# from this environment, and a wrong guess is worse than no pin. At the
+# event: `pip install streamlit pydeck pandas pyarrow numpy requests` in a
+# clean venv, then `pip freeze > requirements.txt` to lock real versions
+# before the first Streamlit Cloud deploy (RESOURCES.md's own instruction
+# to "pin versions" — do it from a real install, not a guess).
+streamlit
+pydeck
+pandas
+pyarrow
+numpy
+requests

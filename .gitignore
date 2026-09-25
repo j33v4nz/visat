@@ -2,13 +2,16 @@ __pycache__/
 *.pyc
 .venv/
 .uv/
-uv.lock
 *.egg-info/
 .pytest_cache/
 .ruff_cache/
 .DS_Store
 
-# Frozen/live data caches — event-day artifacts, not committed as source
+# Raw/frozen satellite exports and runtime live-data caches — never
+# committed as-is. Small, app-ready derived files go in the TRACKED
+# data/app/ folder instead (RESOURCES.md §4b): parquet grid, heat PNG,
+# ward GeoJSON, precomputed presets, live_snapshot.json, news_snapshot.json,
+# reactions_cache.json.
 data/raw/
 data/frozen/
 data/live_cache.json
@@ -16,7 +19,10 @@ data/news_cache.json
 *.tif
 *.tiff
 
-# Secrets
+# Secrets — Streamlit Cloud secrets live in the app's Secrets settings, not here.
 .env
 *.key
 service-account*.json
+.streamlit/secrets.toml
+
+# Reproducibility: uv.lock is committed on purpose (RESOURCES.md §4b), do not ignore it.
