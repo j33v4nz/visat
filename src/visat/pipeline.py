@@ -52,11 +52,19 @@ def physics_check(engine: Engine, n=2000, seed=0) -> dict:
     frame = model.with_atmos(frame, engine.atmos)
     dt_model = model.predict(engine.model, frame) - engine.base[idx]
     dt_formula, _ = engine.formula_delta(idx, "cool_roofs")
+    albedo_built_r = float(c["albedo"].corr(c["built_frac"]))
+    gap_note = (
+        f"Energy balance: ΔT ≈ Δα × S / h (S=750 W/m², h=25 W/m²K) × roof share. In this city, albedo and "
+        f"built-up density are correlated (r={albedo_built_r:.2f} here) — darker roofs coincide with denser "
+        f"building, so the model already explains most warming through built-up features and has little "
+        f"signal left for albedo alone. The physics formula is the more trustworthy number for a single "
+        f"roof; the model's plan-level total reflects this conservatism."
+        if abs(albedo_built_r) > 0.4 else
+        "Energy balance: ΔT ≈ Δα × S / h (S=750 W/m², h=25 W/m²K) × roof share."
+    )
     return {"median_model_c": float(np.median(dt_model)), "median_formula_c": float(np.median(dt_formula)),
             "ratio_model_to_formula": float(np.median(dt_model) / np.median(dt_formula)),
-            "n_cells": len(idx),
-            "note": "Energy balance: ΔT ≈ Δα × S / h (S=750 W/m², h=25 W/m²K) × roof share. "
-                    "Where they disagree, the model is limited by how few very bright roofs exist today."}
+            "n_cells": len(idx), "albedo_built_frac_corr": albedo_built_r, "note": gap_note}
 
 
 def ward_actions(engine, selection, dt, cells) -> dict:

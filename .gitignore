@@ -14,6 +14,7 @@ data/live_cache.json
 data/news_cache.json
 *.tif
 *.tiff
+cache/  # osmnx's HTTP response cache (osm_features.py)
 
 # Secrets (API keys go in Streamlit Cloud → App settings → Secrets)
 .streamlit/secrets.toml

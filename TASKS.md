@@ -6,9 +6,15 @@ submission portal locks at **9:00 AM Day 2**.
 
 ## 🔴 Live status — update this section as things finish
 
-**Now:** Earth Engine login is done (project `sinuous-wording-468112-s2`) and the real Kochi export
-(`visat.gee_export`) is running. Static features (all 54,168 cells) confirmed working (again, on the fixed run). Waiting on the
-28 satellite scenes + weather + the 2017/2024 back-test images.
+**🔒 H+4 DATA FROZEN, done.** Real Kochi data is in `data/app/` (committed) and the app runs on it —
+`git pull` and you're working against real data now, not demo data. Earth Engine is no longer needed
+by anyone except M1 for the optional ECOSTRESS/wards follow-ups below. **App looks/behaves the same
+either way** — same 4 screens, just real numbers now (₹10cr plan → 186,258 people cooled, for real).
+
+**Still open, none of these block M2/M3/M4:**
+- Kochi ward map not loaded (using 575 1-km zones instead — see M1's list below for why + the fix)
+- ECOSTRESS afternoon check not run yet (M1, needs the AppEEARS download)
+- CPCB station check not run yet (M4, optional download)
 
 **Fixed today, already pushed (see `git log` for details), you don't need to redo this:**
 - Earth Engine login hung on this machine (tries to detect if it's a Google server) → fixed with `force=True`.
@@ -63,17 +69,26 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
       area = bbox `76.20, 9.88, 76.40, 10.10`, dates **Jan–Apr 2024 and 2025**, GeoTIFF, EPSG:4326.
       When ready, unzip all `*LST_doy*.tif` into `data/raw/ecostress/`. **Still needs doing — do this now,
       it takes a while to process on NASA's side.**
-- [~] **H+0.5** `uv run python -m visat.gee_export --project sinuous-wording-468112-s2` → `data/frozen/`.
-      **In progress** (28 clean scenes confirmed — see Live status above). When it finishes, check the log
-      for `data frozen` and no errors before moving on.
-- [ ] **H+2** `uv run python -m visat.osm_features` (roads, schools, markets, hospitals, harbours, parks, canals).
-- [ ] **H+2** Download the Kochi 74-ward map from [BharatLAS](https://bharatlas.com/view/wards_kochi) (GeoJSON) →
-      `data/raw/wards.geojson`. If ward names don't show, add the property name to `exposure.assign_wards`.
-- [ ] **H+2.5** (optional, M4 downloads) CPCB Vyttila/Eloor CSVs → `data/raw/cpcb/`.
-- [ ] **H+3** `uv run python -m visat.pipeline --source frozen` → real `data/app/`.
-      **Sanity checks:** Kakkanad/Ernakulam core hotter than Mangalavanam and the backwaters; our spatial-CV R²
-      reported honestly (even if a baseline wins — say so); back-test slope > 0.
-- [ ] **H+4 🔒 DATA FROZEN** — commit `data/app/` (real) and push. From here the app never needs Earth Engine.
+- [x] **H+0.5** `visat.gee_export` done for real: 54,168 cells, **23 clean scenes** (Jan-2019–Feb-2026),
+      2017/2024 back-test composites. Took ~20 min after 2 Earth Engine fixes (see below).
+- [x] **H+2** OSM features done: 28,378 roads, 542 schools, 62 markets, 390 hospitals, 16 construction, 5 harbours, 243 parks, 5,525 canal-bank cells.
+- [ ] **H+2** Kochi 74-ward map: **not loaded yet.** OSM doesn't have Kochi's municipal wards well-tagged
+      (tried; only found district/state boundaries). App currently falls back to **575 1-km zones**
+      (labelled honestly, this fallback was always in the plan). **Nice-to-have, not a blocker:** manually
+      download the GeoJSON from [BharatLAS](https://bharatlas.com/view/wards_kochi) (their site needs a
+      click-through, no public API found) → `data/raw/wards.geojson`, then rerun `visat.pipeline`.
+- [ ] **H+2.5** (optional, M4 downloads) CPCB Vyttila/Eloor CSVs → `data/raw/cpcb/`. Also optional: the
+      AppEEARS ECOSTRESS download (M1, still pending — see top of file).
+- [x] **H+3** `visat.pipeline --source frozen` run — **real `data/app/` built and committed.**
+      **Real numbers:** ₹1cr → 52,951 people cooled · ₹10cr → 186,258 · ₹50cr → 433,751.
+      **Honest validation:** spatial-CV R² = 0.83 (ours) vs 0.84 (unconstrained) vs 0.62 (linear) — physics
+      constraints cost a little raw fit for guaranteed-sensible behaviour, both crush the linear baseline.
+      **Back-test:** r = 0.35 (positive, real, not spectacular — say so, don't oversell it).
+      **Real finding worth knowing for Q&A:** albedo and built-up density are correlated (r≈0.47) in real
+      Kochi, so the ML model alone understates cool-roof cooling — this is exactly why we cross-check
+      against the physics formula (see Proof tab). Good, honest talking point, not a bug.
+- [x] **H+4 🔒 DATA FROZEN** — real `data/app/` committed and pushed. From here the app never needs Earth
+      Engine. **M2/M3/M4: pull now and work against real data.**
 - [ ] **T2** Matched back-test (DiD): changed cells vs kNN-matched unchanged cells on 2017 features, in
       `validation.py`. Never call it "causal".
 - **Presents:** data + validation slide. **Q&A:** "10:30 AM isn't felt heat", "is it just correlation?"
@@ -126,7 +141,7 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 | When | Gate |
 |---|---|
 | H+2 | Live URL works (demo data) · CI green |
-| **H+4** | **Real data frozen and committed** |
+| **H+4** | ✅ **Real data frozen and committed** |
 | **H+6** | Checkpoint 1: real Heat Stress Map + honest CV on screen → start Tier 2 |
 | **H+13** | Checkpoint 2: all 4 screens on real data, live URL → start Tier 3 |
 | H+15 | If anything core is broken → ship ranked hotspots + °C per fix |
