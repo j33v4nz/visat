@@ -6,6 +6,37 @@ Written against PLAN.md as of the section-0 PS1 compliance-checklist commit — 
 
 ---
 
+## 0. URGENT — the real event schedule does not match PLAN.md §9
+
+Pulled directly from the live event site's source (`chsrikar/hackme-26`, `src/data/schedule.js` and `src/pages/RulesPage.jsx`) rather than assumed — this is the organizers' actual published Day 1/Day 2 schedule for today, 25–26 September 2026:
+
+| Real block | Time | What it actually is |
+|---|---|---|
+| Briefing + problem statement reveal | 10:00–11:00 AM | Matches PLAN.md's own "confirm the problem statement" at 10 AM |
+| Room allocation / setup | 11:00 AM–1:00 PM | Not really build time |
+| Lunch | 1:00–2:00 PM | — |
+| **Work block 1** | **2:00–4:30 PM** | **2.5 hours of actual hacking** |
+| Ice-breaking, live music band, games, fresh-up | **5:00–9:30 PM** | **4.5 hours are organizer-scheduled social events, not work time** |
+| **Work block 2** | **9:30 PM–9:00 AM** | **11.5 hours overnight — the real main build window** |
+| **Hard submission deadline** | **9:00 AM Day 2** | Portal locks strictly; no commits after this are judged |
+| Presentation + jury evaluation | 9:00–11:00 AM | — |
+
+**Total real hacking time is ≈14 hours (2.5 + 11.5), not the ~23 continuous hours PLAN.md §9's timeline effectively assumes.** PLAN.md's checkpoints (4 PM, 7 PM, 11 PM, 1 AM, 5 AM, 6 AM) are laid out as if work continues uninterrupted from 2 PM onward — the plan currently has no accounting at all for the mandatory 5–9:30 PM social block, which eats the entire evening.
+
+**Action needed now, before the team commits to the current checkpoint schedule:**
+- Treat 2:00–4:30 PM as a short "get the skeleton running" sprint, not "checkpoint 1: real heat map and honest accuracy on screen" — that's a tall order for 2.5 hours including setup. Consider whether checkpoint 1's bar needs to shrink (e.g., "pipeline runs end-to-end on a tiny sample" rather than a finished, accurate heat map) or move to right after the 9:30 PM restart instead.
+- The 9:30 PM–9:00 AM block is now where almost everything has to happen — Tier 1 and Tier 2 both, plus rehearsal, plus the sleep shifts PLAN.md already plans for. That's the same ambitious scope as before compressed into roughly half the previously-assumed window.
+- Decide as a team, before 2 PM: does anyone skip part of the 5–9:30 PM block to keep working? Nothing in the official rules forbids it, but it's worth deciding deliberately rather than losing the time by default, and worth knowing whether organizers expect attendance.
+- PLAN.md §9's timeline table should be rewritten against these real blocks — this doc flags it, but the fix belongs in PLAN.md itself since it's the team's source of truth for the schedule.
+
+**Also confirmed directly from the rules page (not previously verified against an official source):**
+- Team size is 2–5, not fixed at 4 — no conflict with the current M1–M4 roles, just confirming there's headroom if needed.
+- "All project code, schemas, and configurations must be written during the official hackathon timeframe... Pre-existing private projects... are strictly prohibited and will result in **disqualification**." This confirms the team's own no-code-before-the-event rule (PLAN.md §14) is not just good practice — violating it is an explicit disqualification condition.
+- AI coding assistants (Copilot, Cursor, **Claude**, ChatGPT) are explicitly named as permitted and must be disclosed in the presentation, with judges told to evaluate "architectural novelty, toolchain synthesis, and working domain execution, not simple prompt generation" — worth quoting that exact phrase when drafting the AI-use disclosure, since it's the organizers' own framing of what they're judging AI use on.
+- The rules text says "36-hour hackathon timeframe" in one place, while the site's own tagline and PLAN.md both say 24-hour, and the actual schedule spans about 27 hours end-to-end. This is likely boilerplate rules copy that wasn't fully customized for this event — worth a quick clarifying question to an organizer rather than assuming either number, but doesn't change the schedule table above, which comes from the actual timed agenda, not this rules-page prose.
+
+---
+
 ## 1. Competitive intelligence — worth knowing before the pitch
 
 - **PS1's exact wording ran nationally at ISRO's Bharatiya Antariksh Hackathon 2026** ("Optimizing Urban Heat Mitigation and cooling strategies via AI/ML"), with 15,104 teams. HackMe'26 is very likely reusing that official problem statement text — which means the PS1 compliance checklist in PLAN.md §0 is a genuinely high-value thing to have done; a judge familiar with the BAH framing will recognize the wording being matched precisely.
