@@ -163,8 +163,9 @@ def heat_ledger(result):
 with today:
     peak = LIVE.get("peak_heat_index_c") or M["season_heat_index_c"]
     act = exposure.act_today(wards, peak)
-    hot_people = cells.loc[cells["hotspot"], "pop"].sum()
-    st.markdown(f"### {len(wards[wards['people_in_hotspots'] > 0])} areas have people in the top-10% "
+    hot_people = cells.loc[cells["hotspot"] & (cells["ward_id"] >= 0), "pop"].sum()
+    area_word = "wards" if M["area_kind"] == "wards" else "areas"
+    st.markdown(f"### {len(wards[wards['people_in_hotspots'] > 0])} {area_word} have people in the top-10% "
                 f"heat-stress squares — about **{hot_people:,.0f} people**.")
     st.markdown(f"**Act today** (peak heat index {act['peak_heat_index_c']} °C, *{act['band']}*): "
                 f"**{', '.join(act['wards'])}** — " + " · ".join(act["advice"]))
@@ -247,7 +248,8 @@ with plan_tab:
         st.pydeck_chart(deck(map_layers, tooltip={"text": "{fix}: {dt} °C"}),
                         key="plan_map", height=520)
         st.caption("Coloured dots = where each fix goes (public land only). Teal haze = cells cooled "
-                   f"≥0.05 °C, incl. spillover. {config.LABEL_SURFACE}.")
+                   f"≥0.05 °C, incl. spillover. {config.LABEL_SURFACE}. The plan covers the study area; "
+                   "named wards cover Kochi municipality.")
         if show_canal_banks:
             st.caption("Blue dots = 100 m cells near OSM canals, drains or ditches where tree strips "
                        "could be checked on site. These are not verified IURWTS alignments; "
@@ -381,6 +383,12 @@ with proof_tab:
             if "mae_heat_index_c" in c:
                 st.metric("CPCB stations vs ERA5 heat index", f"±{c['mae_heat_index_c']:.1f} °C",
                           f"{c['n_days']} days", delta_color="off")
+        matched = bt.get("matched")
+        if matched and "mae_c" in matched:
+            st.metric("Matched 2017→2024 check", f"±{matched['mae_c']:.2f} °C",
+                      f"{matched['n_changed_matched']:,} changed cells", delta_color="off")
+            st.caption("Changed cells vs k nearest unchanged cells on 2017 land features. "
+                       "Exploratory comparison; not a causal estimate.")
     with st.expander("Physics check · validity matrix · data freshness · limits"):
         ph = M["physics_check"]
         if ph:
@@ -397,6 +405,8 @@ with proof_tab:
             {"Layer": "Malayalam news", "Status": (NEWS or {}).get("status", "hidden"),
              "Detail": (NEWS or {}).get("fetched_at") or ""},
             {"Layer": "Built", "Status": D["manifest"]["source"], "Detail": D["manifest"]["built_at"]},
+            {"Layer": "Ward rollup", "Status": M["area_kind"],
+             "Detail": D["manifest"].get("ward_rollup_built_at", "from full pipeline")},
         ]), hide_index=True)
         st.markdown("**Limits:** surface temperature at ~10:30 AM is not the air people feel; weather is "
                     "city-scale (~9 km); population is GHSL 2020; we never call results causal; "

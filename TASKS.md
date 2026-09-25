@@ -1,19 +1,18 @@
 # VISAT — who does what (event day)
 
-**Start here.** The whole app already runs end-to-end on **DEMO data** (synthetic Kochi, always labelled DEMO).
-Your job: swap in **real data**, verify, polish, and pitch. Times are **hours from kick-off (H+0)**;
+**Start here.** The app runs end-to-end on frozen **real Kochi data**. Times are **hours from kick-off (H+0)**;
 submission portal locks at **9:00 AM Day 2**.
 
 ## 🔴 Live status — update this section as things finish
 
 **🔒 H+4 DATA FROZEN, done.** Real Kochi data is in `data/app/` (committed) and the app runs on it —
 `git pull` and you're working against real data now, not demo data. Earth Engine is no longer needed
-by anyone except M1 for the optional ECOSTRESS/wards follow-ups below. **App looks/behaves the same
-either way** — same 4 screens, just real numbers now (₹10cr plan → 186,258 people cooled, for real).
+by anyone except M1 for the optional ECOSTRESS/matched-validation follow-ups below. The ₹10 crore
+plan cools about 186,258 people across the study grid.
 
 **Still open, none of these block M2/M3/M4:**
-- ~~Kochi ward map not loaded~~ **The GeoJSON is in now (PR #7), but `data/app/` hasn't been rebuilt
-  with it yet — see the "root0x1d, AI-assisted" section right below for the one command that's needed.**
+- ~~Kochi ward map not loaded~~ **Done:** `data/app/` now has 74 named wards, reaggregated from the
+  frozen app cells and saved OSM data. The raw Earth Engine exports are still needed for a full retrain.
 - ECOSTRESS afternoon check not run yet (M1, needs the AppEEARS download)
 - CPCB station check not run yet (M4, optional download)
 
@@ -52,18 +51,16 @@ came from this side and why, without duplicating or overwriting anyone else's no
   - Also ran `osm_features.py` for real (28,378 roads, 542 schools, 62 markets, 390 hospitals, 5
     harbours, 243 parks) — this is what M1's checklist above is already reporting.
 
-**One thing genuinely still needed, and I can't do it myself:** `data/app/` was built (H+4 freeze) a few
-minutes *before* the ward fix merged, so it's still on the 575-zone fallback. `data/frozen/`'s raw GEE
-export files (`cells_static.parquet`, `scenes.parquet`, `scenes_meta.parquet`, `backtest.parquet`) are
-correctly gitignored and only exist on whoever ran `gee_export.py` locally — I don't have them, so I
-can't rebuild `data/app/` myself (confirmed: tried, got
-`FileNotFoundError: Missing [...] in data/frozen`). **Whoever has that local `data/frozen/` folder
-(M1) just needs to `git pull` then re-run:**
+**Update:** The ward-only rebuild is now done from saved app cells and OSM counts with
+`python -m visat.ward_rollup`; the 575 fallback zones are gone. The raw GEE exports
+(`cells_static.parquet`, `scenes.parquet`, `scenes_meta.parquet`, `backtest.parquet`) are still absent
+here. Whoever has that local `data/frozen/` folder can run the full pipeline again to compute the
+new matched back-test metric:
 ```bash
 uv run python -m visat.pipeline --source frozen
 ```
-That one run will replace the 575 zones with the real ward names/boundaries everywhere in the app —
-Today screen, Plan table, Ward Card — no other code changes needed.
+The ward-only pass preserved the frozen global model and plan values; its Ward Card action values
+come from the already saved per-site plan picks (rounded to 0.01 °C).
 
 **AppEEARS/ECOSTRESS is the one item on this list I genuinely cannot help with** — it needs M1's
 personal NASA Earthdata login, which isn't something I have or can create. Everything else above was
@@ -89,7 +86,7 @@ These are normal for Earth Engine at this data volume, not signs something is fu
 ```bash
 git pull
 uv sync --all-groups                      # app + tests
-uv run pytest -q                          # 22 tests should pass
+uv run pytest -q                          # run the current suite
 uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 ```
 
@@ -131,10 +128,8 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
       itself had two real problems, both fixed and verified before committing: its coordinates are
       `[lat, lon]` not GeoJSON-standard `[lon, lat]` (silently matched zero cells otherwise — confirmed),
       and its name property is `ward_lgd_name`, which `exposure.assign_wards()` wasn't checking for
-      (silently fell back to "Ward N" otherwise). `data/raw/wards.geojson` is in. **Still needs:** rerun
-      `visat.pipeline --source frozen` (whoever has the local `data/frozen/` raw export) to actually
-      replace the 575-zone fallback in `data/app/` with these real ward boundaries — nobody's done that
-      last step yet since the fix merged just after H+4 data freeze.
+      (silently fell back to "Ward N" otherwise). `data/raw/wards.geojson` is in. The named-ward
+      `data/app/` rollup is now built from frozen app cells and OSM counts: 74 wards, 8,063 cells.
 - [ ] **H+2.5** (optional, M4 downloads) CPCB Vyttila/Eloor CSVs → `data/raw/cpcb/`. Also optional: the
       AppEEARS ECOSTRESS download (M1, still pending — see top of file).
 - [x] **H+3** `visat.pipeline --source frozen` run — **real `data/app/` built and committed.**
@@ -147,8 +142,9 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
       against the physics formula (see Proof tab). Good, honest talking point, not a bug.
 - [x] **H+4 🔒 DATA FROZEN** — real `data/app/` committed and pushed. From here the app never needs Earth
       Engine. **M2/M3/M4: pull now and work against real data.**
-- [ ] **T2** Matched back-test (DiD): changed cells vs kNN-matched unchanged cells on 2017 features, in
-      `validation.py`. Never call it "causal".
+- [x] **T2** Matched back-test (DiD) implementation: changed cells vs kNN-matched unchanged cells on
+      2017 features in `validation.py`, tested on demo data. Never call it "causal".
+- [ ] **T2 follow-up** Compute and show the real matched metric after M1's raw `backtest.parquet` is available.
 - **Presents:** data + validation slide. **Q&A:** "10:30 AM isn't felt heat", "is it just correlation?"
 
 ## M2 — Scenarios & Optimizer (ML)
@@ -172,8 +168,8 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 - [x] **H+1** Projector test: 20 px text, dark theme, map ≥65% width. Hide anything not in the demo in expanders.
 - [x] **H+4** Re-check all four screens on the frozen real-data build, the **₹10 crore** preset, and the
       **Kakkanad → IT park** flow. The UI now reports the remaining **+0.26 °C** after offsets honestly.
-- [ ] **H+4 follow-up** Re-check clicks and Ward Cards for the 74 named wards after M1 rebuilds `data/app/`;
-      the current build still contains 575 fallback zones.
+- [x] **H+4 follow-up** Re-check named ward selection and Ward Cards after the ward-only `data/app/`
+      rebuild; the app now has 74 real ward names and boundaries.
 - [ ] **H+4 follow-up** Reach heat-neutral for Kakkanad IT park if M2 can produce a valid offset package;
       the current precomputed package does not pass the screen.
 - [x] **H+6** Screenshots of the 4 key moments for the deck backup (`artifacts/m3/`).

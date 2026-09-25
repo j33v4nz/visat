@@ -7,6 +7,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from scipy.stats import pearsonr, spearmanr
+from sklearn.neighbors import NearestNeighbors
 
 from visat import config
 from visat.features import add_focal_features, heat_index_c
@@ -55,6 +56,53 @@ def backtest(model, cells: pd.DataFrame, bt: pd.DataFrame, atmos: dict, min_chan
         "mean_pred_c": float(p.mean()), "mean_obs_c": float(o.mean()),
         "points": [[round(float(a), 2), round(float(c), 2)] for a, c in zip(p[pick], o[pick])],
         "label": "Δ surface-°C 2017→2024 (Feb–Apr), each year normalised to its city median",
+        "matched": matched_backtest(base, b, pred, obs, min_change=min_change),
+    }
+
+
+def matched_backtest(cells: pd.DataFrame, bt: pd.DataFrame, pred: np.ndarray,
+                     obs: np.ndarray, min_change: float = 0.1,
+                     max_unchanged: float = 0.03, k: int = 5) -> dict:
+    """Descriptive matched DiD: changed cells minus similar unchanged cells' trend.
+
+    Match on 2017 land features only, before looking at 2024 LST. This is an exploratory
+    comparison; unmeasured differences may remain, so it is never a causal estimate.
+    """
+    cols = ["built_2017", "tree_2017", "water_2017", "ndvi_2017", "albedo_2017"]
+    x = bt[cols].to_numpy(float)
+    changed_amount = np.maximum(np.abs(bt["built_2024"] - bt["built_2017"]),
+                                np.abs(bt["tree_2024"] - bt["tree_2017"])).to_numpy()
+    water_change = np.abs(bt["water_2024"] - bt["water_2017"]).to_numpy()
+    valid = (np.isfinite(x).all(axis=1) & np.isfinite(pred) & np.isfinite(obs)
+             & (cells["water_frac"].to_numpy() <= 0.5))
+    treated = np.flatnonzero(valid & (changed_amount > min_change))
+    controls = np.flatnonzero(valid & (changed_amount <= max_unchanged)
+                              & (water_change <= max_unchanged))
+    if len(treated) < 10 or len(controls) < k:
+        return {"n_changed_matched": 0,
+                "note": "Too few changed or stable land cells for a matched comparison."}
+
+    # Scale each 2017 feature by its spread among controls so one feature cannot dominate.
+    spread = np.std(x[controls], axis=0)
+    spread = np.maximum(spread, 0.02)
+    center = np.mean(x[controls], axis=0)
+    control_x = (x[controls] - center) / spread
+    treated_x = (x[treated] - center) / spread
+    distances, neighbours = NearestNeighbors(n_neighbors=k).fit(control_x).kneighbors(treated_x)
+    matched_controls = controls[neighbours]
+    observed_did = obs[treated] - obs[matched_controls].mean(axis=1)
+    predicted_did = pred[treated] - pred[matched_controls].mean(axis=1)
+    correlation = (float(pearsonr(predicted_did, observed_did).statistic)
+                   if np.std(predicted_did) > 1e-8 and np.std(observed_did) > 1e-8 else None)
+    return {
+        "n_changed_matched": len(treated), "n_control_pool": len(controls), "k": k,
+        "mean_control_trend_c": float(obs[matched_controls].mean()),
+        "mean_observed_did_c": float(observed_did.mean()),
+        "mean_predicted_did_c": float(predicted_did.mean()),
+        "mae_c": float(np.mean(np.abs(predicted_did - observed_did))),
+        "pearson_r": correlation,
+        "median_match_distance": float(np.median(distances[:, 0])),
+        "label": "Exploratory 2017-feature kNN matched comparison; not causal",
     }
 
 

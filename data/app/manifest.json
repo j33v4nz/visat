@@ -2,5 +2,7 @@
  "source": "frozen",
  "built_at": "2026-09-26T02:11+05:30",
  "label_surface": "surface °C, ~10:30 AM, Jan–Apr",
- "label_live": "live weather, city-scale"
+ "label_live": "live weather, city-scale",
+ "ward_rollup_built_at": "2026-09-26T03:07+05:30",
+ "ward_rollup_method": "74 named wards from frozen app cells and OSM counts"
 }

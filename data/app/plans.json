@@ -9409,850 +9409,432 @@
     ]
    ],
    "ward_actions": {
-    "17": [
+    "0": [
      {
       "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.37821197509765625,
-      "person_deg": 147.01873255334795
-     }
-    ],
-    "1010": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.3618278503417969,
-      "person_deg": 140.00164996669628
-     }
-    ],
-    "1011": [
-     {
-      "label": "Cool roofs",
-      "cells": 1,
-      "cost_rs": 688350.0069379807,
-      "dt": -2.7534000873565674,
-      "person_deg": 1612.4543803694396
-     },
-     {
-      "label": "Street trees",
-      "cells": 6,
-      "cost_rs": 558000.0,
-      "dt": -0.6499220728874207,
-      "person_deg": 1405.1794048950542
-     }
-    ],
-    "1012": [
-     {
-      "label": "Cool roofs",
-      "cells": 1,
-      "cost_rs": 776699.960231781,
-      "dt": -3.106799840927124,
-      "person_deg": 1225.6794691891482
-     },
-     {
-      "label": "Street trees",
-      "cells": 4,
-      "cost_rs": 372000.0,
-      "dt": -0.48229026794433594,
-      "person_deg": 709.3344597899122
-     }
-    ],
-    "1013": [
-     {
-      "label": "Cool roofs",
-      "cells": 1,
-      "cost_rs": 915749.9670982361,
-      "dt": -3.6629998683929443,
-      "person_deg": 1725.445200061331
-     },
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.5230178833007812,
-      "person_deg": 173.65117881330661
-     }
-    ],
-    "2007": [
-     {
-      "label": "Cool roofs",
-      "cells": 1,
-      "cost_rs": 744150.0127315521,
-      "dt": -2.976600170135498,
-      "person_deg": 1145.6308903411991
-     }
-    ],
-    "2010": [
-     {
-      "label": "Cool roofs",
-      "cells": 2,
-      "cost_rs": 1425000.0268220901,
-      "dt": -2.8499999046325684,
-      "person_deg": 2360.0389700405503
-     }
-    ],
-    "2011": [
-     {
-      "label": "Cool roofs",
-      "cells": 3,
-      "cost_rs": 1942350.0001430511,
-      "dt": -2.6220226287841797,
-      "person_deg": 4236.350108792161
-     },
-     {
-      "label": "Street trees",
-      "cells": 11,
-      "cost_rs": 1023000.0,
-      "dt": -0.9969069957733154,
-      "person_deg": 3433.7367047370644
-     }
-    ],
-    "2012": [
-     {
-      "label": "Street trees",
-      "cells": 16,
-      "cost_rs": 1488000.0,
-      "dt": -1.4843904972076416,
-      "person_deg": 8541.132759871369
-     },
-     {
-      "label": "Cool roofs",
-      "cells": 2,
-      "cost_rs": 1197599.9772548676,
-      "dt": -2.4775784015655518,
-      "person_deg": 2273.5987332603545
-     }
-    ],
-    "2013": [
-     {
-      "label": "Street trees",
-      "cells": 2,
-      "cost_rs": 186000.0,
-      "dt": -1.0437984466552734,
-      "person_deg": 756.6826677715871
-     }
-    ],
-    "3010": [
-     {
-      "label": "Cool roofs",
-      "cells": 3,
-      "cost_rs": 2140350.043773651,
-      "dt": -2.8802030086517334,
-      "person_deg": 4348.078646707232
-     },
-     {
-      "label": "Street trees",
-      "cells": 3,
-      "cost_rs": 279000.0,
-      "dt": -0.46044793725013733,
-      "person_deg": 755.6936610765988
-     }
-    ],
-    "4011": [
-     {
-      "label": "Cool roofs",
-      "cells": 3,
-      "cost_rs": 2264699.9806165695,
-      "dt": -3.0199801921844482,
-      "person_deg": 3122.933260665537
-     },
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.33139801025390625,
-      "person_deg": 156.69778896239586
-     }
-    ],
-    "5002": [
-     {
-      "label": "Street trees",
-      "cells": 2,
-      "cost_rs": 186000.0,
-      "dt": -1.8411502838134766,
-      "person_deg": 1051.690520891454
-     }
-    ],
-    "6002": [
-     {
-      "label": "Cool roofs",
-      "cells": 2,
-      "cost_rs": 1131000.0121593475,
-      "dt": -2.26223087310791,
-      "person_deg": 1472.9759255650242
-     }
-    ],
-    "6021": [
-     {
-      "label": "Cool roofs",
-      "cells": 1,
-      "cost_rs": 973049.9982833862,
-      "dt": -3.892199993133545,
-      "person_deg": 1399.5143415007624
-     },
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.38529205322265625,
-      "person_deg": 138.7277266245801
-     }
-    ],
-    "7010": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.6973762512207031,
-      "person_deg": 134.6428954989533
-     }
-    ],
-    "7012": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -1.3959808349609375,
-      "person_deg": 163.9313079341082
-     }
-    ],
-    "8002": [
-     {
-      "label": "Cool roofs",
-      "cells": 1,
-      "cost_rs": 736199.9899148941,
-      "dt": -2.9464211463928223,
-      "person_deg": 969.8518181712425
-     },
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.4133110046386719,
-      "person_deg": 125.72544129437301
-     }
-    ],
-    "9003": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.49454498291015625,
-      "person_deg": 221.04423610609956
-     }
-    ],
-    "9014": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.6507148742675781,
-      "person_deg": 181.79362686444074
-     }
-    ],
-    "9015": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.8585281372070312,
-      "person_deg": 155.16694800870027
-     }
-    ],
-    "9019": [
-     {
-      "label": "Street trees",
-      "cells": 2,
-      "cost_rs": 186000.0,
-      "dt": -0.7818145751953125,
-      "person_deg": 621.6701856795698
-     }
-    ],
-    "11013": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.455291748046875,
-      "person_deg": 177.32920255791396
-     }
-    ],
-    "12004": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.50604248046875,
-      "person_deg": 192.10863135382533
-     }
-    ],
-    "13002": [
-     {
-      "label": "Mangrove restoration",
-      "cells": 1,
-      "cost_rs": 50000.0,
-      "dt": -3.6639862060546875,
-      "person_deg": 96.76900599041255
-     }
-    ],
-    "13008": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -1.1234016418457031,
-      "person_deg": 165.66874430602184
-     }
-    ],
-    "13019": [
-     {
-      "label": "Street trees",
-      "cells": 4,
-      "cost_rs": 372000.0,
-      "dt": -1.2475509643554688,
-      "person_deg": 904.6292099138955
-     }
-    ],
-    "14004": [
-     {
-      "label": "Street trees",
-      "cells": 5,
-      "cost_rs": 465000.0,
-      "dt": -0.6051643490791321,
-      "person_deg": 719.9131889789714
-     }
-    ],
-    "14005": [
-     {
-      "label": "Street trees",
-      "cells": 15,
-      "cost_rs": 1395000.0,
-      "dt": -0.7413365840911865,
-      "person_deg": 3755.921905270079
-     }
-    ],
-    "14007": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.7869071960449219,
-      "person_deg": 167.1060276752687
-     }
-    ],
-    "14019": [
-     {
-      "label": "Street trees",
-      "cells": 4,
-      "cost_rs": 372000.0,
-      "dt": -1.1379318237304688,
-      "person_deg": 1026.3565451463219
-     }
-    ],
-    "14020": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.48075103759765625,
-      "person_deg": 153.706734651234
-     }
-    ],
-    "14021": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.5616607666015625,
-      "person_deg": 139.62288796156645
-     }
-    ],
-    "15004": [
-     {
-      "label": "Cool roofs",
-      "cells": 3,
-      "cost_rs": 2936549.9317646027,
-      "dt": -3.9348878860473633,
-      "person_deg": 5860.470119598467
-     },
-     {
-      "label": "Street trees",
-      "cells": 7,
-      "cost_rs": 651000.0,
-      "dt": -0.4414710998535156,
-      "person_deg": 1163.4361665650504
-     }
-    ],
-    "15005": [
-     {
-      "label": "Street trees",
-      "cells": 37,
-      "cost_rs": 3441000.0,
-      "dt": -0.7135635614395142,
-      "person_deg": 8693.755733433703
-     },
-     {
-      "label": "Cool roofs",
-      "cells": 3,
-      "cost_rs": 2845499.9327659607,
-      "dt": -3.8189620971679688,
-      "person_deg": 5028.465387668417
-     }
-    ],
-    "15006": [
-     {
-      "label": "Street trees",
-      "cells": 29,
-      "cost_rs": 2697000.0,
-      "dt": -0.8741005063056946,
-      "person_deg": 9061.3042619084
-     },
-     {
-      "label": "Cool roofs",
-      "cells": 2,
-      "cost_rs": 1727249.9799728394,
-      "dt": -3.461087942123413,
-      "person_deg": 3658.110875820239
-     }
-    ],
-    "15007": [
-     {
-      "label": "Street trees",
-      "cells": 2,
-      "cost_rs": 186000.0,
-      "dt": -0.9417304992675781,
-      "person_deg": 261.826350657444
-     }
-    ],
-    "15008": [
-     {
-      "label": "Street trees",
-      "cells": 3,
-      "cost_rs": 279000.0,
-      "dt": -0.49159112572669983,
-      "person_deg": 526.3746766720433
-     }
-    ],
-    "15009": [
-     {
-      "label": "Street trees",
-      "cells": 5,
-      "cost_rs": 465000.0,
-      "dt": -1.2597061395645142,
-      "person_deg": 1216.180864416412
-     }
-    ],
-    "15019": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.6442527770996094,
-      "person_deg": 155.98612534697168
-     }
-    ],
-    "16004": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.34799957275390625,
-      "person_deg": 167.03655579010956
-     }
-    ],
-    "16005": [
-     {
-      "label": "Cool roofs",
-      "cells": 4,
-      "cost_rs": 3404099.9561548233,
-      "dt": -3.430056095123291,
-      "person_deg": 6187.378485504101
-     },
-     {
-      "label": "Street trees",
-      "cells": 22,
-      "cost_rs": 2046000.0,
-      "dt": -0.5290482044219971,
-      "person_deg": 4427.848141579307
-     }
-    ],
-    "16006": [
-     {
-      "label": "Cool roofs",
-      "cells": 7,
-      "cost_rs": 5527500.003576279,
-      "dt": -3.2108099460601807,
-      "person_deg": 9839.740773204256
-     },
-     {
-      "label": "Street trees",
-      "cells": 28,
-      "cost_rs": 2604000.0,
-      "dt": -0.5660449266433716,
-      "person_deg": 6605.1906389537035
-     }
-    ],
-    "16007": [
-     {
-      "label": "Mangrove restoration",
-      "cells": 1,
-      "cost_rs": 50000.0,
-      "dt": -2.9393692016601562,
-      "person_deg": 128.5362030902761
-     }
-    ],
-    "16008": [
-     {
-      "label": "Street trees",
-      "cells": 12,
-      "cost_rs": 1116000.0,
-      "dt": -0.6903982162475586,
-      "person_deg": 2415.3262479668483
+      "cells": 20,
+      "cost_rs": 1860000.0,
+      "dt": -0.7025000000000001,
+      "person_deg": 3764.801991271973
      },
      {
       "label": "Canal-bank tree strip",
       "cells": 1,
       "cost_rs": 100000.0,
-      "dt": -0.5352249145507812,
-      "person_deg": 217.44105069409125
-     }
-    ],
-    "16009": [
-     {
-      "label": "Street trees",
-      "cells": 5,
-      "cost_rs": 465000.0,
-      "dt": -1.9011703729629517,
-      "person_deg": 1256.749888002174
-     }
-    ],
-    "16012": [
+      "dt": -0.54,
+      "person_deg": 219.38098205566408
+     },
      {
       "label": "Mangrove restoration",
       "cells": 1,
       "cost_rs": 50000.0,
-      "dt": -2.055419921875,
-      "person_deg": 134.3316779434681
+      "dt": -2.94,
+      "person_deg": 128.5637873840332
      }
     ],
-    "17004": [
-     {
-      "label": "Cool roofs",
-      "cells": 1,
-      "cost_rs": 930299.9675273895,
-      "dt": -3.7211999893188477,
-      "person_deg": 1802.5416434588842
-     }
-    ],
-    "17005": [
-     {
-      "label": "Street trees",
-      "cells": 12,
-      "cost_rs": 1116000.0,
-      "dt": -0.42398801445961,
-      "person_deg": 1910.6493160978425
-     },
-     {
-      "label": "Cool roofs",
-      "cells": 1,
-      "cost_rs": 945600.0030040741,
-      "dt": -3.782400131225586,
-      "person_deg": 1735.9090387407923
-     }
-    ],
-    "17006": [
-     {
-      "label": "Cool roofs",
-      "cells": 5,
-      "cost_rs": 4043700.0542879105,
-      "dt": -3.446284055709839,
-      "person_deg": 7643.798607146979
-     },
-     {
-      "label": "Street trees",
-      "cells": 17,
-      "cost_rs": 1581000.0,
-      "dt": -1.2198913097381592,
-      "person_deg": 5620.423986027541
-     }
-    ],
-    "17008": [
+    "2": [
      {
       "label": "Street trees",
       "cells": 2,
       "cost_rs": 186000.0,
-      "dt": -0.80859375,
-      "person_deg": 394.00973717006855
-     }
-    ],
-    "17016": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.6422691345214844,
-      "person_deg": 64.51081687252736
-     }
-    ],
-    "18005": [
-     {
-      "label": "Cool roofs",
-      "cells": 1,
-      "cost_rs": 909449.9945640564,
-      "dt": -3.6377999782562256,
-      "person_deg": 1891.178172192187
+      "dt": -0.5800000000000001,
+      "person_deg": 515.8627670288085
      },
-     {
-      "label": "Street trees",
-      "cells": 2,
-      "cost_rs": 186000.0,
-      "dt": -0.4793834686279297,
-      "person_deg": 343.433077695081
-     }
-    ],
-    "18006": [
-     {
-      "label": "Cool roofs",
-      "cells": 10,
-      "cost_rs": 8155200.004577637,
-      "dt": -3.2685699462890625,
-      "person_deg": 18105.46895216198
-     },
-     {
-      "label": "Street trees",
-      "cells": 11,
-      "cost_rs": 1023000.0,
-      "dt": -1.109982967376709,
-      "person_deg": 4078.74719632708
-     }
-    ],
-    "18007": [
-     {
-      "label": "Cool roofs",
-      "cells": 1,
-      "cost_rs": 891599.9829769135,
-      "dt": -3.5664000511169434,
-      "person_deg": 1750.1570591669006
-     },
-     {
-      "label": "Street trees",
-      "cells": 7,
-      "cost_rs": 651000.0,
-      "dt": -0.4599325954914093,
-      "person_deg": 1310.7383282171795
-     }
-    ],
-    "18013": [
      {
       "label": "Mangrove restoration",
       "cells": 1,
       "cost_rs": 50000.0,
-      "dt": -3.3058853149414062,
-      "person_deg": 93.80645050897147
+      "dt": -2.48,
+      "person_deg": 97.82253021240234
      }
     ],
-    "19005": [
-     {
-      "label": "Cool roofs",
-      "cells": 1,
-      "cost_rs": 941549.9567985535,
-      "dt": -3.766199827194214,
-      "person_deg": 1714.0310105147073
-     },
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.547576904296875,
-      "person_deg": 171.62288084439933
-     }
-    ],
-    "19006": [
-     {
-      "label": "Street trees",
-      "cells": 3,
-      "cost_rs": 279000.0,
-      "dt": -0.30454888939857483,
-      "person_deg": 332.40955191198736
-     }
-    ],
-    "19007": [
-     {
-      "label": "Street trees",
-      "cells": 9,
-      "cost_rs": 837000.0,
-      "dt": -0.4617500305175781,
-      "person_deg": 1652.870682757115
-     }
-    ],
-    "19008": [
-     {
-      "label": "Street trees",
-      "cells": 4,
-      "cost_rs": 372000.0,
-      "dt": -0.49997425079345703,
-      "person_deg": 657.6281737175304
-     }
-    ],
-    "20007": [
-     {
-      "label": "Street trees",
-      "cells": 4,
-      "cost_rs": 372000.0,
-      "dt": -0.40813350677490234,
-      "person_deg": 613.9821564818267
-     }
-    ],
-    "20008": [
-     {
-      "label": "Cool roofs",
-      "cells": 5,
-      "cost_rs": 4154850.035905838,
-      "dt": -3.3348898887634277,
-      "person_deg": 6928.70754603442
-     },
-     {
-      "label": "Street trees",
-      "cells": 7,
-      "cost_rs": 651000.0,
-      "dt": -0.4369266927242279,
-      "person_deg": 1225.390592125128
-     }
-    ],
-    "20009": [
-     {
-      "label": "Cool roofs",
-      "cells": 1,
-      "cost_rs": 920400.0234603882,
-      "dt": -3.6816000938415527,
-      "person_deg": 1571.672024045256
-     },
-     {
-      "label": "Street trees",
-      "cells": 4,
-      "cost_rs": 372000.0,
-      "dt": -0.5100288391113281,
-      "person_deg": 881.0899611681234
-     }
-    ],
-    "20010": [
-     {
-      "label": "Mangrove restoration",
-      "cells": 1,
-      "cost_rs": 50000.0,
-      "dt": -2.477100372314453,
-      "person_deg": 97.70815564914665
-     }
-    ],
-    "21007": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.5632133483886719,
-      "person_deg": 251.99447081040125
-     }
-    ],
-    "21008": [
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.6423759460449219,
-      "person_deg": 295.90696655213833
-     }
-    ],
-    "21009": [
-     {
-      "label": "Cool roofs",
-      "cells": 4,
-      "cost_rs": 3366300.031542778,
-      "dt": -3.366300106048584,
-      "person_deg": 6871.4827554130825
-     }
-    ],
-    "22010": [
+    "3": [
      {
       "label": "Cool roofs",
       "cells": 1,
       "cost_rs": 871649.980545044,
-      "dt": -3.486599922180176,
-      "person_deg": 1189.3956591647293
+      "dt": -3.49,
+      "person_deg": 1190.5555392456056
      }
     ],
-    "23009": [
+    "4": [
      {
       "label": "Cool roofs",
       "cells": 3,
-      "cost_rs": 1768350.0051498413,
-      "dt": -2.357799768447876,
-      "person_deg": 3589.780068719061
-     }
-    ],
-    "23010": [
-     {
-      "label": "Cool roofs",
-      "cells": 5,
-      "cost_rs": 3452400.0585079193,
-      "dt": -2.7694616317749023,
-      "person_deg": 9252.334158203426
+      "cost_rs": 2598900.005221367,
+      "dt": -3.466666666666667,
+      "person_deg": 4391.598055114746
      },
      {
       "label": "Street trees",
-      "cells": 5,
-      "cost_rs": 465000.0,
-      "dt": -0.4951004087924957,
-      "person_deg": 1006.3582286584424
-     }
-    ],
-    "24009": [
-     {
-      "label": "Cool roofs",
-      "cells": 1,
-      "cost_rs": 679500.013589859,
-      "dt": -2.7179999351501465,
-      "person_deg": 1536.6225241281209
-     },
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.7351303100585938,
-      "person_deg": 169.3409282155335
-     }
-    ],
-    "24010": [
-     {
-      "label": "Cool roofs",
-      "cells": 3,
-      "cost_rs": 2041199.9970674515,
-      "dt": -2.7354001998901367,
-      "person_deg": 4812.715734840458
-     },
-     {
-      "label": "Street trees",
-      "cells": 1,
-      "cost_rs": 93000.0,
-      "dt": -0.4198646545410156,
-      "person_deg": 176.58772145572584
-     }
-    ],
-    "24011": [
-     {
-      "label": "Cool roofs",
       "cells": 4,
-      "cost_rs": 2597699.984908104,
-      "dt": -2.608600378036499,
-      "person_deg": 6265.569102930611
+      "cost_rs": 372000.0,
+      "dt": -0.39,
+      "person_deg": 660.4297201538086
+     }
+    ],
+    "5": [
+     {
+      "label": "Street trees",
+      "cells": 42,
+      "cost_rs": 3906000.0,
+      "dt": -0.8766666666666665,
+      "person_deg": 12562.8756350708
+     },
+     {
+      "label": "Cool roofs",
+      "cells": 2,
+      "cost_rs": 1727249.9799728394,
+      "dt": -3.465,
+      "person_deg": 3662.1628442382817
+     }
+    ],
+    "6": [
+     {
+      "label": "Cool roofs",
+      "cells": 2,
+      "cost_rs": 1551449.9992132187,
+      "dt": -3.195,
+      "person_deg": 2599.308421020508
+     },
+     {
+      "label": "Street trees",
+      "cells": 6,
+      "cost_rs": 558000.0,
+      "dt": -0.5583333333333332,
+      "person_deg": 1122.4581069946291
+     }
+    ],
+    "7": [
+     {
+      "label": "Cool roofs",
+      "cells": 5,
+      "cost_rs": 4280850.067734718,
+      "dt": -3.554,
+      "person_deg": 8610.452578125
+     },
+     {
+      "label": "Street trees",
+      "cells": 10,
+      "cost_rs": 930000.0,
+      "dt": -0.648,
+      "person_deg": 2240.839257354736
+     }
+    ],
+    "8": [
+     {
+      "label": "Cool roofs",
+      "cells": 8,
+      "cost_rs": 6607799.9621629715,
+      "dt": -3.3125,
+      "person_deg": 14544.506628417968
+     },
+     {
+      "label": "Street trees",
+      "cells": 19,
+      "cost_rs": 1767000.0,
+      "dt": -0.7957894736842107,
+      "person_deg": 5374.134478149414
+     }
+    ],
+    "9": [
+     {
+      "label": "Street trees",
+      "cells": 18,
+      "cost_rs": 1674000.0,
+      "dt": -0.508888888888889,
+      "person_deg": 4081.9926110839847
+     },
+     {
+      "label": "Cool roofs",
+      "cells": 2,
+      "cost_rs": 1471350.0291109085,
+      "dt": -3.035,
+      "person_deg": 2943.3137927246094
+     }
+    ],
+    "10": [
+     {
+      "label": "Street trees",
+      "cells": 4,
+      "cost_rs": 372000.0,
+      "dt": -0.485,
+      "person_deg": 658.1865997314453
+     }
+    ],
+    "11": [
+     {
+      "label": "Street trees",
+      "cells": 2,
+      "cost_rs": 186000.0,
+      "dt": -0.6000000000000001,
+      "person_deg": 545.3692456054688
+     }
+    ],
+    "12": [
+     {
+      "label": "Street trees",
+      "cells": 2,
+      "cost_rs": 186000.0,
+      "dt": -0.475,
+      "person_deg": 327.4555096435547
+     }
+    ],
+    "13": [
+     {
+      "label": "Cool roofs",
+      "cells": 5,
+      "cost_rs": 4286700.055003166,
+      "dt": -3.428,
+      "person_deg": 8439.946726379394
+     }
+    ],
+    "15": [
+     {
+      "label": "Street trees",
+      "cells": 12,
+      "cost_rs": 1116000.0,
+      "dt": -0.4491666666666667,
+      "person_deg": 2097.3003701782227
+     },
+     {
+      "label": "Cool roofs",
+      "cells": 1,
+      "cost_rs": 855750.0243186951,
+      "dt": -3.47,
+      "person_deg": 1621.3053991699219
+     }
+    ],
+    "16": [
+     {
+      "label": "Cool roofs",
+      "cells": 1,
+      "cost_rs": 700200.0063657761,
+      "dt": -2.81,
+      "person_deg": 918.7433407592773
      },
      {
       "label": "Street trees",
       "cells": 2,
       "cost_rs": 186000.0,
-      "dt": -0.4778556823730469,
-      "person_deg": 343.08511129417457
+      "dt": -0.485,
+      "person_deg": 412.45781890869137
+     }
+    ],
+    "17": [
+     {
+      "label": "Cool roofs",
+      "cells": 4,
+      "cost_rs": 3202049.95572567,
+      "dt": -3.205,
+      "person_deg": 6499.877366638184
+     },
+     {
+      "label": "Street trees",
+      "cells": 1,
+      "cost_rs": 93000.0,
+      "dt": -0.54,
+      "person_deg": 209.26962707519533
+     }
+    ],
+    "18": [
+     {
+      "label": "Street trees",
+      "cells": 2,
+      "cost_rs": 186000.0,
+      "dt": -0.555,
+      "person_deg": 297.0378872680664
+     }
+    ],
+    "19": [
+     {
+      "label": "Street trees",
+      "cells": 1,
+      "cost_rs": 93000.0,
+      "dt": -0.55,
+      "person_deg": 172.38233337402346
+     }
+    ],
+    "20": [
+     {
+      "label": "Cool roofs",
+      "cells": 1,
+      "cost_rs": 945600.0030040741,
+      "dt": -3.78,
+      "person_deg": 1734.8075134277342
+     },
+     {
+      "label": "Street trees",
+      "cells": 7,
+      "cost_rs": 651000.0,
+      "dt": -0.47714285714285715,
+      "person_deg": 1260.4721099853516
+     }
+    ],
+    "21": [
+     {
+      "label": "Street trees",
+      "cells": 1,
+      "cost_rs": 93000.0,
+      "dt": -0.4,
+      "person_deg": 158.6973388671875
+     }
+    ],
+    "22": [
+     {
+      "label": "Street trees",
+      "cells": 13,
+      "cost_rs": 1209000.0,
+      "dt": -0.8200000000000001,
+      "person_deg": 3582.290125732422
+     }
+    ],
+    "23": [
+     {
+      "label": "Street trees",
+      "cells": 15,
+      "cost_rs": 1395000.0,
+      "dt": -0.678,
+      "person_deg": 3532.105371398926
+     },
+     {
+      "label": "Cool roofs",
+      "cells": 1,
+      "cost_rs": 933149.9934196472,
+      "dt": -3.81,
+      "person_deg": 1568.7586633300782
+     }
+    ],
+    "24": [
+     {
+      "label": "Cool roofs",
+      "cells": 1,
+      "cost_rs": 977249.9799728394,
+      "dt": -3.91,
+      "person_deg": 1833.7305767822265
+     },
+     {
+      "label": "Street trees",
+      "cells": 9,
+      "cost_rs": 837000.0,
+      "dt": -0.4833333333333333,
+      "person_deg": 1468.9681854248047
+     }
+    ],
+    "25": [
+     {
+      "label": "Cool roofs",
+      "cells": 4,
+      "cost_rs": 3136799.9464273453,
+      "dt": -3.2475,
+      "person_deg": 5439.782961120605
+     },
+     {
+      "label": "Street trees",
+      "cells": 14,
+      "cost_rs": 1302000.0,
+      "dt": -1.1664285714285716,
+      "person_deg": 4374.4068818664555
+     }
+    ],
+    "26": [
+     {
+      "label": "Street trees",
+      "cells": 20,
+      "cost_rs": 1860000.0,
+      "dt": -0.646,
+      "person_deg": 4758.101874694824
+     },
+     {
+      "label": "Cool roofs",
+      "cells": 3,
+      "cost_rs": 2639100.0151634216,
+      "dt": -3.52,
+      "person_deg": 4609.489624938965
+     }
+    ],
+    "27": [
+     {
+      "label": "Cool roofs",
+      "cells": 1,
+      "cost_rs": 983699.9773979187,
+      "dt": -4.0,
+      "person_deg": 1890.330322265625
+     },
+     {
+      "label": "Street trees",
+      "cells": 3,
+      "cost_rs": 279000.0,
+      "dt": -0.54,
+      "person_deg": 662.1722912597656
+     }
+    ],
+    "33": [
+     {
+      "label": "Street trees",
+      "cells": 1,
+      "cost_rs": 93000.0,
+      "dt": -1.12,
+      "person_deg": 165.16710205078127
+     }
+    ],
+    "40": [
+     {
+      "label": "Street trees",
+      "cells": 1,
+      "cost_rs": 93000.0,
+      "dt": -0.7,
+      "person_deg": 135.1494644165039
+     }
+    ],
+    "45": [
+     {
+      "label": "Street trees",
+      "cells": 10,
+      "cost_rs": 930000.0,
+      "dt": -1.579,
+      "person_deg": 2470.5145796203615
+     }
+    ],
+    "65": [
+     {
+      "label": "Street trees",
+      "cells": 1,
+      "cost_rs": 93000.0,
+      "dt": -0.46,
+      "person_deg": 179.1629949951172
+     }
+    ],
+    "72": [
+     {
+      "label": "Cool roofs",
+      "cells": 1,
+      "cost_rs": 930299.9675273895,
+      "dt": -3.72,
+      "person_deg": 1801.9603710937502
+     },
+     {
+      "label": "Street trees",
+      "cells": 6,
+      "cost_rs": 558000.0,
+      "dt": -0.385,
+      "person_deg": 951.2362310791016
+     }
+    ],
+    "73": [
+     {
+      "label": "Cool roofs",
+      "cells": 4,
+      "cost_rs": 3871649.891138077,
+      "dt": -3.8874999999999997,
+      "person_deg": 7490.454111022949
+     },
+     {
+      "label": "Street trees",
+      "cells": 12,
+      "cost_rs": 1116000.0,
+      "dt": -0.5100000000000001,
+      "person_deg": 1884.3287648010255
      }
     ]
    }

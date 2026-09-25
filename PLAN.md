@@ -12,7 +12,30 @@ v5 is the result of four rounds of expert review (remote sensing, ML engineering
 
 ## ▶ Build status (event day)
 
-The full system is **implemented and tested** (22 tests) and runs end-to-end on labelled DEMO data; the real-data run is M1's first job. Who does what, with commands: **[TASKS.md](./TASKS.md)**. Every PS1 item below maps to a module listed in README.md → "How it works".
+The app runs on frozen real Kochi data: 54,168 grid cells and 23 clean Landsat scenes. The saved
+₹10 crore plan cools about 186,258 people across the study area. Who does what, with commands:
+**[TASKS.md](./TASKS.md)**. Every PS1 item below maps to a module listed in README.md → "How it works".
+
+### M1 implementation status (26 Sep 2026)
+
+- [x] Real Earth Engine and OSM exports were used for the frozen app build. The corrected BharatLAS
+  boundary and saved OSM counts are tracked source inputs.
+- [x] Rebuilt the app's 74 named Kochi ward summaries, boundaries, cell IDs, and Ward Card actions
+  from the frozen app cells plus OSM counts. All 74 wards receive cells: 8,063 cells and about
+  941,517 people estimated by the GHSL grid inside the municipal boundaries. Global model and plan
+  values were preserved.
+  `python -m visat.ward_rollup` reproduces this ward-only rebuild without Earth Engine.
+- [x] Implemented an exploratory 2017-feature kNN matched comparison of changed cells against
+  unchanged cells in `validation.py`, with tests and a Proof-screen result when the full pipeline runs.
+- [ ] Produce the **real** matched comparison metric. The raw `backtest.parquet` export is absent here;
+  whoever has M1's original `data/frozen/` files must rerun `python -m visat.pipeline --source frozen`.
+- [ ] Submit the NASA AppEEARS request and download afternoon ECOSTRESS LST. No NASA Earthdata
+  credential or ECOSTRESS GeoTIFF is available in this workspace; the afternoon map and agreement
+  cannot be reported yet.
+- [ ] Run the optional CPCB station comparison. The Vyttila/Eloor CSVs are not present.
+
+The named wards cover Kochi municipality; the optimization totals cover the wider study grid.
+The matched comparison is descriptive, not a causal claim.
 
 ---
 
@@ -28,14 +51,14 @@ Every requirement in PS1 (from the hackathon doc), and where VISAT covers it. **
 | **Obj 3:** LST ↔ factors with **physics-informed ML** | Scene-panel model with an **energy-balance interaction feature** (1 − albedo) × incoming solar radiation, which varies by scene and so is genuinely learned; **monotone physics constraints**; and an **energy-balance formula** for interventions without data analogs | 1 |
 | **Obj 4:** simulate **urban greening, cool roofs, albedo changes, water bodies**; evaluate effectiveness | Street and canal-bank trees, mangroves, green roofs (greening); cool roofs; cool pavements (albedo); **pond restoration + canal-bank strips** (water bodies). All are scored in the validity matrix (section 5) | 1 |
 | **Input:** Landsat 8 LST | Landsat 8 + 9 Collection 2 L2, 20–30 clean Jan–Apr scenes | 1 |
-| **Input:** ECOSTRESS LST | Afternoon (12:00–15:30) scenes via NASA AppEEARS. **T1:** an afternoon ECOSTRESS map on the Proof screen next to the Landsat morning map. **T2:** rank agreement (Spearman + top-decile overlap) | 1 (map) / 2 (stats) |
+| **Input:** ECOSTRESS LST | Pending AppEEARS download. Afternoon map and rank agreement are not yet on the Proof screen. | 1 (map) / 2 (stats) |
 | **Input:** LULC from Sentinel-2 / Landsat | Sentinel-2 indices (2019+), **Landsat for 2017** (Sentinel-2 surface reflectance over India starts ~Dec 2018), ESA WorldCover, Dynamic World | 1 |
-| **Input:** ERA5 & CPCB meteorology | ERA5-Land per scene (model) + CPCB Vyttila and Eloor (heat-index validation) | 1 |
+| **Input:** ERA5 & CPCB meteorology | ERA5-Land per scene is in the model; CPCB Vyttila/Eloor validation awaits station CSVs. | 1 |
 | **Input:** OSM, GHSL, UT-GLOBUS (if available) | OSM + GHSL. **UT-GLOBUS:** checked before the event; skipped because GHSL covers building height (stated openly) | 1 |
 | **Optional:** SOLWEIG & InVEST | Not used, and listed as future scope. PS1 marks them optional | — |
 | **Outcome:** heat stress maps identifying hotspots | "Today" screen | 1 |
 | **Outcome:** quantitative assessment of drivers | Ward driver panel + city atmospheric panel, with numbers and CIs | 1 |
-| **Outcome:** validated AI/ML model | Proof screen: grouped spatial-block CV against baselines, 2017→2024 back-test, CPCB check, ECOSTRESS agreement (T2) | 1–2 |
+| **Outcome:** validated AI/ML model | Proof screen: grouped spatial-block CV against baselines and 2017→2024 back-test. Matched, CPCB, and ECOSTRESS results appear only when their source data are available. | 1–2 |
 | **Outcome:** scenario-based evaluation | Validity matrix + °C per intervention per ward | 1 |
 | **Outcome:** optimal strategy with **type, spatial placement, °C reduction** | Plan table: type · ward + map location · −°C (with back-test error band) · people · ₹ | 1 |
 
@@ -99,7 +122,7 @@ LIVE: Open-Meteo (15 min) + official alert + Malayalam news chip ──► strip
    - WorldCover, Dynamic World, GHSL, SRTM, OSM buildings/roads/sites, the 74-ward map, CPCB stations (Jan–Apr, to match the scenes)
    - 300/500 m neighbourhood features
 
-   The **AppEEARS ECOSTRESS request is submitted at hour 0.**
+   The **AppEEARS ECOSTRESS request is still pending** a NASA Earthdata login.
 2. **Scene-panel model (physics-informed).** Each row is one 100 m cell in one satellite scene (cells × scenes), so the model learns **both** where it's hot (land cover) **and** how the day's weather changes it.
    - The physics feature **(1 − albedo) × incoming solar radiation** varies from scene to scene, so the model really learns the energy balance.
    - Monotone constraints: concrete only warms; trees, water and reflective surfaces only cool.

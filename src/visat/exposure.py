@@ -117,4 +117,4 @@ def act_today(wards: pd.DataFrame, peak_hi_c: float, top: int = 5) -> dict:
 
 
 def save_json(obj, path: Path):
-    path.write_text(json.dumps(obj, ensure_ascii=False, indent=1, default=float))
+    path.write_text(json.dumps(obj, ensure_ascii=False, indent=1, default=float), encoding="utf-8")

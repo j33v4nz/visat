@@ -13,6 +13,9 @@ def test_app_runs_all_four_screens_without_errors():
     at.run()
     assert not at.exception
     assert len(at.tabs) == 4
+    at.selectbox[0].set_value("Island North").run()
+    at.selectbox[2].set_value("Island North").run()
+    assert not at.exception
     at.segmented_control(key="budget").set_value("₹50 crore").run()
     at.toggle(key="neutral").set_value(True).run()
     assert not at.exception

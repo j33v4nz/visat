@@ -65,3 +65,30 @@ def test_backtest_runs(world):
     bt = validation.backtest(world["model"], world["engine"].cells, world["data"]["backtest"],
                              world["engine"].atmos)
     assert bt["n_changed_cells"] > 10 and np.isfinite(bt["mae_c"])
+    assert bt["matched"]["n_changed_matched"] > 10
+    assert np.isfinite(bt["matched"]["mae_c"])
+
+
+def test_matched_backtest_removes_local_control_trend():
+    import pandas as pd
+
+    n = 12
+    cells = pd.DataFrame({"water_frac": np.zeros(2 * n)})
+    base = np.linspace(0.1, 0.8, n)
+    bt = pd.DataFrame({
+        "built_2017": np.r_[base, base],
+        "built_2024": np.r_[base + 0.2, base],
+        "tree_2017": np.r_[1 - base, 1 - base],
+        "tree_2024": np.r_[1 - base, 1 - base],
+        "water_2017": np.zeros(2 * n), "water_2024": np.zeros(2 * n),
+        "ndvi_2017": np.r_[1 - base, 1 - base],
+        "albedo_2017": np.full(2 * n, 0.2),
+    })
+    # Changed cells warmed 1.5 °C beyond the common 1 °C local trend.
+    observed = np.r_[np.full(n, 2.5), np.full(n, 1.0)]
+    predicted = np.r_[np.full(n, 1.4), np.zeros(n)]
+    result = validation.matched_backtest(cells, bt, predicted, observed)
+    assert result["n_changed_matched"] == n
+    assert result["mean_observed_did_c"] == pytest.approx(1.5)
+    assert result["mean_predicted_did_c"] == pytest.approx(1.4)
+    assert result["mae_c"] == pytest.approx(0.1)

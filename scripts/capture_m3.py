@@ -15,7 +15,7 @@ with sync_playwright() as playwright:
     page = browser.new_page(viewport={"width": 1600, "height": 1100}, device_scale_factor=1)
     page.goto("http://localhost:8501", wait_until="networkidle", timeout=120_000)
     page.get_by_role("tab", name="① Where is heat dangerous today?").click()
-    page.wait_for_timeout(2000)
+    page.wait_for_timeout(6000)
     page.screenshot(path=str(OUT / "01_today.png"), animations="disabled")
 
     page.get_by_role("tab", name="② What should we do with ₹?").click()
