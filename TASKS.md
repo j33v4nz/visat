@@ -108,7 +108,7 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 | Public Reaction Preview (Tier 3, simulated personas, number guard) | `src/visat/reactions.py` | Extra |
 | Earth Engine export, OSM features, frozen loader | `gee_export.py`, `osm_features.py`, `frozen.py` | Inputs |
 | 4-screen Streamlit app, dark projector theme | `app/streamlit_app.py`, `.streamlit/config.toml` | UI |
-| 22 tests: budget, never-warms, eligibility, joint vs single, baselines, heat-neutral, fallbacks, Malayalam, number guard, app smoke | `tests/` | Demo safety |
+| 25 tests: budget, never-warms, eligibility, joint vs single, baselines, heat-neutral, fallbacks, Malayalam, number guard, app smoke | `tests/` | Demo safety |
 
 ---
 
@@ -149,14 +149,14 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 
 ## M2 — Scenarios & Optimizer (ML)
 
-- [ ] **H+0** Read `scenarios.py` + `optimize.py`; run `uv run pytest -q`.
+- [x] **H+0** Read `scenarios.py` + `optimize.py`; the local test suite passes (25 tests).
 - [ ] **H+3.5** On real data, open the validity matrix (Plan tab → expander). Check each intervention has eligible
       cells and a sensible median °C. Tune in `config.INTERVENTIONS` (intensity, coverage) and eligibility rules
       in `scenarios.eligible` — **public land only**.
-- [ ] **H+4** Confirm our plan beats both baselines on real data at ₹1/10/50 Cr (test `test_plan_beats_naive_baselines`).
+- [x] **H+4** Confirmed the saved real-data plan beats both baselines at ₹1/10/50 Cr; `test_plan_beats_naive_baselines` passes.
 - [ ] **H+5** Check the 5–8 Heat-Neutral sites (`heat_neutral.select_sites`) are genuinely open plots on a map;
       adjust `config.SITE_ANCHORS` if one lands on a wetland or paddy (protected).
-- [ ] **T2** "Conservative mode": use the back-test error (±MAE) as the ΔT band on the Plan table.
+- [x] **T2** "Conservative mode": show the saved back-test ±MAE as an empirical ΔT band in the Plan summary and site table, explicitly not a confidence interval.
 - **Presents:** plan-vs-baselines + Heat-Neutral slide. **Q&A:** "where is the physics?", "why greedy?", "joint vs sum".
 
 ## M3 — App (Design)
@@ -177,7 +177,7 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 - [x] **T3** Optional overlay of OSM canal/drain/ditch bank tree-strip candidate cells, labelled as
       unverified candidates with 0 °C canal credit.
 - [ ] **T3 follow-up** Named IURWTS canal alignments from OSM `waterway=canal` geometry.
-- [ ] **T3 follow-up** Numerical heat-ledger count-down animation.
+- [x] **T3 follow-up** Numerical heat-ledger count-down animation, from project heat added to the saved net change.
 - **Presents:** live demo (screens 1–4). **Q&A:** "walk me through one ward", "what if Wi-Fi fails?"
 
 ## M4 — Product & Pitch (Design)

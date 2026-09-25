@@ -9,6 +9,7 @@ import altair as alt
 import pandas as pd
 import pydeck as pdk
 import streamlit as st
+import streamlit.components.v1 as components
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from visat import config, exposure, live, news, report
@@ -28,14 +29,6 @@ st.markdown(
     [data-testid="stAppViewContainer"] p, [data-testid="stAppViewContainer"] li,
     [data-testid="stAppViewContainer"] label {font-size:1.05rem;}
     [data-baseweb="tab"] {font-size:1.05rem;}
-    .heat-ledger {padding:16px 18px;border:1px solid #36504d;border-radius:12px;
-                  background:#162020;margin:12px 0;}
-    .heat-ledger-row {display:flex;justify-content:space-between;gap:12px;font-size:20px;
-                      margin:6px 0;}
-    .heat-ledger-track {height:10px;background:#29403d;border-radius:10px;overflow:hidden;}
-    .heat-ledger-fill {height:100%;width:var(--ledger-width);background:var(--ledger-color);
-                       animation:ledger-fill .8s ease-out both;}
-    @keyframes ledger-fill {from {width:0;} to {width:var(--ledger-width);}}
     </style>""",
     unsafe_allow_html=True,
 )
@@ -138,7 +131,7 @@ def deck(layers, tooltip=None):
 
 
 def heat_ledger(result):
-    """Show the actual change, including any heat still left after the offset package."""
+    """Animate the net number while preserving the actual saved before/after values."""
     before = float(result["before"]["mean_dt_c"])
     after = float(result["after"]["mean_dt_c"])
     removed = before - after
@@ -149,14 +142,38 @@ def heat_ledger(result):
         ("Net change", f"{after:+.2f} °C", abs(after),
          "#ff7a3d" if after > 0.005 else "#46c4be"),
     ]
-    markup = "<div class='heat-ledger'>"
-    for label, value, amount, color in rows:
+    markup = """<style>
+    body {margin:0;background:#162020;color:#e4ebe9;font-family:Arial,sans-serif;}
+    .heat-ledger {padding:12px 16px;border:1px solid #36504d;border-radius:12px;}
+    .heat-ledger-row {display:flex;justify-content:space-between;gap:12px;
+                      font-size:20px;margin:5px 0;}
+    .heat-ledger-track {height:9px;background:#29403d;border-radius:10px;overflow:hidden;}
+    .heat-ledger-fill {height:100%;width:var(--ledger-width);background:var(--ledger-color);
+                       animation:ledger-fill .9s ease-out both;}
+    @keyframes ledger-fill {from {width:0;} to {width:var(--ledger-width);}}
+    </style><div class='heat-ledger'>"""
+    for i, (label, value, amount, color) in enumerate(rows):
         width = min(100, max(0, amount / scale * 100))
+        number_id = " id='net-number'" if i == 2 else ""
         markup += (f"<div class='heat-ledger-row'><span>{label}</span>"
-                   f"<strong style='color:{color}'>{value}</strong></div>"
+                   f"<strong{number_id} style='color:{color}'>{value}</strong></div>"
                    f"<div class='heat-ledger-track'><div class='heat-ledger-fill' "
                    f"style='--ledger-width:{width:.1f}%;--ledger-color:{color}'></div></div>")
-    return markup + "</div>"
+    markup += f"""</div><script>
+    const start = {before:.4f}, end = {after:.4f}, duration = 900;
+    const output = document.getElementById('net-number');
+    const format = value => `${{value >= 0 ? '+' : ''}}${{value.toFixed(2)}} °C`;
+    let began;
+    function tick(now) {{
+      if (began === undefined) began = now;
+      const p = Math.min(1, (now - began) / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      output.textContent = format(start + (end - start) * eased);
+      if (p < 1) requestAnimationFrame(tick);
+    }}
+    requestAnimationFrame(tick);
+    </script>"""
+    return markup
 
 
 # ------------------------------------------------------------------ ① Today
@@ -219,7 +236,16 @@ with plan_tab:
     st.markdown(f"### {budget} → about **{ours['people_cooled']:,.0f} people** cooler by "
                 f"**{abs(ours['mean_dt_cooled']):.2f} °C** on average — **{gain:.1f}×** the best simple "
                 f"strategy.")
+    conservative = st.toggle("Conservative mode · show back-test error band", key="conservative")
     show_canal_banks = st.toggle("Show OSM canal-bank tree-strip candidates", key="canal_overlay")
+    backtest_mae = float(M["backtest"]["mae_c"])
+    if conservative:
+        lo = ours["mean_dt_cooled"] - backtest_mae
+        hi = ours["mean_dt_cooled"] + backtest_mae
+        st.info(f"Mean surface ΔT: {ours['mean_dt_cooled']:+.2f} °C, with an empirical "
+                f"back-test error band of {lo:+.2f} to {hi:+.2f} °C "
+                f"(±{backtest_mae:.2f} °C MAE). This is not a confidence interval or a "
+                "guaranteed cooling range.")
     k1, k2, k3, k4 = st.columns(4)
     k1.metric("People cooled (≥0.1 °C)", f"{ours['people_cooled']:,.0f}")
     k2.metric("Avg cooling", f"{ours['mean_dt_cooled']:.2f} °C")
@@ -268,6 +294,28 @@ with plan_tab:
                    "joint re-prediction.")
         st.dataframe(pd.DataFrame(M["validity_matrix"]), hide_index=True)
         st.caption(config.CANAL_CREDIT_NOTE)
+    with st.expander("Site-by-site plan · fix, ward, people, surface °C and cost"):
+        locations = cells[["lat", "lon", "ward_id", "pop"]].copy()
+        locations[["lat", "lon"]] = locations[["lat", "lon"]].round(5)
+        site_table = picks.merge(locations, on=["lat", "lon"], how="left",
+                                 validate="many_to_one")
+        site_table["Ward / area"] = site_table["ward_id"].map(wards["ward"])
+        site_table["Ward / area"] = site_table["Ward / area"].fillna("Outside Kochi wards")
+        site_table["Surface ΔT (°C)"] = site_table["dt"].map(lambda x: f"{x:+.2f}")
+        if conservative:
+            site_table["Back-test band (°C)"] = site_table["dt"].map(
+                lambda x: f"{x - backtest_mae:+.2f} to {x + backtest_mae:+.2f}")
+        columns = ["Ward / area", "fix", "Surface ΔT (°C)"]
+        if conservative:
+            columns.append("Back-test band (°C)")
+        site_table["People at site"] = site_table["pop"].round(0)
+        site_table["₹ lakh"] = (site_table["cost"] / 1e5).round(2)
+        st.dataframe(site_table[columns + ["People at site", "₹ lakh", "lat", "lon"]]
+                     .rename(columns={"fix": "Fix", "lat": "Latitude", "lon": "Longitude"}),
+                     hide_index=True)
+        st.caption("Each row is one selected 100 m cell. People at site use GHSL 2020; the total plan "
+                   "also counts spillover. Per-site surface ΔT is the saved joint prediction. "
+                   "The empirical back-test MAE is not a statistical confidence interval.")
 
 # ------------------------------------------------------------------ ③ Check a Project
 with project_tab:
@@ -287,7 +335,7 @@ with project_tab:
             st.markdown(f"<div class='ledger hot'>+{R['before']['mean_dt_c']:.1f} °C</div>"
                         f"<b>{R['before']['people']:,} people</b> within ~500 m", unsafe_allow_html=True)
         else:
-            st.markdown(heat_ledger(R), unsafe_allow_html=True)
+            components.html(heat_ledger(R), height=160, scrolling=False)
             st.markdown(f"**Offset package: ₹{R['offset_cost_rs'] / 1e5:,.1f} lakh**")
             if R["after"]["mean_dt_c"] > 0.005:
                 st.warning("Heat remains after these offsets. This proposal does not pass the "
@@ -399,6 +447,12 @@ with proof_tab:
         st.dataframe(pd.DataFrame([
             {"Layer": "Satellite heat (Landsat 8/9)", "Status": "frozen",
              "Detail": f"{M['n_scenes']} scenes, Jan–Apr {config.SCENE_YEARS[0]}–{config.SCENE_YEARS[1]}"},
+            {"Layer": "ECOSTRESS afternoon check", "Status": "available" if M.get("ecostress") else "pending",
+             "Detail": "Requires AppEEARS scenes" if not M.get("ecostress") else "see metric above"},
+            {"Layer": "CPCB station check", "Status": "available" if M.get("cpcb") else "pending",
+             "Detail": "Requires station CSVs" if not M.get("cpcb") else "see metric above"},
+            {"Layer": "Matched back-test", "Status": "available" if matched else "pending",
+             "Detail": "Requires raw back-test export" if not matched else "see metric above"},
             {"Layer": "Weather per scene (ERA5-Land)", "Status": "frozen", "Detail": "at overpass hour"},
             {"Layer": "Live weather (Open-Meteo)", "Status": LIVE.get("status"),
              "Detail": LIVE.get("fetched_at") or LIVE.get("time", "")},
