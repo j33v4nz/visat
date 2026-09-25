@@ -10,6 +10,10 @@
 
 v5 is the result of four rounds of expert review (remote sensing, ML engineering, hackathon strategy, Kerala urban planning, UX design, and a judge scoring against the HackMe'26 rubric). The judge's final estimate: **~84/100 with Tier 1+2, ~86 with everything.** A perfect 10/10 isn't realistic: satellite surface temperature isn't the heat people feel, and 24-hour code shows seams. But **9s are reachable in technical depth, innovation and impact.** What decides the result is a demo that never crashes and all four members answering questions.
 
+## ▶ Build status (event day)
+
+The full system is **implemented and tested** (22 tests) and runs end-to-end on labelled DEMO data; the real-data run is M1's first job. Who does what, with commands: **[TASKS.md](./TASKS.md)**. Every PS1 item below maps to a module listed in README.md → "How it works".
+
 ---
 
 ## 0. Problem Statement 1 compliance checklist
@@ -171,7 +175,7 @@ A small MiroFish-style simulation. It is **not** a full social-network swarm.
 | Green roofs | Greening | **Energy-balance formula** (labelled) | Buildings | ₹7,500/m², shown as "evaluated, not cost-effective" |
 | Cool roofs | Cool roofs | **Energy-balance formula** (labelled) | Buildings | ₹300/m² (+ recoat every ~3 yrs) |
 | Cool pavements | Albedo | **Energy-balance formula** (labelled) | OSM road cells | ₹350/m² (₹190–500, ~3-yr life) |
-| Pond restoration (≥ 1 ha) | Water bodies | **Analog to water cells** where data supports it, otherwise the formula | Low-lying public land | ~₹45 lakh/ha (Amrit Sarovar rate) |
+| Pond restoration (0.5 ha per 1 ha cell, ≈ Amrit Sarovar size) | Water bodies | **Analog to water cells**, kept inside the model's training range | Low-lying open land (public land to verify) | ~₹45 lakh/ha → ₹22.5 lakh per pond |
 | IURWTS canals (KMRL) | Water bodies | **Committed overlay, 0 °C credit**; cooling counted as a co-benefit only (canals are narrower than one 100 m cell) | 6 canals | Committed ₹3,716 crore project, not bought by our optimizer |
 
 Every row also shows its **"within-support %"**: how much of the change stays inside what real Kochi data has seen.

@@ -92,7 +92,11 @@ class Engine:
         cur = self.cells.loc[idx, config.LC_FEATURES]
         tgt = self._knn_target(idx, donors(self.cells, key)) if target is None else target
         new = cur + intensity * (tgt - cur)
-        if cooling_only:  # only move each feature in its cooling direction
+        water = new["water_frac"]
+        new["tree_frac"] = np.minimum(new["tree_frac"], 1 - water)
+        new["mangrove_frac"] = np.minimum(new["mangrove_frac"], 1 - water)
+        new, inside = self._clip(new)
+        if cooling_only:  # applied LAST so capping/clipping can never push a feature toward warming
             for f in config.LC_FEATURES:
                 sign = config.FEATURES.get(f, 0)
                 if sign < 0:
@@ -101,10 +105,7 @@ class Engine:
                     new[f] = np.minimum(new[f], cur[f])
                 else:
                     new[f] = cur[f]
-        water = new["water_frac"]
-        new["tree_frac"] = np.minimum(new["tree_frac"], 1 - water)
-        new["mangrove_frac"] = np.minimum(new["mangrove_frac"], 1 - water)
-        return self._clip(new)
+        return new, inside
 
     # ------------------------------------------------------------ formulas (no data analog)
     def formula_delta(self, idx: np.ndarray, key: str, building_frac=None) -> tuple[np.ndarray, np.ndarray]:

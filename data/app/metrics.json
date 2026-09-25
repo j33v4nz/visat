@@ -58,7 +58,7 @@
    "method": "Analog (real Kochi cells)",
    "eligible_cells": 8824,
    "median_dt_c": -0.17,
-   "within_support_pct": 90.8,
+   "within_support_pct": 93.4,
    "cost_note": "30 trees × ₹3,100 (planting + 5-yr care, BBMP)"
   },
   {
@@ -66,8 +66,8 @@
    "ps1_category": "Urban greening + water bodies",
    "method": "Analog (real Kochi cells)",
    "eligible_cells": 318,
-   "median_dt_c": -0.15,
-   "within_support_pct": 86.5,
+   "median_dt_c": -0.16,
+   "within_support_pct": 87.7,
    "cost_note": "100 m × ~₹1,000/m (estimate)"
   },
   {
@@ -75,8 +75,8 @@
    "ps1_category": "Urban greening",
    "method": "Analog (real Kochi cells)",
    "eligible_cells": 698,
-   "median_dt_c": -0.21,
-   "within_support_pct": 26.7,
+   "median_dt_c": -0.19,
+   "within_support_pct": 22.6,
    "cost_note": "0.5 ha × ₹1 lakh/ha (range ₹1–8 lakh)"
   },
   {

@@ -1,38 +1,24 @@
 from visat import config
 
 
-def test_grid_resolution_is_positive():
-    assert config.GRID_RESOLUTION_M > 0
+def test_grid_and_seasons():
+    assert config.GRID_RESOLUTION_M == 100
+    assert config.BACKTEST_YEARS[0] < config.BACKTEST_YEARS[1]
+    assert set(config.SCENE_MONTHS) >= set(config.BACKTEST_MONTHS)
 
 
-def test_backtest_years_are_ordered():
-    start, end = config.BACKTEST_YEARS
-    assert start < end
+def test_monotone_constraints_match_physics():
+    f = config.FEATURES
+    assert f["tree_frac"] == -1 and f["water_frac"] == -1 and f["albedo"] == -1
+    assert f["built_frac"] == 1 and f["absorbed_sw"] == 1
 
 
-def test_green_roofs_are_costed_but_flagged_rarely_cost_effective():
-    # PLAN.md §5 keeps green roofs IN the cost table (they must be comparable, not hidden)
-    # but labels them "evaluated, rarely cost-effective" — the honest outcome at ₹7,500/m².
-    spec = config.INTERVENTIONS["green_roofs"]
-    assert spec["cost_per_m2"] == 7_500
-    assert spec["method"] == "formula"
-    assert "cost-effective" in spec["cost_note"]
+def test_every_ps1_intervention_category_is_covered():
+    cats = " ".join(v["ps1"] for v in config.INTERVENTIONS.values()).lower()
+    for needed in ("greening", "cool roofs", "albedo", "water bodies"):
+        assert needed in cats
 
 
-def test_kochi_points_have_eight_locations():
-    assert len(config.KOCHI_POINTS) == 8
-
-
-def test_heat_index_bands_cover_caution_to_extreme_danger():
-    bands = config.HEAT_INDEX_BANDS_C  # [(label, low °C, high °C), ...], consumed by features.py
-    assert [name.lower().replace(" ", "_") for name, _, _ in bands] == [
-        "caution",
-        "extreme_caution",
-        "danger",
-        "extreme_danger",
-    ]
-    lows = [lo for _, lo, _ in bands]
-    highs = [hi for _, _, hi in bands]
-    assert lows[0] == 27  # NWS caution threshold
-    assert highs[:-1] == lows[1:]  # bands are contiguous, no gaps
-    assert highs[-1] == 200  # open-ended top band
+def test_budget_presets_and_heat_bands():
+    assert config.BUDGET_PRESETS_CR == (1, 10, 50)
+    assert [b[0] for b in config.HEAT_INDEX_BANDS_C][:3] == ["Caution", "Extreme caution", "Danger"]

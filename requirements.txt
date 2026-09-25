@@ -1,0 +1,11 @@
+# Streamlit Community Cloud installs from this file (it does not read uv.lock / treats pyproject as Poetry).
+# App-only and lean: no Earth Engine, osmnx/geopandas/GDAL or training here — the app reads data/app/.
+streamlit==1.64.0
+pydeck==0.9.3
+altair==6.3.0
+pandas==3.0.6
+pyarrow==25.0.1
+numpy==2.5.3
+scipy==1.18.1
+requests==2.34.2
+pillow==12.3.0

@@ -2,7 +2,6 @@ __pycache__/
 *.pyc
 .venv/
 .uv/
-uv.lock
 *.egg-info/
 .pytest_cache/
 .ruff_cache/
@@ -16,7 +15,8 @@ data/news_cache.json
 *.tif
 *.tiff
 
-# Secrets
+# Secrets (API keys go in Streamlit Cloud → App settings → Secrets)
+.streamlit/secrets.toml
 .env
 *.key
 service-account*.json

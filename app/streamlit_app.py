@@ -286,7 +286,7 @@ with proof_tab:
                 x="Predicted Δ °C", y="Observed Δ °C")
             line = alt.Chart(pd.DataFrame({"x": lim, "y": lim})).mark_line(color="#46c4be").encode(
                 x="x", y="y")
-            st.altair_chart(chart + line, use_container_width=True)
+            st.altair_chart(chart + line, width="stretch")
             st.caption(f"{bt['label']} · {bt['n_changed_cells']:,} cells that really changed · "
                        f"r = {bt['pearson_r']:.2f} · error ±{bt['mae_c']:.2f} °C · teal = perfect match")
         else:
@@ -337,7 +337,7 @@ with proof_tab:
     card = report.ward_card(wards.loc[wid].to_dict(), rank, len(names), acts, D["manifest"]["source"])
     st.download_button("⬇ Download Ward Heat Card (open → print to PDF)", card,
                        file_name=f"ward_heat_card_{wc.replace(' ', '_')}.html", mime="text/html")
-    st.components.v1.html(card, height=520, scrolling=True)
+    st.iframe("data:text/html;base64," + base64.b64encode(card.encode()).decode(), height=520)
 
 st.divider()
 st.caption(f"{live.ATTRIBUTION} · Satellite: USGS Landsat, ESA Sentinel-2/WorldCover, Google Dynamic "
