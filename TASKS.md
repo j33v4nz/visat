@@ -170,17 +170,18 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
       Share the live URL in the team chat. (If the build picks `pyproject.toml`/`uv.lock` instead and fails,
       check the "dependency file" note in RESOURCES.md §4b.)
 - [x] **H+1** Projector test: 20 px text, dark theme, map ≥65% width. Hide anything not in the demo in expanders.
-- [ ] **H+4** After M1's real data lands: re-check every screen; click wards; the **₹10 crore** preset and the
-      **Kakkanad → IT park → heat-neutral** flow must look perfect.
+- [x] **H+4** Re-check all four screens on the frozen real-data build, the **₹10 crore** preset, and the
+      **Kakkanad → IT park** flow. The UI now reports the remaining **+0.26 °C** after offsets honestly.
+- [ ] **H+4 follow-up** Re-check clicks and Ward Cards for the 74 named wards after M1 rebuilds `data/app/`;
+      the current build still contains 575 fallback zones.
+- [ ] **H+4 follow-up** Reach heat-neutral for Kakkanad IT park if M2 can produce a valid offset package;
+      the current precomputed package does not pass the screen.
 - [x] **H+6** Screenshots of the 4 key moments for the deck backup (`artifacts/m3/`).
-- [ ] **T3** Heat-ledger count-down animation; before/after image comparison (`streamlit-image-comparison`,
-      2017 vs 2024 or before/after offset); IURWTS canal overlay (OSM `waterway=canal` names).
-- **M3 progress:** The project screen now animates a three-line heat ledger and compares the modelled
-  project/offset maps. It shows the actual remaining heat when an offset package fails the neutral screen
-  (Kakkanad IT park: +0.26 °C). The Plan map can overlay OSM canal/drain/ditch bank candidate cells,
-  labelled as candidates with 0 °C canal credit; named IURWTS canal geometry is still unavailable.
-  The current app build still has 575 zones; M1's frozen-data rebuild is required for the 74 real wards.
-  The live Cloud deployment still needs an authenticated Streamlit Community Cloud account.
+- [x] **T3** Animated three-line heat ledger and side-by-side modelled project/offset map comparison.
+- [x] **T3** Optional overlay of OSM canal/drain/ditch bank tree-strip candidate cells, labelled as
+      unverified candidates with 0 °C canal credit.
+- [ ] **T3 follow-up** Named IURWTS canal alignments from OSM `waterway=canal` geometry.
+- [ ] **T3 follow-up** Numerical heat-ledger count-down animation.
 - **Presents:** live demo (screens 1–4). **Q&A:** "walk me through one ward", "what if Wi-Fi fails?"
 
 ## M4 — Product & Pitch (Design)
