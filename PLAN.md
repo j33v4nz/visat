@@ -1,4 +1,6 @@
-# VISAT: Kochi Heat Action Planner (v5)
+# VISAT: Kochi Heat Action Planner (v5, final)
+
+*Cross-checked on 25 Sep 2026 against Problem Statement 1 in the hackathon doc, the HackMe'26 rules and rubric, and every file in this repo.*
 
 **HackMe'26 · VISAT Engineering College · AI/ML track · PS1: Urban Heat Mitigation via AI/ML**
 
@@ -17,7 +19,7 @@ Every requirement in PS1 (from the hackathon doc), and where VISAT covers it. **
 | PS1 requirement | Where VISAT covers it | Tier |
 |---|---|---|
 | **Description:** geospatial AI/ML, physics-informed decision making, hotspots, drivers, optimized scenario-based interventions | The whole system; the scene-panel physics model; the optimizer | 1 |
-| **Obj 1:** heat stress maps from **satellite *and* meteorological data** | **Heat Exposure Index** = satellite LST rank (*where*) × meteorological heat index (*when*, from ERA5 per scene + live Open-Meteo) × population (*who*) | 1 |
+| **Obj 1:** heat stress maps from **satellite *and* meteorological data** | **Heat Stress Map** (PS1's own term), built from a heat exposure index = satellite LST rank (*where*) × meteorological heat index (*when*, from ERA5 per scene + live Open-Meteo) × population (*who*) | 1 |
 | **Obj 2:** drivers: **LULC, urban morphology, vegetation, atmospheric conditions** | SHAP from the **scene-panel model**: land cover, morphology (GHSL height/volume, OSM building density), vegetation, **plus per-scene atmospheric variables** (air temp, humidity, wind, solar radiation). Reported with n and confidence intervals | 1 |
 | **Obj 3:** LST ↔ factors with **physics-informed ML** | Scene-panel model with an **energy-balance interaction feature** (1 − albedo) × incoming solar radiation, which varies by scene and so is genuinely learned; **monotone physics constraints**; and an **energy-balance formula** for interventions without data analogs | 1 |
 | **Obj 4:** simulate **urban greening, cool roofs, albedo changes, water bodies**; evaluate effectiveness | Street and canal-bank trees, mangroves, green roofs (greening); cool roofs; cool pavements (albedo); **pond restoration + canal-bank strips** (water bodies). All are scored in the validity matrix (section 5) | 1 |
@@ -47,7 +49,7 @@ VISAT is a web app for **C-HED and ward councillors**. It uses free satellite da
 
 | Screen | Question it answers | What's on it |
 |---|---|---|
-| **1. Today** | *Where is heat dangerous today?* | **Heat Exposure Map** (Kochi in 100 m squares); live strip (temperature, humidity, heat index, danger band); **"Act today: wards X, Y, Z"** tied to the Labour order and KSDMA advisories; official alert chip + Malayalam news chip (T2). **Click a ward** to open a driver panel in plain words: *"Low tree cover adds +1.8 °C."* |
+| **1. Today** | *Where is heat dangerous today?* | **Heat Stress Map** (Kochi in 100 m squares); live strip (temperature, humidity, heat index, danger band); **"Act today: wards X, Y, Z"** tied to the Labour order and KSDMA advisories; official alert chip + Malayalam news chip (T2). **Click a ward** to open a driver panel in plain words: *"Low tree cover adds +1.8 °C."* |
 | **2. Plan ₹** | *What should we do with our money?* | Preset buttons **₹1 / ₹10 / ₹50 crore** (instant, cached). Plan map + table: type · place · −°C · people · ₹. Compared with "spread evenly" and "trees everywhere". Big numbers: people protected, °C, ₹ per °C |
 | **3. Check a Project** ⭐ | *Will this new project make it hotter?* | **The hero screen.** Pick one of 5–8 pre-drawn sites and a use (IT park / mall / housing / parking). A **heat ledger** shows *"+1.3 surface-°C (morning) · 4,200 people"*, then the cheapest offset brings it to *"0.0 °C · ₹38 L"*, with a "which rule / who signs" line (the figures here are illustrative) |
 | **4. Proof & Ward Card** | *Can we trust it? What do I take to council?* | 2017→2024 back-test chart, honest accuracy vs baselines, validity matrix, CPCB and ECOSTRESS checks, data freshness, limits. **Download Ward Heat Card (PDF)** |
@@ -60,7 +62,7 @@ VISAT is a web app for **C-HED and ward councillors**. It uses free satellite da
 - The map takes at least 65% of the width. Hide Streamlit's menu, footer and sidebar.
 
 **Honesty rules**
-- Satellite values are labelled **"surface °C, ~10:30 AM"**.
+- Satellite values are labelled **"surface °C, ~10:30 AM, Jan–Apr"**.
 - Live weather is labelled **"city-scale"**.
 - News is supporting evidence; official alerts come from KSDMA/IMD.
 - The Heat-Neutral Check is **"a screening tool and a policy proposal"**, never an approval.
@@ -89,7 +91,8 @@ LIVE: Open-Meteo (15 min) + official alert + Malayalam news chip ──► strip
 1. **Data, frozen by 2 PM.** Earth Engine exports:
    - **20–30 clean Landsat scenes** (Jan–Apr 2019–2026), each with its own **ERA5-Land** air temperature, humidity, wind and solar radiation at overpass time
    - Sentinel-2 indices (2019+), and **Landsat NDVI for 2017**
-   - WorldCover, Dynamic World, GHSL, SRTM, OSM buildings/roads/sites, the 74-ward map, CPCB stations
+   - **Back-test windows:** Feb–Apr 2017 and Feb–Apr 2024. The model's scene stack uses Jan–Apr across 2019–2026 to get enough clean scenes.
+   - WorldCover, Dynamic World, GHSL, SRTM, OSM buildings/roads/sites, the 74-ward map, CPCB stations (Jan–Apr, to match the scenes)
    - 300/500 m neighbourhood features
 
    The **AppEEARS ECOSTRESS request is submitted at hour 0.**
@@ -98,7 +101,7 @@ LIVE: Open-Meteo (15 min) + official alert + Malayalam news chip ──► strip
    - Monotone constraints: concrete only warms; trees, water and reflective surfaces only cool.
    - Validated with **grouped spatial-block CV** (2 km blocks across all scenes) against a linear model and an unconstrained model. Atmospheric effects are reported with n and CIs.
    - **Fallback** if this isn't working at 4 PM: a single-composite model, described honestly.
-3. **Heat Exposure Index.** LST rank (*where*) × heat index (*when*) × population (*who*), rolled up to 74 wards (76 after the 2025 delimitation, stated openly). Validated against CPCB stations.
+3. **Heat Stress Map (heat exposure index).** LST rank (*where*) × heat index (*when*) × population (*who*), rolled up to 74 wards (76 after the 2025 delimitation, stated openly). Validated against CPCB stations.
 4. **Interventions.** Each is modelled the most honest way the data allows; see the validity matrix in section 5. Every reported °C comes from **one joint re-prediction**, and tests prevent spillover from being counted twice.
 5. **Optimizer.** Greedy on (°C × people × vulnerability weight) / ₹, public land only, with neighbourhood spillover counted once. Compared with naive baselines. Results for ₹1/10/50 crore are precomputed.
 6. **Back-test.** For cells that really changed between 2017 and 2024, each scene is **normalised to the city median** first, then predicted ΔLST is compared with observed ΔLST.
@@ -114,7 +117,7 @@ LIVE: Open-Meteo (15 min) + official alert + Malayalam news chip ──► strip
 
 ---
 
-## 4. Live Malayalam news (your request, final form)
+## 4. Live Malayalam news alerts
 
 - **Where it appears:** a **static chip** on the Today screen: *"⚠ Heat reported by N Malayalam channels today"*. It sits **next to an official KSDMA/IMD alert chip**; the official alert is the authority, the news is supporting evidence.
 - **When you click it:** it opens a list of headlines, each with channel, time and link, plus the fetch time.
@@ -192,9 +195,13 @@ Every row also shows its **"within-support %"**: how much of the change stays in
 
 **Tier 1: must ship (covers all of PS1)**
 1. Data freeze by 2 PM: scene stack, ERA5 per scene, Landsat 2017, OSM, wards, CPCB. AppEEARS request at hour 0.
-2. Hello-world deploy + CI (tests + lint) by 12 PM.
+2. Hello-world deploy + CI (tests + lint) by 12 PM, with the **deployment fixes from the repo cross-check**:
+   - **`requirements.txt`, app-only and lean.** Streamlit Community Cloud doesn't read `pyproject.toml`/`uv.lock`; it assumes Poetry format. The app needs only streamlit, pydeck, pandas, pyarrow, numpy and requests (plus xgboost only if the app re-predicts). Keep Earth Engine, geopandas/GDAL and the training libraries out of the cloud build.
+   - **Commit `uv.lock`**, which is currently gitignored, so the pipeline can be reproduced.
+   - **Commit the small app-ready data** to a tracked `data/app/` folder: parquet, heat PNG, ward GeoJSON, precomputed presets and results, and fallback snapshots (`live_snapshot.json`, `news_snapshot.json`, `reactions_cache.json`). The current `.gitignore` excludes `data/frozen/` and the cache files, so the deployed app would start with no data and no fallback. Raw exports and runtime caches stay ignored.
+   - **Keep secrets out:** add `.streamlit/secrets.toml` to `.gitignore`. Any API key goes in Streamlit Cloud's secrets settings.
 3. Scene-panel model + baselines + SHAP (fallback: composite model).
-4. Heat Exposure Map + ward roll-up.
+4. Heat Stress Map + ward roll-up.
 5. Validity matrix + joint re-prediction + tests.
 6. Optimizer vs naive baselines, with ₹1/10/50 crore presets.
 7. Back-test normalised to the city median; **ECOSTRESS afternoon map** on the Proof screen (~30 min, keeps PS1 input coverage even if Tier 2 slips).
@@ -230,7 +237,7 @@ Every row also shows its **"within-support %"**: how much of the change stays in
 
 | Member | Builds | Presents / Q&A |
 |---|---|---|
-| **M1, Data & Model (ML)** | AppEEARS request (hour 0) → Earth Engine scene stack + ERA5 + 2017 Landsat, frozen by 2 PM → scene-panel model + CV + baselines + SHAP → exposure map → back-test → ECOSTRESS afternoon map → *(T2)* ECOSTRESS rank agreement, DiD | Data, model, validation |
+| **M1, Data & Model (ML)** | AppEEARS request (hour 0) → Earth Engine scene stack + ERA5 + 2017 Landsat, frozen by 2 PM → scene-panel model + CV + baselines + SHAP → Heat Stress Map → back-test → ECOSTRESS afternoon map → *(T2)* ECOSTRESS rank agreement, DiD | Data, model, validation |
 | **M2, Scenarios & Optimizer (ML)** | Validity matrix → analog + formula scenarios → joint re-prediction + tests → optimizer + baselines + presets → *(T2)* Heat-Neutral Check engine, vulnerability weights | Optimizer, physics, Heat-Neutral Check |
 | **M3, App (Design)** | Hello-world + CI by 12 PM → 4 screens, dark theme → Open-Meteo strip + fallback → Ward Card PDF → *(T2)* Check-a-Project UI (pre-drawn sites, use picker) → *(T3)* ledger animation, before/after, IURWTS overlay, Public Reaction expander | Live demo, ward walkthrough |
 | **M4, Product & Pitch (Design)** | Costs + rules → README + AI disclosure → *(T2)* official alert chip + Malayalam news chip, "who signs" lines → deck, video, demo script → *(T3)* printed A5 cards, Public Reaction Preview (persona table, prompts, precomputed results) → timekeeper and submitter | Problem, costs, policy, impact |
@@ -240,9 +247,9 @@ Every row also shows its **"within-support %"**: how much of the change stays in
 | Time | Milestone |
 |---|---|
 | 10:00 | Repo, data columns, roles; **AppEEARS request submitted** |
-| 12:00 | Hello-world online, CI running |
+| 12:00 | Hello-world online from `requirements.txt`, CI running, `data/app/` tracked |
 | **2:00 PM** | **Data frozen** |
-| **4:00 PM** | **Checkpoint 1:** scene-panel model (or fallback) + exposure map on screen → Tier 2 unlocked |
+| **4:00 PM** | **Checkpoint 1:** scene-panel model (or fallback) + Heat Stress Map on screen → Tier 2 unlocked |
 | 7:00 PM | Validity matrix, optimizer, back-test done |
 | **11:00 PM** | **Checkpoint 2:** all 4 screens live online → Tier 3 unlocked |
 | **1:00 AM** | If the optimizer is broken, ship ranked hotspots + °C per intervention |
@@ -284,6 +291,7 @@ Each member presents one screen. Keep the backup recording ready and warm the ap
 
 ## 12. Before the event (no code carried in)
 
+- **⚠️ Team decision first.** The repo already has pre-event code and configuration: `src/visat/config.py`, `tests/`, `.github/workflows/ci.yml`, `pyproject.toml`, `.gitignore`. HackMe'26 says *"all project code, schemas, and configurations must be written during the event."* Move these to a `prep` branch (or delete them from `main`) before the event, and recreate them live at hour 0–2. `config.py` is also out of date against v5: its ERA5 comment, `STUDY_MONTHS`, and the missing cool-pavement, pond and canal-bank costs, ECOSTRESS and CPCB entries. The docs (PLAN/RESOURCES/STRATEGY/README) are plans and can stay.
 - **Everyone:** Earth Engine sign-up (now), Python + `uv`, GitHub.
 - **M1:**
   - Create a NASA Earthdata account and practise an AppEEARS request.

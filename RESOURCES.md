@@ -71,9 +71,9 @@ This is everything the team needs to get ready for HackMe'26: accounts, datasets
 
 **Never-crash pattern**
 - Wrap the fetch in `st.cache_data(ttl=900)` with a 3-second timeout, so it makes only ~4 calls/hour.
-- On success, overwrite `data/live_cache.json`.
-- On any error, load that file and show a "Live feed unavailable, showing data from <time>" banner.
-- Commit a snapshot at data freeze so the fallback always exists.
+- On success, overwrite the runtime cache `data/live_cache.json` (gitignored).
+- On any error, load the runtime cache if it exists, otherwise the **committed snapshot `data/app/live_snapshot.json`**, and show a "Live feed unavailable, showing data from <time>" banner.
+- Commit that snapshot at data freeze. The deployed app on Streamlit Cloud only has files that are in git, so the fallback must be tracked.
 - Test it with Wi-Fi off.
 
 **"Act today" (one line on the Today screen)**
@@ -128,7 +128,7 @@ Without the minus terms, Gulf heat stories (UAE 41–48 °C) leak in.
 - Extract district(s) + alert colour with regex.
 - Group items with the same (date, district, colour). **N sources = "confirmed by N channels"**; a single source = "unconfirmed".
 - **Never empty:** if there are no heat items in 7 days, show "No heat alerts this week" plus the latest Kerala weather alerts. In September, all alerts were rain alerts.
-- Cache: `st.cache_data(ttl=900)`, 5-second timeout, fall back to `data/news_cache.json`.
+- Cache: `st.cache_data(ttl=900)`, 5-second timeout. Fall back to the runtime `data/news_cache.json` (gitignored), then to the **committed `data/app/news_snapshot.json`**. If neither exists, hide the chip.
 
 **Fair use:** show only headline, channel name, time and a link to the original. Never copy article text. Label it "from Malayalam news; official alerts: IMD / KSDMA". This is a non-commercial hackathon prototype; a production version would ask the channels for permission or use official IMD/KSDMA feeds.
 
@@ -151,7 +151,7 @@ These notes are from the current Claude API reference. They are for writing the 
 | Batches | The Message Batches API costs **50% less** but runs asynchronously and can take a while. Use it only if precomputing early in the night; otherwise use normal calls |
 | Rough cost | About 3k input + about 3k output tokens per call ≈ **$0.09/call** on `claude-opus-5` ($5 in / $25 out per million tokens) → **about $2–4 for all precomputed results**, less with caching or batches. Re-check prices on the day |
 | Number guard | After parsing, reject any quote that contains a number not present in the VISAT input numbers, and regenerate or drop it |
-| Demo safety | Precompute everything into `data/reactions_cache.json`. The demo reads the cache; a live re-run is optional and falls back to the cache |
+| Demo safety | Precompute everything into **`data/app/reactions_cache.json` (tracked in git)**. The demo reads the cache; a live re-run is optional and falls back to the cache. The API key lives in Streamlit Cloud secrets, never in the repo |
 | Disclosure | Mention this in the AI-use disclosure slide: which model, what it does, and that it never changes the numbers |
 
 ---
@@ -162,7 +162,7 @@ These notes are from the current Claude API reference. They are for writing the 
 |---|---|---|
 | **Ward boundaries** | [BharatLAS: Kochi 74 wards](https://bharatlas.com/view/wards_kochi) (Parquet / GeoJSON / Shapefile) | The 2025 delimitation raised the count to **76** ([Wikipedia](https://en.wikipedia.org/wiki/Kochi_Municipal_Corporation)). No open 76-ward GIS file was found, so use 74 and say so on stage |
 | Schools, hospitals, markets, bus stops, parks, roads | OpenStreetMap via `osmnx` | Tags: `amenity=school/hospital/marketplace/bus_station`, `highway=bus_stop`, `leisure=park`. Anganwadis are often unmapped, so check `amenity=kindergarten` / name search |
-| Station air temperature (independent check) | [CPCB CCR portal](https://app.cpcbccr.com/ccr/#/): Vyttila, Eloor (Udyogamandal) | Registration needed. Downloads are limited to about 1 week per query at 15-minute resolution, so pull Feb–Apr in chunks. [How to access Indian AQ data](https://urbanemissions.info/blog-pieces/resources-how-to-access-aqdata-in-india/) |
+| Station air temperature (independent check) | [CPCB CCR portal](https://app.cpcbccr.com/ccr/#/): Vyttila, Eloor (Udyogamandal) | Registration needed. Downloads are limited to about 1 week per query at 15-minute resolution, so pull **Jan–Apr** (to match the Landsat scene stack) in chunks. [How to access Indian AQ data](https://urbanemissions.info/blog-pieces/resources-how-to-access-aqdata-in-india/) |
 | Coastal Regulation Zone | [KCZMA CZMP 2019, Ernakulam maps (PDF)](https://keralaczma.gov.in/index.php/zone-maps/coastal-zone-maps-2019) | PDF only, not GIS. Use it as a visual reference. The mangrove mask is a proxy: barren/grass cells within 200 m of water, below 3 m elevation, not built, near existing Global Mangrove Watch extent |
 | Kawaki programme | [C-HED: Kawaki](https://c-hed.org/kawaki-project-inaugurated/) · [NbS4India case study](https://www.nbs4india.org/case-studies/the-kawaki-initiative/) | Launched in 2020 by Kochi Municipal Corporation with WRI-India and C-HED. Native-tree groves placed with data in heat-vulnerable areas |
 | C-HED | [Climate change](https://c-hed.org/climate-change-2/) · [Designated climate-action cell](https://c-hed.org/workshop-on-advancing-climate-action-in-kochi-facilitating-c-heds-priorities-as-kochis-designated-cell-for-climate-action/) | Centre for Heritage, Environment & Development, **Kochi's designated cell for climate action**. This is our target user |
@@ -197,6 +197,18 @@ These notes are from the current Claude API reference. They are for writing the 
 | `anthropic` (Tier 3) | Public Reaction Preview | Structured outputs via `output_config.format` or `messages.parse()`; prompt caching; typed exceptions (`RateLimitError`, `APIConnectionError`). See §2d |
 | `requests` | Live Open-Meteo fetch | Always pass `timeout=3`; never let an exception reach the UI |
 | `pytest`, `ruff` | Tests and lint in CI | GitHub Actions, set up in hour 2. Tests to include:<br>• a mocked network failure loads the cache fallback<br>• the plan stays within budget<br>• no intervention warms a cell<br>• **joint re-prediction ≠ sum of separate ones is handled**<br>• **no double-counted spillover** |
+
+---
+
+## 4b. Deployment (Streamlit Community Cloud), from the repo cross-check
+
+| Item | What to do at the event |
+|---|---|
+| Dependency file | Community Cloud **recommends `requirements.txt`**. It does **not** read `uv.lock`, and it treats `pyproject.toml` as Poetry format. So add an **app-only** `requirements.txt`: `streamlit`, `pydeck`, `pandas`, `pyarrow`, `numpy`, `requests` (+ `xgboost` only if the app re-predicts; + `anthropic` and `streamlit-image-comparison` only if Tier 3 ships). **No Earth Engine, geopandas/GDAL or training libraries** in the cloud build. [Streamlit docs: app dependencies](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/app-dependencies) · [uv support request](https://github.com/streamlit/streamlit/issues/9502) |
+| Reproducibility | Commit **`uv.lock`** (currently gitignored) for the full pipeline environment. Pin versions in `requirements.txt` |
+| App data | The cloud app only sees files that are in git. Commit small, app-ready files to a tracked **`data/app/`** folder: parquet grid, heat PNG, ward GeoJSON, precomputed presets and Heat-Neutral results, `live_snapshot.json`, `news_snapshot.json`, `reactions_cache.json`. Keep `data/raw/`, `data/frozen/` and the runtime caches ignored. Aim for tens of MB, well under the ~1 GB app limit |
+| Secrets | Add `.streamlit/secrets.toml` to `.gitignore`. Put any API key in the app's **Secrets** settings on Community Cloud and read it with `st.secrets` |
+| Cold start | Open the app 10 minutes before judging. Keep the backup recording ready |
 
 ---
 
@@ -257,7 +269,8 @@ These notes are from the current Claude API reference. They are for writing the 
 - [ ] Open-Meteo test request for the 8 Kochi points works from a browser (M3), and the coordinates are checked on a map (M1)
 - [ ] Malayalam news feeds open in a browser (Google News query, Mathrubhumi, 24 News), and a native reader reviews the keyword list (M4)
 - [ ] Kochi 74-ward GeoJSON downloaded from BharatLAS (M1)
-- [ ] CPCB Vyttila + Eloor temperature, Feb–Apr, downloaded (M4)
+- [ ] CPCB Vyttila + Eloor temperature, Jan–Apr, downloaded (M4)
+- [ ] **Team decision made** on the pre-event code/config files (`config.py`, tests, CI, `pyproject.toml`): move them to a `prep` branch or delete them before the event (PLAN §12)
 - [ ] Costs re-verified; sources saved for slides (M4)
 - [ ] Kerala rules re-verified: Labour order dates, KMBR FSI clause, SEIAA thresholds, IURWTS status (M4)
 - [ ] An official KSDMA/IMD alert source found and tested (M4)

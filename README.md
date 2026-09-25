@@ -4,7 +4,7 @@
 
 > "VISAT shows Kochi where heat is dangerous today, where ₹10 crore cools the most people, and screens every new project so the city stops getting hotter. We prove it against real change from 2017 to 2024."
 
-**Plan version: v5** (after four expert-review rounds). Four screens: **Today → Plan ₹ → Check a Project → Proof & Ward Card**.
+**Plan version: v5 (final)**, after four expert-review rounds and a full cross-check against PS1 and this repo (25 Sep 2026). Four screens: **Today → Plan ₹ → Check a Project → Proof & Ward Card**.
 
 ## Documents
 
@@ -24,7 +24,7 @@ tests/           # tests — written live during the hackathon
 
 | Member | Owns |
 |---|---|
-| M1 | Data & Model (Earth Engine scene stack, scene-panel model, exposure map, back-test, ECOSTRESS check) |
+| M1 | Data & Model (Earth Engine scene stack, scene-panel model, Heat Stress Map, back-test, ECOSTRESS check) |
 | M2 | Scenarios & Optimizer (validity matrix, joint re-prediction, optimizer, Heat-Neutral Check engine, tests) |
 | M3 | App (4 screens, live strip, Check-a-Project UI, Ward Card PDF, deploy) |
 | M4 | Product & Pitch (costs + Kerala rules, alert + Malayalam news chips, README, deck, video, submission) |
