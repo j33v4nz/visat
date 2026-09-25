@@ -14,6 +14,7 @@ This is everything the team needs to get ready for HackMe'26: accounts, datasets
 | Python 3.12 + `uv` on every laptop | All | Pin versions (section 4) and test the install before the event |
 | CPCB CCR portal login | M4 | For station temperature data (section 3) |
 | **NASA Earthdata login** (for AppEEARS) | M1 | Needed for **ECOSTRESS** LST, a PS1 input dataset. [AppEEARS ECOSTRESS tutorial (PDF)](https://ecostress.jpl.nasa.gov/downloads/tutorials/06-Downloading_from_AppEEARS.pdf) |
+| Anthropic API access (Tier 3 Public Reaction Preview only) | M4 | Optional. An API key or an `ant auth login` profile. Budget a few dollars (see §2d). Skip it if Tier 3 isn't reached |
 
 ---
 
@@ -135,6 +136,26 @@ Without the minus terms, Gulf heat stories (UAE 41–48 °C) leak in.
 
 ---
 
+## 2d. Public Reaction Preview: Claude API notes (Tier 3)
+
+These notes are from the current Claude API reference. They are for writing the code at the event; nothing is pre-built.
+
+| Item | Guidance |
+|---|---|
+| SDK | Official `anthropic` Python SDK: `client = anthropic.Anthropic()`. Don't use raw HTTP |
+| Model | Default **`claude-opus-5`** at `output_config: {"effort": "low"}` (simple, high-volume task). Switching to `claude-sonnet-5` or `claude-haiku-4-5` to save money is the team's choice; measure quality on a few sites first |
+| Call shape | **One call per (site, use type)** returns **all personas at once** as JSON. That's 5–8 sites × 3–4 uses ≈ **15–32 calls in total**, not one call per persona |
+| Structured output | `output_config: {"format": {...JSON schema...}}` on `messages.create()`, or `client.messages.parse()` with a Pydantic model. The old `output_format` parameter is deprecated. Schema per persona: `persona_id, stance ∈ {support, neutral, oppose}, top_concern, would_change_mind_if, quote_en, quote_ml (optional)` |
+| Prompt caching | Put the **fixed system prompt + persona table** first and mark it with `cache_control: {"type": "ephemeral"}`. The varying proposal and numbers go after it. Check that `usage.cache_read_input_tokens > 0` on the second call. Keep timestamps and random IDs out of the cached prefix |
+| Refusals | Check `stop_reason` before reading content. When writing `claude-opus-5` code, enable the server-side refusal fallback per the current docs |
+| Batches | The Message Batches API costs **50% less** but runs asynchronously and can take a while. Use it only if precomputing early in the night; otherwise use normal calls |
+| Rough cost | About 3k input + about 3k output tokens per call ≈ **$0.09/call** on `claude-opus-5` ($5 in / $25 out per million tokens) → **about $2–4 for all precomputed results**, less with caching or batches. Re-check prices on the day |
+| Number guard | After parsing, reject any quote that contains a number not present in the VISAT input numbers, and regenerate or drop it |
+| Demo safety | Precompute everything into `data/reactions_cache.json`. The demo reads the cache; a live re-run is optional and falls back to the cache |
+| Disclosure | Mention this in the AI-use disclosure slide: which model, what it does, and that it never changes the numbers |
+
+---
+
 ## 3. Kochi / Kerala local data
 
 | Data | Source | Notes |
@@ -173,6 +194,7 @@ Without the minus terms, Gulf heat stories (UAE 41–48 °C) leak in.
 | `streamlit-image-comparison` (Tier 3) | Before/after view | Compares two pre-rendered PNGs (e.g. 2017 vs 2024, before vs after the offset) |
 | `osmnx` (2.1) | OSM features (buildings, roads, sites, canals) | **v2 API:** `graph_from_bbox(bbox=(left, bottom, right, top))`; features via `ox.features_from_bbox`. [User reference](https://osmnx.readthedocs.io/en/stable/user-reference.html) |
 | `pythermalcomfort` (optional) | Heat index | `heat_index` as an alternative to coding the NWS formula ourselves. [Docs](https://pythermalcomfort.readthedocs.io/) |
+| `anthropic` (Tier 3) | Public Reaction Preview | Structured outputs via `output_config.format` or `messages.parse()`; prompt caching; typed exceptions (`RateLimitError`, `APIConnectionError`). See §2d |
 | `requests` | Live Open-Meteo fetch | Always pass `timeout=3`; never let an exception reach the UI |
 | `pytest`, `ruff` | Tests and lint in CI | GitHub Actions, set up in hour 2. Tests to include:<br>• a mocked network failure loads the cache fallback<br>• the plan stays within budget<br>• no intervention warms a cell<br>• **joint re-prediction ≠ sum of separate ones is handled**<br>• **no double-counted spillover** |
 

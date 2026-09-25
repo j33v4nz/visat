@@ -78,6 +78,7 @@ The roles table spreads these across M1–M4. What remains is sequencing *within
 | A judge attacks the physics or the canal assumptions | Medium | Credibility | Show the validity matrix: which interventions use analogs, which use the formula, which get no credit. Canals get 0 °C credit; IURWTS is an overlay | M2 |
 | Streamlit Cloud cold start or venue Wi-Fi fails during the slot | Medium | The demo dies | Warm the app up 10 minutes early; keep a backup screen recording; freeze the data; rehearse with Wi-Fi off | M3 |
 | GHSL population epoch (2020 or projection) doesn't match the 2024 back-test year | Low | Minor | Q&A answer ready (§5) | M1 |
+| Tier 3 **Public Reaction Preview** (simulated personas) is read as a gimmick or as "prompt generation", or quotes invented numbers | Medium | Could cost innovation or credibility points | Keep it **out of the 3-minute demo** and show it only in Q&A. Personas come from aggregate data tables, never real people, and are labelled "simulated". Schema-validated JSON, a number guard, precomputed cache. It never changes a °C or ₹ figure. It is the **first thing cut in Tier 3** (PLAN.md §4b) | M4 + M3 |
 
 ---
 

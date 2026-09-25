@@ -123,6 +123,41 @@ LIVE: Open-Meteo (15 min) + official alert + Malayalam news chip ──► strip
 - **Fallback:** the last cached fetch with its timestamp; if there is none, the chip is hidden.
 - **Build:** Tier 2, M4.
 
+## 4b. Public Reaction Preview (Tier 3 add-on, simulated)
+
+A small MiroFish-style simulation. It is **not** a full social-network swarm.
+
+- **Question it answers:** *"If Kochi adopts this, which residents will push back, and why?"* It helps C-HED **prepare for public consultation**. It is **not** a prediction of public opinion.
+- **Where it appears:** an expander on the **Check a Project** screen, below the heat-neutral result: *"How might residents react? (simulated)"*.
+- **Personas: 20–30 synthetic resident types**, built only from **overall statistics** (ward population/density from GHSL, OSM sites such as markets, harbours and construction, and job types). **Never real or identifiable people.** Examples:
+  - a Fort Kochi fisher
+  - a migrant construction worker (Hindi/Odia/Bengali speaker)
+  - an autorickshaw driver
+  - a Broadway market vendor
+  - a Kakkanad IT employee
+  - an elderly Mattancherry resident
+  - a school parent
+  - an anganwadi worker
+  - a ward councillor
+  - a builder or developer
+  - a residents' association secretary
+  - an environmental volunteer
+
+  Each persona has a ward, age band, hours outdoors, main concerns and a starting stance.
+- **Input:** the proposal (e.g. the heat-neutral rule for the chosen site, or the ₹10 crore plan for a ward) plus **VISAT's own numbers** (°C, ₹, people).
+- **Output per persona, as schema-validated JSON:** stance (support / neutral / oppose), top concern, what would change their mind, and a one-line quote (**labelled "simulated"**; Malayalam optional).
+- **Shown as:** a stance bar by group, the top 5 concerns, and a **"who to consult first"** list.
+- **Engineering, so it's more than prompt generation:**
+  - Personas are generated from data tables.
+  - Structured output uses a fixed JSON schema.
+  - A **number guard** rejects any reply that quotes a number not found in VISAT's input.
+  - Shared persona context is cached across calls.
+  - Results are **precomputed** for the 5–8 pre-drawn sites × use types, so the demo makes **no live AI call**. A "re-run" button is optional and falls back to the cache.
+  - pytest covers schema validity, the number guard and cache fallback.
+- **Honesty banner:** *"Simulated personas built from aggregate statistics, not real people or survey data. Use it to prepare for consultation, not as evidence."* It **never changes any °C, ₹ or ranking number.**
+- **Not in the 3-minute demo** (the judge vetoed leading with a chatbot). Show it only in Q&A, e.g. when asked "will people accept this?"
+- **Owner:** M4 (persona table, prompts, Malayalam) + M3 (UI). About 2–2.5 hours. **It is the first thing cut in Tier 3.**
+
 ## 5. Interventions: validity matrix
 
 | Intervention | PS1 category | How we model it | Where allowed | Cost |
@@ -178,6 +213,7 @@ Every row also shows its **"within-support %"**: how much of the change stays in
 - Heat ledger animation.
 - Before/after image comparison.
 - Printed A5 ward cards for the jury.
+- **Public Reaction Preview** (simulated personas, section 4b). It is built last and is the **first thing cut** if time is short. Start it only once the Heat-Neutral Check works.
 
 **Cut** (mentioned only as future scope):
 - Ask VISAT chatbot
@@ -196,8 +232,8 @@ Every row also shows its **"within-support %"**: how much of the change stays in
 |---|---|---|
 | **M1, Data & Model (ML)** | AppEEARS request (hour 0) → Earth Engine scene stack + ERA5 + 2017 Landsat, frozen by 2 PM → scene-panel model + CV + baselines + SHAP → exposure map → back-test → ECOSTRESS afternoon map → *(T2)* ECOSTRESS rank agreement, DiD | Data, model, validation |
 | **M2, Scenarios & Optimizer (ML)** | Validity matrix → analog + formula scenarios → joint re-prediction + tests → optimizer + baselines + presets → *(T2)* Heat-Neutral Check engine, vulnerability weights | Optimizer, physics, Heat-Neutral Check |
-| **M3, App (Design)** | Hello-world + CI by 12 PM → 4 screens, dark theme → Open-Meteo strip + fallback → Ward Card PDF → *(T2)* Check-a-Project UI (pre-drawn sites, use picker) → *(T3)* ledger animation, before/after, IURWTS overlay | Live demo, ward walkthrough |
-| **M4, Product & Pitch (Design)** | Costs + rules → README + AI disclosure → *(T2)* official alert chip + Malayalam news chip, "who signs" lines → deck, video, demo script → *(T3)* printed A5 cards → timekeeper and submitter | Problem, costs, policy, impact |
+| **M3, App (Design)** | Hello-world + CI by 12 PM → 4 screens, dark theme → Open-Meteo strip + fallback → Ward Card PDF → *(T2)* Check-a-Project UI (pre-drawn sites, use picker) → *(T3)* ledger animation, before/after, IURWTS overlay, Public Reaction expander | Live demo, ward walkthrough |
+| **M4, Product & Pitch (Design)** | Costs + rules → README + AI disclosure → *(T2)* official alert chip + Malayalam news chip, "who signs" lines → deck, video, demo script → *(T3)* printed A5 cards, Public Reaction Preview (persona table, prompts, precomputed results) → timekeeper and submitter | Problem, costs, policy, impact |
 
 ## 9. 24-hour timeline (work starts ~10 AM)
 
@@ -241,6 +277,7 @@ Each member presents one screen. Keep the backup recording ready and warm the ap
 | Why Malayalam news? Isn't it unreliable? | M4 | It's supporting evidence shown next to the official KSDMA/IMD alert, with channel, time and link. |
 | What if the live feed fails? | M3 | Every live item falls back to its last cached value with a timestamp. We rehearsed with Wi-Fi off. |
 | Did you cover the whole problem statement? | M4 | Yes. Section 0 maps every PS1 objective, input and outcome to a feature. |
+| Will people accept this? / Isn't the reaction preview just an AI making things up? | M4 | It's labelled as a simulation: synthetic resident types built from ward statistics, not real people or a survey. It only helps C-HED prepare for consultation, like "builders will worry about cost, vendors want shade". It never changes a °C or ₹ number, and a guard blocks any number that isn't in our data. |
 | Walk me through one ward. | M3 | Open its Ward Card: hotspots, drivers, vulnerable sites, top 3 actions with ₹ and °C, and who signs. |
 
 **One sentence everyone can say:** *"Where Kochi really lost trees or gained concrete between 2017 and 2024, our model predicted the temperature change, and here's how close it got."*
