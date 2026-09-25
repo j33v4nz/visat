@@ -4,6 +4,29 @@
 Your job: swap in **real data**, verify, polish, and pitch. Times are **hours from kick-off (H+0)**;
 submission portal locks at **9:00 AM Day 2**.
 
+## 🔴 Live status — update this section as things finish
+
+**Now:** Earth Engine login is done (project `sinuous-wording-468112-s2`) and the real Kochi export
+(`visat.gee_export`) is running. Static features (all 54,168 cells) confirmed working. Waiting on the
+28 satellite scenes + weather + the 2017/2024 back-test images.
+
+**Fixed today, already pushed (see `git log` for details), you don't need to redo this:**
+- Earth Engine login hung on this machine (tries to detect if it's a Google server) → fixed with `force=True`.
+- `computePixels` hit "User memory limit exceeded" on the full-size grid → now split into row tiles
+  (`gee_export.TILE_ROWS = 15`), auto-halves further if a tile still overflows.
+- `reduceResolution` rejected multi-source composites (Sentinel-2 + WorldCover) with no projection →
+  fixed with `setDefaultProjection` before reducing.
+- `.copyProperties()` returns the wrong type in Earth Engine's Python library and broke `.toFloat()` → cast
+  back to `ee.Image` explicitly.
+- **`ST_QA_MAX_K` (temperature-precision filter) raised from 2.0 → 3.0.** At 2K only **4 of 89** Jan–Apr
+  scenes passed — Kochi's humid coastal air makes Landsat's temperature readings less certain even on
+  clear days. 3K gives **28 scenes**, in our target range. This is a legitimate, measured choice — good
+  Q&A answer if asked ("why 3K not 2K": we measured it on real data, see `config.py` comment).
+
+**If you hit a NEW Earth Engine error not listed above:** check the exact message, it's usually one of:
+memory limit (tile smaller), projection (setDefaultProjection), or a type mismatch (wrap in `ee.Image(...)`).
+These are normal for Earth Engine at this data volume, not signs something is fundamentally wrong.
+
 ```bash
 git pull
 uv sync --all-groups                      # app + tests
@@ -35,16 +58,14 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 
 ## M1 — Data & Model (ML)
 
-- [ ] **H+0** Make sure your Google Cloud project is registered for Earth Engine (noncommercial). Then:
-  ```bash
-  uv sync --all-groups --extra pipeline
-  uv run earthengine authenticate
-  ```
+- [x] **H+0** Earth Engine registered and logged in (project `sinuous-wording-468112-s2`).
 - [ ] **H+0** Submit the **AppEEARS** request (NASA Earthdata login): product `ECO_L2T_LSTE.002`, layer **LST**,
       area = bbox `76.20, 9.88, 76.40, 10.10`, dates **Jan–Apr 2024 and 2025**, GeoTIFF, EPSG:4326.
-      When ready, unzip all `*LST_doy*.tif` into `data/raw/ecostress/`.
-- [ ] **H+0.5** `uv run python -m visat.gee_export --project <your-project>` → `data/frozen/`.
-      Check the log: **20–30 clean scenes**. If fewer, lower `MIN_VALID_FRACTION` in `config.py` to 0.5.
+      When ready, unzip all `*LST_doy*.tif` into `data/raw/ecostress/`. **Still needs doing — do this now,
+      it takes a while to process on NASA's side.**
+- [~] **H+0.5** `uv run python -m visat.gee_export --project sinuous-wording-468112-s2` → `data/frozen/`.
+      **In progress** (28 clean scenes confirmed — see Live status above). When it finishes, check the log
+      for `data frozen` and no errors before moving on.
 - [ ] **H+2** `uv run python -m visat.osm_features` (roads, schools, markets, hospitals, harbours, parks, canals).
 - [ ] **H+2** Download the Kochi 74-ward map from [BharatLAS](https://bharatlas.com/view/wards_kochi) (GeoJSON) →
       `data/raw/wards.geojson`. If ward names don't show, add the property name to `exposure.assign_wards`.
