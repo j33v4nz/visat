@@ -108,7 +108,7 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 | Public Reaction Preview (Tier 3, simulated personas, number guard) | `src/visat/reactions.py` | Extra |
 | Earth Engine export, OSM features, frozen loader | `gee_export.py`, `osm_features.py`, `frozen.py` | Inputs |
 | 4-screen Streamlit app, dark projector theme | `app/streamlit_app.py`, `.streamlit/config.toml` | UI |
-| 25 tests: budget, never-warms, eligibility, joint vs single, baselines, heat-neutral, fallbacks, Malayalam, number guard, app smoke | `tests/` | Demo safety |
+| 26 tests: budget, never-warms, eligibility, joint vs single, baselines, heat-neutral, fallbacks, Malayalam, number guard, app smoke | `tests/` | Demo safety |
 
 ---
 
@@ -186,6 +186,9 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
       KMBR FSI clause, SEIAA thresholds, IURWTS status). Fix anything wrong directly in `config.py`.
 - [ ] **H+1** Official alert source: put the best IMD/KSDMA link(s) in `config.OFFICIAL_ALERT_LINKS`.
 - [ ] **H+2** Malayalam: a **native speaker** fills `report.ML_LABELS` (Ward Card headings). No machine translation.
+      **Implemented in the app:** English/Malayalam switch across all four screens and a Malayalam
+      printable Ward Card, with source numbers unchanged. The Malayalam copy uses KSDMA's
+      `താപസൂചിക` terminology; native-speaker editorial review remains open before calling it final.
 - [ ] **H+2** Review the news keyword lists in `news.py` (HEAT, PLACE, GULF) with a native reader.
 - [ ] **H+3** Deck (5 slides): problem (2026 heat facts) → data → model + proof → plan vs baselines + Heat-Neutral →
       impact/scale. Include the **AI-use disclosure** (Claude-assisted coding; reaction preview uses Claude Opus 5
