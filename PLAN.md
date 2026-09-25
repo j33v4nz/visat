@@ -162,7 +162,7 @@ A small MiroFish-style simulation. It is **not** a full social-network swarm.
   - Results are **precomputed** for the 5–8 pre-drawn sites × use types, so the demo makes **no live AI call**. A "re-run" button is optional and falls back to the cache.
   - pytest covers schema validity, the number guard and cache fallback.
 - **Honesty banner:** *"Simulated personas built from aggregate statistics, not real people or survey data. Use it to prepare for consultation, not as evidence."* It **never changes any °C, ₹ or ranking number.**
-- **Not in the 3-minute demo** (the judge vetoed leading with a chatbot). Show it only in Q&A, e.g. when asked "will people accept this?"
+- **Not in the 5-minute pitch** (the judge vetoed leading with a chatbot). Show it only in Q&A, e.g. when asked "will people accept this?"
 - **Owner:** M4 (persona table, prompts, Malayalam) + M3 (UI). About 2–2.5 hours. **It is the first thing cut in Tier 3.**
 
 ## 5. Interventions: validity matrix
@@ -262,15 +262,19 @@ Every row also shows its **"within-support %"**: how much of the change stays in
 | **6:00 AM** | **Code freeze**; 3 rehearsals, one with Wi-Fi off |
 | 8:30 AM | Warm up the app; submit repo, URL, video and deck before 9:00 |
 
-## 10. The 3-minute demo
+## 10. The 5-minute pitch + 2-minute jury Q&A
+
+**Correction (verified against the event site's own rubric page source, `RubricPage.jsx`):** the actual format is a **5-minute team pitch, then a separate 2-minute jury Q&A** — not a 3-minute demo. That's almost 2 extra minutes versus what this section used to plan for; spent mainly on not rushing the back-test and giving the headline feature room to land, not on adding new content.
 
 | Time | What happens |
 |---|---|
-| **0:00–0:20 · Today** | "Right now Kochi's heat index is X, which is *Danger*. Act today in wards X, Y, Z: water kiosks, and the Labour order's 12–3 rest period." |
-| **0:20–1:00 · Plan ₹** | Press **₹10 crore**: "−X °C for Y people, N% better than spreading the money evenly." |
-| **1:00–1:50 · Check a Project** ⭐ | Pick the Kakkanad site, choose *IT park* → **+1.3 °C, 4,200 people** → *Make it heat-neutral* → **0.0 °C, ₹38 L**, then 2 seconds of silence (numbers illustrative). |
-| **1:50–2:30 · Proof** | "We predicted 2024 from 2017 and were within ±Z. The afternoon ECOSTRESS check agrees N%. Here's what we model and how." |
-| **2:30–3:00 · Close** | Hand each judge the Ward Card for their area, and say the closing number. |
+| **0:00–0:25 · Today** | "Right now Kochi's heat index is X, which is *Danger*. Act today in wards X, Y, Z: water kiosks, and the Labour order's 12–3 rest period." |
+| **0:25–1:15 · Plan ₹** | Press **₹10 crore**: "−X °C for Y people, N% better than spreading the money evenly." |
+| **1:15–2:30 · Check a Project** ⭐ | Pick the Kakkanad site, choose *IT park* → **+1.3 °C, 4,200 people** → *Make it heat-neutral* → **0.0 °C, ₹38 L**, then 2 seconds of silence (numbers illustrative). |
+| **2:30–3:45 · Proof** | "We predicted 2024 from 2017 and were within ±Z. The afternoon ECOSTRESS check agrees N%. Here's what we model and how." Take the extra time here — this is the hardest thing to rush and the easiest to get wrong under time pressure. |
+| **3:45–4:30 · Close** | Hand each judge the Ward Card for their area, and say the closing number. |
+| **4:30–5:00 · Buffer** | Land the last line, hand off to Q&A. |
+| **5:00–7:00 · Jury Q&A (2 min)** | See section 11. Whoever is asked answers; others stay quiet unless named — equal participation is explicitly scored, but that means everyone gets *a* turn across the whole pitch, not everyone answering every question. |
 
 Each member presents one screen. Keep the backup recording ready and warm the app up 10 minutes early.
 
