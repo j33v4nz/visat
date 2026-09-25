@@ -16,7 +16,10 @@ from visat import config, exposure, i18n, live, news, report
 
 st.set_page_config(page_title="VISAT · Kochi Heat Action Planner", page_icon="🌡️", layout="wide")
 st.markdown(
-    """<style>
+    """<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;600;800&display=swap"
+          rel="stylesheet">
+    <style>
     header[data-testid="stHeader"] {visibility:hidden;} #MainMenu, footer {visibility:hidden;}
     [data-testid="stMainBlockContainer"] {padding-top:1rem;}
     html, body, [class*="css"] {font-size:20px;}
