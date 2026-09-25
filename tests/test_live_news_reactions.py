@@ -32,6 +32,20 @@ def test_news_classification():
     assert tag == {"kind": "heat", "colour": "Yellow"}
 
 
+def test_news_classification_handles_inflected_malayalam_forms():
+    # Real headlines almost always inflect place/heat words rather than using
+    # the bare dictionary form (e.g. "in Ernakulam" is "എറണാകുളത്ത്", not
+    # "എറണാകുളം" + a separate word) -- these must still match.
+    assert news.classify("എറണാകുളത്ത് ചൂട് ജാഗ്രത") is not None
+    assert news.classify("കൊല്ലത്ത് ചൂട് കൂടുന്നു") is not None
+    assert news.classify("കോട്ടയത്ത് ചൂട് കൂടുന്നു") is not None
+    assert news.classify("കേരളത്തിൽ ചൂടേറുന്നു") is not None  # "heat is rising"
+    # and unrelated Kerala news, or Gulf heat in its inflected form, must
+    # still be excluded -- the fix must not create new false positives.
+    assert news.classify("കേരളത്തിൽ തെരഞ്ഞെടുപ്പ് പ്രഖ്യാപിച്ചു") is None
+    assert news.classify("ദുബായിൽ ചൂട് കൂടുന്നു") is None
+
+
 def test_news_chip_counts_channels():
     items = [{"title": "a", "channel": c, "time": "2026-04-23T10:00", "kind": "heat", "colour": None,
               "link": "x"} for c in ("Asianet", "24 News", "Asianet")]

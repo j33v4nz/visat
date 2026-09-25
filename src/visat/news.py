@@ -34,15 +34,32 @@ def normalize(text: str) -> str:
     return unicodedata.normalize("NFC", text).lower()
 
 
+def _stem(word: str) -> str:
+    """Malayalam case suffixes replace a trailing virama or anusvara rather
+    than simply appending (e.g. "ചൂട്" -> "ചൂടിൽ"/"ചൂടേറുന്നു", "എറണാകുളം" ->
+    "എറണാകുളത്ത്"). A plain substring match against the dictionary form
+    misses these — very common — inflected headlines. Strip a trailing
+    virama (്) or anusvara (ം) so the stem still matches. This is a
+    heuristic, not real morphology — a native Malayalam reader should review
+    it, same caveat as the chillu normalisation above."""
+    if len(word) > 3 and word[-1] in ("്", "ം"):
+        return word[:-1]
+    return word
+
+
+def _keyword_in(keyword: str, normalized_text: str) -> bool:
+    return _stem(normalize(keyword)) in normalized_text
+
+
 def classify(title: str) -> dict | None:
     t = normalize(title)
-    if any(normalize(g) in t for g in GULF) or not any(normalize(p) in t for p in PLACE):
+    if any(_keyword_in(g, t) for g in GULF) or not any(_keyword_in(p, t) for p in PLACE):
         return None
-    heat = any(normalize(k) in t for k in HEAT)
-    rain = any(normalize(k) in t for k in RAIN)
+    heat = any(_keyword_in(k, t) for k in HEAT)
+    rain = any(_keyword_in(k, t) for k in RAIN)
     if not (heat or rain or "അലർട്ട്" in t or "alert" in t):
         return None
-    colour = next((v for k, v in COLOURS.items() if normalize(k) in t), None)
+    colour = next((v for k, v in COLOURS.items() if _keyword_in(k, t)), None)
     return {"kind": "heat" if heat else "weather", "colour": colour}
 
 
