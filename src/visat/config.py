@@ -14,7 +14,16 @@ GHSL_POP = "JRC/GHSL/P2023A/GHS_POP"  # real epochs to 2020 only; 2025/2030 are 
 GHSL_BUILT_H = "JRC/GHSL/P2023A/GHS_BUILT_H"
 GHSL_BUILT_S = "JRC/GHSL/P2023A/GHS_BUILT_S"
 SRTM = "USGS/SRTMGL1_003"
-ERA5_LAND_HOURLY = "ECMWF/ERA5_LAND/HOURLY"  # not a model feature — heat index/UTCI + physics check only
+# meteorological input (PS1): heat stress map, atmospheric-driver analysis, and
+# physics-derived features (absorbed shortwave, evaporative-cooling potential).
+# ~9km, so never used as a raw per-pixel predictor directly.
+ERA5_LAND_HOURLY = "ECMWF/ERA5_LAND/HOURLY"
+# UT-GLOBUS (GEE community catalog) — Kochi coverage unconfirmed; fall back to
+# GHSL + OSM building density if it doesn't cover Kochi (see RESOURCES.md §2).
+UT_GLOBUS_CHECK_BEFORE_EVENT = True
+# ECOSTRESS LST — not in GEE for Kochi (LA-metro tiles only); sourced instead
+# via NASA AppEEARS (ECO_L2T_LSTE.002), request submitted at hour 0.
+ECOSTRESS_PRODUCT = "ECO_L2T_LSTE.002"
 
 # Landsat ST scaling (Collection 2 Level 2)
 LANDSAT_ST_SCALE = 0.00341802
@@ -68,4 +77,7 @@ COST_COOL_ROOF_PER_SQM = 300
 COST_COOL_ROOF_RECOAT_PER_SQM = 150  # every 3 years
 COST_MANGROVE_PER_HECTARE_LOW = 100_000
 COST_MANGROVE_PER_HECTARE_HIGH = 800_000
-COST_GREEN_ROOF_PER_SQM = 7500  # excluded from optimizer — never cost-effective
+COST_GREEN_ROOF_PER_SQM = 7500  # simulated and scored; rarely chosen on cost
+# Cool pavement and canal/pond restoration costs are still being researched
+# (RESOURCES.md §6) — add constants here once sourced, before wiring into
+# the optimizer's cost table.
