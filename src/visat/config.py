@@ -34,7 +34,9 @@ LANDSAT_ST_SCALE = 0.00341802
 LANDSAT_ST_OFFSET = 149.0  # kelvin
 LANDSAT_SR_SCALE = 0.0000275
 LANDSAT_SR_OFFSET = -0.2
-ST_QA_MAX_K = 2.0  # drop pixels whose ST_QA * 0.01 exceeds this
+ST_QA_MAX_K = 3.0  # drop pixels whose ST_QA * 0.01 exceeds this — 2.0 left only 4 scenes over
+# humid coastal Kochi even on cloud-free days (Landsat's LST retrieval is less certain in high
+# water vapour); measured on real data: 2K -> 4 scenes, 3K -> 28 scenes, 4K -> 47 scenes.
 SENTINEL2_SR = "COPERNICUS/S2_SR_HARMONIZED"  # 2019+ over India
 CLOUD_SCORE_PLUS = "GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED"
 WORLDCOVER = "ESA/WorldCover/v200"  # 2021: present-day land cover

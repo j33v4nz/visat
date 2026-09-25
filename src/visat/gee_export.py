@@ -43,32 +43,53 @@ def _aoi():
     return ee.Geometry.Rectangle(list(config.BBOX))
 
 
-def pixels(image) -> np.ndarray:
-    """Pull an image onto the exact 100 m grid as a numpy structured array (rows × cols)."""
-    n_rows, n_cols = grid_shape()
-    lon0, _, _, lat1 = config.BBOX
-    req = {
-        "expression": image.unmask(NODATA),
+TILE_ROWS = 15  # 30 rows still overflows EE's synchronous memory limit over the dense urban core
+
+
+def _pixels_request(image, n_cols, row_start, height, lon0, lat1):
+    return {
+        "expression": image,
         "fileFormat": "NUMPY_NDARRAY",
         "grid": {
-            "dimensions": {"width": n_cols, "height": n_rows},
+            "dimensions": {"width": n_cols, "height": height},
             "affineTransform": {"scaleX": config.CELL_DEG, "shearX": 0, "translateX": lon0,
-                                "shearY": 0, "scaleY": -config.CELL_DEG, "translateY": lat1},
+                                "shearY": 0, "scaleY": -config.CELL_DEG,
+                                "translateY": lat1 - row_start * config.CELL_DEG},
             "crsCode": "EPSG:4326",
         },
     }
-    for attempt in range(4):
-        try:
-            return ee.data.computePixels(req)
-        except Exception:
-            if attempt == 3:
-                raise
-            time.sleep(5 * (attempt + 1))
 
 
-def _mean_to_grid(img):
-    return img.reduceResolution(ee.Reducer.mean(), maxPixels=4096).reproject(
-        crs="EPSG:4326", crsTransform=_transform())
+def pixels(image, tile_rows: int = TILE_ROWS) -> np.ndarray:
+    """Pull an image onto the exact 100 m grid, tiled by rows so each request stays small enough
+    for Earth Engine's synchronous computePixels memory limit (this matters most for composites
+    that need reduceResolution, e.g. Sentinel-2/WorldCover/Dynamic World at their native 10 m)."""
+    n_rows, n_cols = grid_shape()
+    lon0, _, _, lat1 = config.BBOX
+    img = image.unmask(NODATA)
+    tiles = []
+    for start in range(0, n_rows, tile_rows):
+        height = min(tile_rows, n_rows - start)
+        req = _pixels_request(img, n_cols, start, height, lon0, lat1)
+        for attempt in range(4):
+            try:
+                tiles.append(ee.data.computePixels(req))
+                break
+            except Exception as e:
+                is_memory = "memory limit" in str(e).lower()
+                if attempt == 3 or (is_memory and tile_rows <= 2):
+                    raise
+                if is_memory:  # halve the tile size once, then keep retrying at that size
+                    return pixels(image, tile_rows=max(2, tile_rows // 2))
+                time.sleep(5 * (attempt + 1))
+    return np.concatenate(tiles, axis=0)
+
+
+def _mean_to_grid(img, scale=10):
+    # Band math / multi-source composites (S2 normalizedDifference, WorldCover masks, Dynamic
+    # World means) lose their native projection, so reduceResolution needs one declared explicitly.
+    return img.setDefaultProjection(crs="EPSG:4326", scale=scale).reduceResolution(
+        ee.Reducer.mean(), maxPixels=4096).reproject(crs="EPSG:4326", crsTransform=_transform())
 
 
 def _landsat(start, end, months):
@@ -86,7 +107,9 @@ def _clear(img):
 def _lst(img):
     st = img.select("ST_B10").multiply(config.LANDSAT_ST_SCALE).add(config.LANDSAT_ST_OFFSET).subtract(273.15)
     good = _clear(img).And(img.select("ST_QA").multiply(0.01).lte(config.ST_QA_MAX_K))
-    return st.updateMask(good).rename("lst").copyProperties(img, ["system:time_start"])
+    # .copyProperties() returns a generic Element in the Python client, not an Image — cast it back
+    # so later Image-only calls (.toFloat(), etc.) work.
+    return ee.Image(st.updateMask(good).rename("lst").copyProperties(img, ["system:time_start"]))
 
 
 def _sr(img, band):
