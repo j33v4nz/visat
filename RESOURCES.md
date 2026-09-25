@@ -14,7 +14,6 @@ This is everything the team needs to get ready for HackMe'26: accounts, datasets
 | Python 3.12 + `uv` on every laptop | All | Pin versions (section 4) and test the install before the event |
 | CPCB CCR portal login | M4 | For station temperature data (section 3) |
 | **NASA Earthdata login** (for AppEEARS) | M1 | Needed for **ECOSTRESS** LST, a PS1 input dataset. [AppEEARS ECOSTRESS tutorial (PDF)](https://ecostress.jpl.nasa.gov/downloads/tutorials/06-Downloading_from_AppEEARS.pdf) |
-| Anthropic API key (Tier 3 "Ask VISAT" only) | M2 | Optional. Skip it if Tier 3 isn't reached |
 
 ---
 
@@ -24,15 +23,21 @@ This is everything the team needs to get ready for HackMe'26: accounts, datasets
 |---|---|---|
 | **Surface temperature (target)** | `LANDSAT/LC09/C02/T1_L2`, `LANDSAT/LC08/C02/T1_L2` | `ST_B10 × 0.00341802 + 149.0` = kelvin, then subtract 273.15 for °C. Mask clouds with `QA_PIXEL`. Drop pixels where `ST_QA × 0.01` > 2 K. Overpass is ~10:30 AM local time. Landsat 9 L2 is available through Sep 2026. [L9 catalog](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC09_C02_T1_L2) · [USGS scale factors](https://www.usgs.gov/faqs/how-do-i-use-a-scale-factor-landsat-level-2-science-products) · [Science product guide](https://www.usgs.gov/media/files/landsat-8-9-collection-2-level-2-science-product-guide) |
 | Albedo | Same Landsat SR bands | Liang's formula on SR_B2–B7 |
-| Greenery / concrete / water indices | `COPERNICUS/S2_SR_HARMONIZED` | NDVI, NDBI, MNDWI from **Sentinel-2 only**, because Landsat surface temperature already uses NDVI-based emissivity and would leak into the target. For clouds, use the SCL band or `GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED` |
+| Greenery / concrete / water indices | `COPERNICUS/S2_SR_HARMONIZED` | NDVI, NDBI, MNDWI from Sentinel-2, because Landsat surface temperature already uses NDVI-based emissivity and would leak into the target. For clouds, use the SCL band or `GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED`. **2017 back-test exception:** the panel reports that S2 surface reflectance over India starts around Dec 2018 (check in GEE). For 2017, use **Landsat 8 SR NDVI** (or `COPERNICUS/S2_HARMONIZED` L1C) and say so |
 | Land cover fractions | `ESA/WorldCover/v200` (2021) | Classes: 10 tree · 50 built · 80 water · **95 mangroves** |
 | **Land-cover change (back-test)** | `GOOGLE/DYNAMICWORLD/V1` | 10 m, **2015 to present**, 9 class probabilities. Compare Feb–Apr 2017 with Feb–Apr 2024. [Catalog](https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1) · [Change-monitoring workshop](https://courses.spatialthoughts.com/gee-dw-monitoring.html) |
 | Population | `JRC/GHSL/P2023A/GHS_POP` | 100 m. Epochs every 5 years to 2020, plus 2025/2030 projections. P2023A is still the latest release. [Catalog](https://developers.google.com/earth-engine/datasets/catalog/JRC_GHSL_P2023A_GHS_POP) |
 | Building height / built surface | `JRC/GHSL/P2023A/GHS_BUILT_H`, `…/GHS_BUILT_S` | Morphology features. [Built surface](https://developers.google.com/earth-engine/datasets/catalog/JRC_GHSL_P2023A_GHS_BUILT_S) |
 | Elevation | `USGS/SRTMGL1_003` | Mangrove eligibility (low-lying land) |
-| **Meteorological (PS1 input)** | `ECMWF/ERA5_LAND/HOURLY` | ~9 km. Bands: `temperature_2m`, `dewpoint_temperature_2m` (for humidity), `u/v_component_of_wind_10m`, `surface_solar_radiation_downwards`, `potential_evaporation`. Used for:<br>• the **heat stress map** (Feb–Apr afternoon heat index)<br>• **atmospheric drivers** (values at each Landsat overpass)<br>• **physics features** (absorbed shortwave, evaporative potential)<br>Not used as a raw per-pixel predictor (too coarse) |
-| Urban morphology | UT-GLOBUS building heights / urban canopy parameters | GEE community catalog ([page](https://gee-community-catalog.org/projects/utglobus/)). Covers 1,200+ cities; **check Kochi coverage before the event**, otherwise fall back to GHSL + OSM buildings and say so |
-| **ECOSTRESS LST (PS1 input)** | `ECO_L2T_LSTE.002` via **NASA AppEEARS** (not in GEE for Kochi; GEE only has Los Angeles tiles) | 70 m, varying overpass times, so it gives the **afternoon** scenes Landsat can't. Output is GeoTIFF with a cloud mask. **Note:** the `lst_err` layer is missing for 16 Dec 2025 – 10 Jun 2026, so prefer Feb–Apr 2024–2025 scenes. [Product page](https://lpdaac.usgs.gov/products/eco_l2t_lstev002/) · [VITALS notebook](https://nasa.github.io/VITALS/python/Exploring_ECOSTRESS_L2T_LSTE.html) · [Quality-flag notice](https://www.earthdata.nasa.gov/data/alerts-outages/ecostress-version-2-level-2-quality-flags-action-required) |
+| **Meteorological (PS1 input)** | `ECMWF/ERA5_LAND/HOURLY` | ~9 km. Bands: `temperature_2m`, `dewpoint_temperature_2m` (for humidity), `u/v_component_of_wind_10m`, `surface_solar_radiation_downwards`, `potential_evaporation`. **v5 use: the scene-panel model.** For each clean Landsat scene, take ERA5 values at the overpass hour, so each scene row gets its own weather. The physics feature (1 − albedo) × SSRD then **varies from scene to scene** and is really learned, not just a rescaled albedo. Also used for the heat index (the *when* part of the exposure index). Report n scenes and confidence intervals |
+| Urban morphology | UT-GLOBUS building heights / urban canopy parameters | GEE community catalog ([page](https://gee-community-catalog.org/projects/utglobus/)). **Check only.** Record whether it covers Kochi so we can say so honestly. v5 uses GHSL + OSM buildings (PS1 says "if available") |
+| **ECOSTRESS LST (PS1 input)** | `ECO_L2T_LSTE.002` via **NASA AppEEARS** (not in GEE for Kochi; GEE only has Los Angeles tiles) | 70 m, varying overpass times, so it gives the **afternoon** scenes Landsat can't. Output is GeoTIFF with a cloud mask. **v5 use:**
+- Filter to **12:00–15:30 local time**, because the ISS overpass time drifts.
+- Compare **patterns, not absolute °C**: Spearman correlation on ward means, plus top-decile overlap with the Landsat ranking.
+- Check alignment against the coastline, since early scenes have geolocation errors.
+- Submit the AppEEARS request at hour 0.
+
+**Note:** the `lst_err` layer is missing for 16 Dec 2025 – 10 Jun 2026, so prefer Feb–Apr 2024–2025 scenes. [Product page](https://lpdaac.usgs.gov/products/eco_l2t_lstev002/) · [VITALS notebook](https://nasa.github.io/VITALS/python/Exploring_ECOSTRESS_L2T_LSTE.html) · [Quality-flag notice](https://www.earthdata.nasa.gov/data/alerts-outages/ecostress-version-2-level-2-quality-flags-action-required) |
 | Mangrove reference | Global Mangrove Watch v4.1 (1985–2025) | In the community catalog. [GEE community catalog](https://gee-community-catalog.org/projects/mangrove/) |
 
 ---
@@ -70,13 +75,22 @@ This is everything the team needs to get ready for HackMe'26: accounts, datasets
 - Commit a snapshot at data freeze so the fallback always exists.
 - Test it with Wi-Fi off.
 
-**"Where to act today"**
-- Formula: `today_peak_heat_index × ward_exposure`, where `ward_exposure` = satellite heat anomaly × population × vulnerable-site weight (schools, anganwadis, markets, harbours from OSM).
+**"Act today" (one line on the Today screen)**
+- Formula: `today_peak_heat_index × ward_exposure`, where `ward_exposure` = LST rank × population × site weight (construction sites, markets, schools, anganwadis, harbours from OSM).
 - The live part is *when* and *how bad*; the satellite part is *where*.
+- Link each ward to the actions officials already use (section 3b): the Labour Department's 12–3 PM rest period, and KSDMA advisories.
 
 ---
 
 ## 2c. Live Malayalam news alerts (RSS)
+
+**v5 form (judge's ruling):**
+- A **static chip** on the Today screen: "⚠ Heat reported by N Malayalam channels today". Clicking it opens an expander with the headlines, links and fetch time.
+- Shown **next to an official KSDMA/IMD alert chip**, which is the authority.
+- No scrolling ticker and no AI summaries.
+- Falls back to the last cache; if there is none, the chip is hidden.
+- Tier 2, owned by M4.
+- **Official source:** M4 finds one before the event. Candidates to check: IMD district-wise warnings (mausam.imd.gov.in), NDMA's **Sachet** CAP alert feed, and KSDMA bulletins. None verified yet.
 
 **Tested 25 Sep 2026**
 
@@ -131,6 +145,19 @@ Without the minus terms, Gulf heat stories (UAE 41–48 °C) leak in.
 | Coastal Regulation Zone | [KCZMA CZMP 2019, Ernakulam maps (PDF)](https://keralaczma.gov.in/index.php/zone-maps/coastal-zone-maps-2019) | PDF only, not GIS. Use it as a visual reference. The mangrove mask is a proxy: barren/grass cells within 200 m of water, below 3 m elevation, not built, near existing Global Mangrove Watch extent |
 | Kawaki programme | [C-HED: Kawaki](https://c-hed.org/kawaki-project-inaugurated/) · [NbS4India case study](https://www.nbs4india.org/case-studies/the-kawaki-initiative/) | Launched in 2020 by Kochi Municipal Corporation with WRI-India and C-HED. Native-tree groves placed with data in heat-vulnerable areas |
 | C-HED | [Climate change](https://c-hed.org/climate-change-2/) · [Designated climate-action cell](https://c-hed.org/workshop-on-advancing-climate-action-in-kochi-facilitating-c-heds-priorities-as-kochis-designated-cell-for-climate-action/) | Centre for Heritage, Environment & Development, **Kochi's designated cell for climate action**. This is our target user |
+| **IURWTS canals (KMRL)** | [KMRL IURWTS](https://kochimetro.org/iurwts/) · [Swarajya](https://swarajyamag.com/news-brief/kochi-to-have-more-navigable-waterways-as-canals-set-for-transformation-under-rs-3716-crore-urban-revival-plan) | ₹3,716 crore; 6 canals (Edappally, Chilavannur, Thevara–Perandoor, Thevara, Konthuruthy, Market) to be widened to 16.5 m; land acquisition under way. Driven by flooding and transport. **v5:** shown as a committed overlay with 0 °C credit, plus canal-bank tree strips |
+
+## 3b. Kerala rules and advisories (from panel research; M4 re-verifies before the event)
+
+| Item | What it says | Use in VISAT | Source |
+|---|---|---|---|
+| Labour Commissioner order, 2026 | Outdoor workers rest **12–3 PM**, **13 Feb – 20 May 2026**; at most 8 hours between 7 AM and 7 PM | Linked from "Act today"; wards with construction sites ranked higher | [Kerala Kaumudi](https://keralakaumudi.com/en/news/news.php?id=1478856&u=govt-reschedules-working-hours-for-labourers-as-temperatures-soar-rest-from-12-3-pm) |
+| KSDMA heat advisories | Avoid direct sun 11 AM–3 PM; water, ORS, cotton clothing; schools avoid assemblies and outdoor classes; local bodies run drinking-water kiosks (*thanneer pandal*); fire safety at markets and waste dumps; protect livestock | Action list on "Act today" and the Ward Card | KSDMA (find the current PDF) |
+| KMBR 2019 | Government may grant extra FSI or relaxations for climate-mitigation and conservation projects | Heat-Neutral Check framed as a voluntary offset that could earn an FSI incentive | [Onmanorama](https://www.onmanorama.com/news/kerala/2020/09/24/building-rules-relaxations-details-kerala-cabinet.html) |
+| SEIAA Kerala (EIA 8(a)) | Projects of 20,000–150,000 m² built-up area need state environmental clearance (Form-1A) | Heat-Neutral output could be attached to Form-1A for IT parks and malls | Verify with MoEFCC EIA 2006 schedule |
+| Kochi Master Plan 2040 / nature-based solutions | Resilience guidance adopted | "Who signs" line for Ward Card actions | [WRI](https://www.wri.org/outcomes/kochi-india-adopts-nature-based-solutions-climate-resilience) |
+
+**Framing rule:** the Heat-Neutral Check is a **screening tool and a policy proposal**, never an "approval" or a legal requirement.
 
 ---
 
@@ -142,13 +169,12 @@ Without the minus terms, Gulf heat stories (UAE 41–48 °C) leak in.
 | `pandas`, `pyarrow`, `numpy`, `scipy`, `scikit-learn` | Tables, focal filters, `NearestNeighbors`, `GroupKFold` | `scipy.ndimage.uniform_filter` for 300/500 m neighbourhood features |
 | `xgboost` | Model | `monotone_constraints` per feature. Constrain all correlated partners |
 | `shap` | Drivers | Use native TreeSHAP (`pred_contribs=True`), precomputed offline |
-| `streamlit` + `pydeck` | Dashboard | `st.pydeck_chart(..., on_select="rerun")` returns the clicked ward. **Every layer needs an `id`.** [Docs](https://docs.streamlit.io/develop/api-reference/charts/st.pydeck_chart) · [2026 release notes](https://docs.streamlit.io/develop/quick-reference/release-notes/2026) |
-| `osmnx` (2.1) + `networkx` | OSM features, Cool Routes | **v2 API:** `graph_from_bbox(bbox=(left, bottom, right, top))`; routing lives in `ox.routing`. [User reference](https://osmnx.readthedocs.io/en/stable/user-reference.html) |
-| `pythermalcomfort` | UTCI "feels-like" heat stress | UTCI valid ranges: air temp −50 to 50 °C; radiant temp within air temp −70/+30; wind 0.5–17 m/s. [Docs](https://pythermalcomfort.readthedocs.io/) |
-| `natcap.invest` (Tier 3) | **InVEST Urban Cooling** benchmark (optional PS1 tool) | Needs a land-cover raster (projected CRS), a reference ET₀ raster, an AOI, a biophysical table (`lucode, kc, green_area`, plus `shade, albedo` for the "factors" method) and a reference air temperature. [API](https://invest.readthedocs.io/en/latest/api/natcap.invest.urban_cooling_model.html) |
+| `streamlit` + `pydeck` | Dashboard | `st.pydeck_chart(..., on_select="rerun")` returns **picked objects only**, not arbitrary lat/lon, and **every layer needs an `id`**. So the Check-a-Project sites are **5–8 pre-drawn pickable polygons**, the use type comes from `st.segmented_control`, and `view_state` is kept in `st.session_state` so reruns don't reset the map. The budget uses **preset buttons (₹1/10/50 crore)** with cached results instead of a laggy slider. Dark theme; hide the header with CSS. [Docs](https://docs.streamlit.io/develop/api-reference/charts/st.pydeck_chart) · [2026 release notes](https://docs.streamlit.io/develop/quick-reference/release-notes/2026) |
+| `streamlit-image-comparison` (Tier 3) | Before/after view | Compares two pre-rendered PNGs (e.g. 2017 vs 2024, before vs after the offset) |
+| `osmnx` (2.1) | OSM features (buildings, roads, sites, canals) | **v2 API:** `graph_from_bbox(bbox=(left, bottom, right, top))`; features via `ox.features_from_bbox`. [User reference](https://osmnx.readthedocs.io/en/stable/user-reference.html) |
+| `pythermalcomfort` (optional) | Heat index | `heat_index` as an alternative to coding the NWS formula ourselves. [Docs](https://pythermalcomfort.readthedocs.io/) |
 | `requests` | Live Open-Meteo fetch | Always pass `timeout=3`; never let an exception reach the UI |
-| `pytest`, `ruff` | Tests and lint in CI | GitHub Actions, set up in hour 2. Include a test that mocks a network failure and checks that the cache fallback loads |
-| `anthropic` (Tier 3) | "Ask VISAT" parser | Claude only turns text into optimizer parameters, and every number comes from our code |
+| `pytest`, `ruff` | Tests and lint in CI | GitHub Actions, set up in hour 2. Tests to include:<br>• a mocked network failure loads the cache fallback<br>• the plan stays within budget<br>• no intervention warms a cell<br>• **joint re-prediction ≠ sum of separate ones is handled**<br>• **no double-counted spillover** |
 
 ---
 
@@ -157,15 +183,14 @@ Without the minus terms, Gulf heat stories (UAE 41–48 °C) leak in.
 | Feature | What to read / reuse |
 |---|---|
 | Heat map | Landsat ST scaling (above), [GEE Landsat guide](https://developers.google.com/earth-engine/guides/landsat), [Digital Earth Africa LST notebook](https://docs.digitalearthafrica.org/en/latest/sandbox/notebooks/Datasets/Landsat_Surface_Temperature.html) (same Collection 2 logic) |
-| Model + honest validation | XGBoost monotone constraints; `GroupKFold` on 2 km block IDs; compare against random KFold and a linear baseline |
+| Model + honest validation | **Scene-panel:** rows = cells × scenes, with that scene's ERA5 values + (1 − albedo) × SSRD. XGBoost monotone constraints. `GroupKFold` on 2 km block IDs **across all scenes** (a block never appears in both train and test). Compare against a linear model and an unconstrained XGBoost; report n and CIs. Fallback: a single-composite model |
+| Validity matrix | For each intervention: analog / energy-balance formula / no °C credit, plus within-support %. Formula interventions: ΔT ≈ Δα × S / h (cool roofs, cool pavements), latent-cooling estimate (green roofs) |
 | Why (SHAP) | Group correlated features (greenery = NDVI + tree fraction) before showing bars |
 | Analog transitions | `sklearn.neighbors.NearestNeighbors` (k=20) on context features, then move toward the neighbours' median. Cap at the observed 90th percentile |
-| Back-test | Dynamic World 2017 vs 2024 (Feb–Apr) + Landsat LST for both periods, then plot predicted vs observed ΔLST |
+| Back-test | Dynamic World 2017 vs 2024 (Feb–Apr) + Landsat LST for both periods. **Normalise each scene to its city median first**, so year-to-year weather doesn't dominate. Then plot predicted vs observed ΔLST |
 | Optimizer | Greedy on (ΔT × people × vulnerability weight) / ₹, re-scoring neighbours via focal features. Precompute the ₹1–50 crore curve |
 | Physics check | ΔT_roof ≈ Δα × S / h, with S ≈ 750 W/m² and h ≈ 25 W/m²K, scaled by roof fraction |
-| **Heat Impact Check** (new) | Reverse analog transition (green → built) + optimizer for the cheapest offset. Precedent: cities abroad require canopy/cool-roof measures for new development ([ACEEE UHI policy database](https://database.aceee.org/city/mitigation-urban-heat-islands), [OCRAP model policy](https://ocrap.net/policies/urban-heat-model/)). We found no Kerala equivalent |
-| Cool Routes (Tier 3) | `osmnx` walk graph; edge weight = length × (1 + heat penalty) |
-| Feels-like heat (Tier 3) | `pythermalcomfort` UTCI with ERA5 air temp, humidity and wind, and radiant temperature adjusted for shade. Label as an estimate |
+| **Heat-Neutral Development Check** | Reverse analog transition using **donors matched to the site's context** (inland vs port/industrial). Joint re-prediction of the site and its neighbours, then the cheapest offset to 0 **surface-°C (morning)**. Framed as a screening tool and policy proposal (section 3b). Precedent abroad: [ACEEE UHI policy database](https://database.aceee.org/city/mitigation-urban-heat-islands), [OCRAP model policy](https://ocrap.net/policies/urban-heat-model/) |
 | Ward Heat Card | HTML template printed from the browser; Malayalam in **Noto Sans Malayalam** (Google Fonts), translated by a team member |
 
 ---
@@ -178,8 +203,10 @@ Without the minus terms, Gulf heat stories (UAE 41–48 °C) leak in.
 | Cool roof | ₹300 / m² | [Telangana Cool Roof Policy 2023](https://telanganatoday.com/indias-first-cool-roof-policy-launched-in-telangana) |
 | Cool roof recoat | ₹150 / m² every 3 years | Our estimate (humid-climate soiling) |
 | Mangrove restoration | ₹1–8 lakh / ha | [CEEW](https://www.ceew.in/ecological-mangrove-restoration); [One Earth 2025](https://www.sciencedirect.com/science/article/pii/S259033222500168X) |
-| Cool pavement | **To research** | M4 |
-| Canal / pond restoration | **To research** | M4 |
+| Cool pavement | ₹350 / m² (range ₹190–500, ~3-year life) | Reflective coating ~₹186/m² material ([Flipkart LuminX](https://www.flipkart.com/luminx-cool-pavement-heat-reflective-coating-roads-walkways-parking-areas-white-resistance-elastomeric-emulsion-wall-paint/p/itmc4728e92353a1)) + labour (panel estimate) |
+| Pond restoration | ~₹45 lakh / ha | Amrit Sarovar ~₹18 lakh/acre ([Vikaspedia](https://en.vikaspedia.in/viewcontent/schemesall/schemes-for-farmers/mission-amrit-sarovar?lgn=en)) |
+| Canal-bank tree strip | ~₹1,000 / m | Estimate: ~1 tree per 3 m at ₹3,100/tree |
+| IURWTS canals | ₹3,716 crore (committed; **not bought by our optimizer**) | [KMRL](https://kochimetro.org/iurwts/) |
 | Green roof (simulated, rarely chosen) | ₹7,500 / m² | [IndiaSpend](https://www.indiaspend.com/explainers/explained-as-indoor-heat-rises-can-india-turn-to-green-roofs-867308) |
 
 ---
@@ -209,13 +236,16 @@ Without the minus terms, Gulf heat stories (UAE 41–48 °C) leak in.
 - [ ] Malayalam news feeds open in a browser (Google News query, Mathrubhumi, 24 News), and a native reader reviews the keyword list (M4)
 - [ ] Kochi 74-ward GeoJSON downloaded from BharatLAS (M1)
 - [ ] CPCB Vyttila + Eloor temperature, Feb–Apr, downloaded (M4)
-- [ ] Costs re-verified, plus cool-pavement and canal-restoration costs found; sources saved for slides (M4)
+- [ ] Costs re-verified; sources saved for slides (M4)
+- [ ] Kerala rules re-verified: Labour order dates, KMBR FSI clause, SEIAA thresholds, IURWTS status (M4)
+- [ ] An official KSDMA/IMD alert source found and tested (M4)
+- [ ] Check in GEE whether S2 surface reflectance exists over Kochi in 2017, and whether Landsat NDVI is needed for the back-test (M1)
 - [ ] NASA Earthdata account works; a test AppEEARS ECOSTRESS request for Kochi is done (M1)
 - [ ] UT-GLOBUS Kochi coverage checked (M1)
 - [ ] **PS1 compliance checklist (PLAN.md section 0) re-checked by the whole team**
 - [ ] C-HED / councillor / KSDMA contacted (M4). **Use only genuine quotes.** If there's no reply, say "awaiting response"
 - [ ] Slide template, pitch script and AI-use disclosure drafted (M4)
-- [ ] Ward-card and tab sketches (M3)
+- [ ] Sketches of the 4 screens and the ward card, and a dark-theme test on a projector (M3)
 - [ ] Practice run of the full pipeline (practice code stays off the event repo)
 - [ ] Two phone hotspots with data packs
 
