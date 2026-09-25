@@ -12,9 +12,62 @@ by anyone except M1 for the optional ECOSTRESS/wards follow-ups below. **App loo
 either way** — same 4 screens, just real numbers now (₹10cr plan → 186,258 people cooled, for real).
 
 **Still open, none of these block M2/M3/M4:**
-- Kochi ward map not loaded (using 575 1-km zones instead — see M1's list below for why + the fix)
+- ~~Kochi ward map not loaded~~ **The GeoJSON is in now (PR #7), but `data/app/` hasn't been rebuilt
+  with it yet — see the "root0x1d, AI-assisted" section right below for the one command that's needed.**
 - ECOSTRESS afternoon check not run yet (M1, needs the AppEEARS download)
 - CPCB station check not run yet (M4, optional download)
+
+## 🤖 root0x1d + AI-assisted additions (PRs #5, #6, #7 — merged, see `git log`)
+
+Adding this so it's clear to the rest of the team (and your own AI assistants reading this repo) what
+came from this side and why, without duplicating or overwriting anyone else's notes above/below.
+
+- **PR #5 — docs only.** Verified two things directly against the event site's own source
+  (`chsrikar/hackme-26` on GitHub, not the rendered page): the rubric is **5 weighted pillars summing to
+  100%**, not 6 with an invented "UI/UX" category (Innovation 30 / Technical Depth 25 / Working
+  Execution 20 / Impact 15 / Presentation 10) — and the real pitch format is **5-minute pitch + 2-minute
+  jury Q&A**, not 3 minutes. Fixed PLAN.md §10's demo script and STRATEGY.md's rubric table to match.
+- **PR #6 — real bug, verified before fixing.** `news.py`'s Malayalam keyword filter missed real
+  headlines that inflect place/heat words (very common — "in Ernakulam" is one word,
+  "എറണാകുളത്ത്", not "Ernakulam" + a separate locative word). Confirmed
+  `news.classify("എറണാകുളത്ത് ചൂട് ജാഗ്രത")` returned `None` before the fix, despite Ernakulam being
+  the district Kochi is in. Fixed with a stem-match helper instead of hand-editing each keyword; 1 new
+  regression test, 3 negative cases checked for new false positives (Gulf heat, unrelated Kerala news —
+  both still correctly excluded).
+- **PR #7 — `data/raw/wards.geojson` + `data/frozen/osm.parquet`, both real, both verified before
+  committing:**
+  - Downloaded the real 74-ward GeoJSON from BharatLAS (direct link, no click-through needed:
+    `https://pub-0429b8e3b5a946e69ea007df844a6f1c.r2.dev/admin/wards-kochi/wards_kochi.geojson`).
+  - **Found the file stores coordinates as `[lat, lon]`, not GeoJSON-standard `[lon, lat]`.** Checked
+    against a real landmark — "Island North" ward (Willingdon Island) showed raw coordinates
+    `[9.96, 76.28]`, and 9.96 is obviously the latitude. Confirmed the effect directly: `assign_wards()`
+    on the unswapped file matches **zero** cells (ran it, got 0/54168), silently, no error anywhere.
+    Fixed by swapping coordinates before saving.
+  - **Also found `exposure.py`'s `assign_wards()` doesn't look for this file's actual name property**
+    (`ward_lgd_name`) — only `ward_name`/`name`/`Ward_Name`/`WARD_NAME`, none of which exist here. Left
+    as-is, every ward silently falls back to "Ward 1", "Ward 2"... Added `ward_lgd_name` to the lookup.
+  - Verified both fixes together against `demo_data.build()`: 74 real LGD ward names resolve correctly
+    (Island North, Island South, Edakochi North, Edakochi South, Thazhappu, ...), thousands of cells
+    assigned versus zero before.
+  - Also ran `osm_features.py` for real (28,378 roads, 542 schools, 62 markets, 390 hospitals, 5
+    harbours, 243 parks) — this is what M1's checklist above is already reporting.
+
+**One thing genuinely still needed, and I can't do it myself:** `data/app/` was built (H+4 freeze) a few
+minutes *before* the ward fix merged, so it's still on the 575-zone fallback. `data/frozen/`'s raw GEE
+export files (`cells_static.parquet`, `scenes.parquet`, `scenes_meta.parquet`, `backtest.parquet`) are
+correctly gitignored and only exist on whoever ran `gee_export.py` locally — I don't have them, so I
+can't rebuild `data/app/` myself (confirmed: tried, got
+`FileNotFoundError: Missing [...] in data/frozen`). **Whoever has that local `data/frozen/` folder
+(M1) just needs to `git pull` then re-run:**
+```bash
+uv run python -m visat.pipeline --source frozen
+```
+That one run will replace the 575 zones with the real ward names/boundaries everywhere in the app —
+Today screen, Plan table, Ward Card — no other code changes needed.
+
+**AppEEARS/ECOSTRESS is the one item on this list I genuinely cannot help with** — it needs M1's
+personal NASA Earthdata login, which isn't something I have or can create. Everything else above was
+either public data (OSM, BharatLAS) or pure local computation.
 
 **Fixed today, already pushed (see `git log` for details), you don't need to redo this:**
 - Earth Engine login hung on this machine (tries to detect if it's a Google server) → fixed with `force=True`.
@@ -72,11 +125,16 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 - [x] **H+0.5** `visat.gee_export` done for real: 54,168 cells, **23 clean scenes** (Jan-2019–Feb-2026),
       2017/2024 back-test composites. Took ~20 min after 2 Earth Engine fixes (see below).
 - [x] **H+2** OSM features done: 28,378 roads, 542 schools, 62 markets, 390 hospitals, 16 construction, 5 harbours, 243 parks, 5,525 canal-bank cells.
-- [ ] **H+2** Kochi 74-ward map: **not loaded yet.** OSM doesn't have Kochi's municipal wards well-tagged
-      (tried; only found district/state boundaries). App currently falls back to **575 1-km zones**
-      (labelled honestly, this fallback was always in the plan). **Nice-to-have, not a blocker:** manually
-      download the GeoJSON from [BharatLAS](https://bharatlas.com/view/wards_kochi) (their site needs a
-      click-through, no public API found) → `data/raw/wards.geojson`, then rerun `visat.pipeline`.
+- [x] **H+2** Kochi 74-ward map: **done (PR #7, AI-assisted — see the section near the top of this file).**
+      OSM doesn't have Kochi's municipal wards well-tagged, so this came from BharatLAS instead — direct
+      download link found (no click-through needed): `wards_kochi.geojson` at their R2 bucket. The file
+      itself had two real problems, both fixed and verified before committing: its coordinates are
+      `[lat, lon]` not GeoJSON-standard `[lon, lat]` (silently matched zero cells otherwise — confirmed),
+      and its name property is `ward_lgd_name`, which `exposure.assign_wards()` wasn't checking for
+      (silently fell back to "Ward N" otherwise). `data/raw/wards.geojson` is in. **Still needs:** rerun
+      `visat.pipeline --source frozen` (whoever has the local `data/frozen/` raw export) to actually
+      replace the 575-zone fallback in `data/app/` with these real ward boundaries — nobody's done that
+      last step yet since the fix merged just after H+4 data freeze.
 - [ ] **H+2.5** (optional, M4 downloads) CPCB Vyttila/Eloor CSVs → `data/raw/cpcb/`. Also optional: the
       AppEEARS ECOSTRESS download (M1, still pending — see top of file).
 - [x] **H+3** `visat.pipeline --source frozen` run — **real `data/app/` built and committed.**
