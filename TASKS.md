@@ -121,14 +121,31 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 
 ## M4 — Product & Pitch (Design)
 
-- [ ] **H+0** Verify costs in `config.INTERVENTIONS` (`cost_note` sources) and Kerala rules (Labour order dates,
-      KMBR FSI clause, SEIAA thresholds, IURWTS status). Fix anything wrong directly in `config.py`.
-- [ ] **H+1** Official alert source: put the best IMD/KSDMA link(s) in `config.OFFICIAL_ALERT_LINKS`.
+- [x] **H+0** Verify costs in `config.INTERVENTIONS` (`cost_note` sources) and Kerala rules (Labour order dates,
+      KMBR FSI clause, SEIAA thresholds, IURWTS status). **Re-verified (AI-assisted, fresh web searches, not
+      just re-reading the doc):** Labour order 13 Feb–20 May, 12–3 PM rest, max 8h between 7 AM–7 PM — exact
+      match. KMBR 2019 extra-FSI incentive — confirmed, matches. SEIAA Form-1A 20,000–150,000 m² — confirmed
+      exact threshold. IURWTS ₹3,716 crore — confirmed current. **One real error found and fixed** in
+      RESOURCES.md's canal list: it read "Edappally, Chilavannur, Thevara–Perandoor, Thevara, Konthuruthy,
+      Market" — which lists "Thevara" twice and never names "Perandoor" cleanly. The real 6 are Edappally,
+      **Perandoor**, Chilavannur, Thevara, Konthuruthy, Market (confirmed against Onmanorama/Swarajya) — fixed.
+      All cost figures (`cost_per_cell`/`cost_per_m2` in `config.py`) checked, nothing else wrong.
+- [x] **H+1** Official alert source: put the best IMD/KSDMA link(s) in `config.OFFICIAL_ALERT_LINKS`.
+      **Already done and verified live** — both `mausam.imd.gov.in/thiruvananthapuram/` and
+      `sdma.kerala.gov.in` return 200. Just the checkbox was stale.
 - [ ] **H+2** Malayalam: a **native speaker** fills `report.ML_LABELS` (Ward Card headings). No machine translation.
 - [ ] **H+2** Review the news keyword lists in `news.py` (HEAT, PLACE, GULF) with a native reader.
 - [ ] **H+3** Deck (5 slides): problem (2026 heat facts) → data → model + proof → plan vs baselines + Heat-Neutral →
       impact/scale. Include the **AI-use disclosure** (Claude-assisted coding; reaction preview uses Claude Opus 5
-      only to phrase simulated personas — never numbers).
+      only to phrase simulated personas — never numbers). **Ready-to-paste draft (verified against the actual
+      code, not just described from memory):**
+      > *This project used Claude (Anthropic) as a coding assistant throughout the build — data pipeline,
+      > model, optimizer, app and tests. Where AI is used at runtime, it's narrowly scoped and disclosed on
+      > screen: the optional Public Reaction Preview (Tier 3) uses Claude Opus 5, at low effort, only to phrase
+      > how simulated resident personas might react — a number guard automatically drops any AI-generated reply
+      > that quotes a figure not already present in our own computed results, so it can describe our numbers
+      > but never invent new ones. Every °C, ₹ and person figure elsewhere in the app comes from our own model
+      > and optimizer, not from an AI call.*
 - [ ] **T3** Public Reaction Preview: `uv sync --extra reactions`, set `ANTHROPIC_API_KEY`, run
       `uv run python -m visat.reactions` (~24 calls, ~$2–4) → commits `data/app/reactions_cache.json`.
 - [ ] **H+19** Record the 2–3 min demo video (backup). **H+22.5** submit: repo, live URL, video, deck.
