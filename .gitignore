@@ -1,0 +1,22 @@
+__pycache__/
+*.pyc
+.venv/
+.uv/
+uv.lock
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+
+# Frozen/live data caches — event-day artifacts, not committed as source
+data/raw/
+data/frozen/
+data/live_cache.json
+data/news_cache.json
+*.tif
+*.tiff
+
+# Secrets
+.env
+*.key
+service-account*.json
