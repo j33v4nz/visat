@@ -24,6 +24,7 @@ service-account*.json
 
 # Office lock files (LibreOffice leaves these behind)
 .~lock.*#
+~$*
 
 # Local debugging/review output (keep out of the repo)
 debug.log
