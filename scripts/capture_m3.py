@@ -1,8 +1,4 @@
-"""Capture the four VISAT demo moments from a running local Streamlit app.
-
-Run: python scripts/capture_m3.py
-"""
-
+"""Walk the map-first UHI dashboard and save desktop, scenario and mobile screenshots."""
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright
@@ -10,37 +6,51 @@ from playwright.sync_api import sync_playwright
 OUT = Path("artifacts/m3")
 OUT.mkdir(parents=True, exist_ok=True)
 
-with sync_playwright() as playwright:
-    browser = playwright.chromium.launch(headless=True)
-    page = browser.new_page(viewport={"width": 1600, "height": 1100}, device_scale_factor=1)
-    page.goto("http://localhost:8501", wait_until="networkidle", timeout=120_000)
-    page.get_by_role("tab", name="① Where is heat dangerous today?").click()
-    page.wait_for_timeout(6000)
-    page.screenshot(path=str(OUT / "01_today.png"), animations="disabled")
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True)
+    page = browser.new_page(viewport={"width": 1600, "height": 1000}, device_scale_factor=1)
+    errors = []
+    page.on("pageerror", lambda error: errors.append(str(error)))
+    page.goto("http://localhost:8501", wait_until="domcontentloaded", timeout=60000)
+    page.locator(".st-key-inspector").wait_for(timeout=30000)
+    page.wait_for_timeout(2500)
+    canvas = page.locator(".st-key-map_canvas").bounding_box()
+    assert canvas["width"] == 1600 and canvas["height"] == 1000
+    page.screenshot(path=str(OUT / "dashboard_desktop.png"))
 
-    page.get_by_role("tab", name="② What should we do with ₹?").click()
-    page.get_by_text("₹10 crore → about", exact=False).wait_for()
-    page.wait_for_timeout(1500)
-    assert not page.get_by_text("Error: Unexpected", exact=False).count()
-    page.screenshot(path=str(OUT / "02_plan_10_crore.png"), animations="disabled")
-    page.get_by_text("Show OSM canal-bank tree-strip candidates").click()
-    page.get_by_text("Blue dots = 100 m cells near OSM canals", exact=False).wait_for()
-    assert not page.get_by_text("Error: Unexpected", exact=False).count()
+    nav = page.locator(".st-key-navigation")
+    nav.get_by_text("Cooling plan", exact=False).click()
+    page.get_by_text("People cooled", exact=False).wait_for()
+    page.screenshot(path=str(OUT / "dashboard_plan.png"))
 
-    page.get_by_role("tab", name="③ Will this project make it hotter?").click()
-    page.get_by_text("Apply available offsets").click()
-    page.get_by_text("Heat remains after these offsets", exact=False).wait_for()
-    page.wait_for_timeout(1500)
-    assert not page.get_by_text("Error: Unexpected", exact=False).count()
-    page.screenshot(path=str(OUT / "03_kakkanad_it_park.png"), animations="disabled")
-    page.get_by_text("Compare the modelled heat before and after offsets").click()
-    page.get_by_text("Project + available offsets").wait_for()
-    assert not page.get_by_text("Error: Unexpected", exact=False).count()
+    nav.get_by_text("Project check", exact=False).click()
+    page.get_by_text("Development impact", exact=False).wait_for()
+    page.screenshot(path=str(OUT / "dashboard_project.png"))
 
-    page.get_by_role("tab", name="④ Can we trust it? · Ward Card").click()
-    page.get_by_text("We predicted 2024 from 2017", exact=False).wait_for()
-    page.wait_for_timeout(1500)
-    page.screenshot(path=str(OUT / "04_proof_ward_card.png"), animations="disabled")
+    nav.get_by_text("Simulation", exact=False).click()
+    page.get_by_text("Test a ward-level heat scenario", exact=False).wait_for()
+    page.get_by_role("button", name="Download scenario report").wait_for()
+    page.screenshot(path=str(OUT / "dashboard_simulation.png"))
+
+    nav.get_by_text("Evidence", exact=False).click()
+    page.get_by_text("Model performance", exact=False).wait_for()
+    page.screenshot(path=str(OUT / "dashboard_evidence.png"))
+
+    nav.get_by_text("Heat overview", exact=False).click()
+    page.get_by_role("combobox").first.click()
+    page.get_by_role("option").nth(1).click()
+    page.wait_for_timeout(1200)
+    page.screenshot(path=str(OUT / "dashboard_malayalam.png"))
+    page.set_viewport_size({"width": 390, "height": 844})
+    page.wait_for_timeout(800)
+    layer_options = page.locator(".st-key-map_tools").get_by_text("Heat surface", exact=False)
+    if layer_options.count() and layer_options.first.is_visible():
+        page.locator(".st-key-map_tools").get_by_role("button").first.click()
+        page.wait_for_timeout(300)
+    page.screenshot(path=str(OUT / "dashboard_mobile.png"))
+    assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+    assert not errors, errors
+    assert not page.locator('[data-testid="stException"]').count()
     browser.close()
 
-print(f"Saved four screenshots to {OUT.resolve()}")
+print("Dashboard capture passed: five workspaces, English/Malayalam and mobile.")

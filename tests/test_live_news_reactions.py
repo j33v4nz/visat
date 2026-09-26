@@ -1,6 +1,6 @@
 import json
 
-from visat import live, news, reactions
+from uhi import live, news, reactions
 
 
 def _boom():

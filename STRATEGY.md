@@ -1,8 +1,8 @@
-# VISAT — Winning Strategy & Risk Register
+# UHI — Winning Strategy & Risk Register
 
 Companion to [PLAN.md](./PLAN.md) and [RESOURCES.md](./RESOURCES.md). Those two cover *what to build*. This one covers *how to win*:
 - the judging criteria
-- the risks specific to this plan's shape: four screens, a live weather strip plus alert/news chips, the Heat-Neutral Development Check, and a scene-panel physics model
+- the risks specific to this plan's shape: five workspaces, a live weather strip plus alert/news chips, the Heat-Neutral Development Check, and a scene-panel physics model
 - the exact order to cut scope if the clock runs out
 
 It is analysis and pre-event decisions only, with no project code (PLAN.md §14).
@@ -17,7 +17,7 @@ It is analysis and pre-event decisions only, with no project code (PLAN.md §14)
 
 **The rubric has exactly 5 weighted pillars summing to 100%, not 6 with an unweighted "UI/UX" row.** Confirmed verbatim from the component: Innovation & Originality 30%, Technical Complexity & Depth 25%, Working Execution & Live Demo 20%, Practical Utility & Impact 15%, Presentation Craft & Jury Q&A 10%. UI quality is judged *inside* Working Execution (does the live demo work well) and Presentation (does it communicate clearly) — it never had its own "remainder" weight.
 
-| Criterion | Weight | What judges check (site wording) | Where VISAT v5 stands |
+| Criterion | Weight | What judges check (site wording) | Where UHI v5 stands |
 |---|---|---|---|
 | **Innovation & Originality** | 30% | Novel architecture, creative synthesis across domains, *differentiation from existing off-the-shelf solutions* | **Strong.** The Heat-Neutral Development Check (a screening tool tied to KMBR/SEIAA hooks) plus a warn / plan / prevent / prove story. Kochi-specific pieces: IURWTS canal overlay, Labour-order-linked "act today". |
 | **Technical Complexity & Depth** | 25% | Engineering depth, system architecture, robust algorithms, code quality, non-trivial algorithmic logic | **Strong.** Scene-panel physics-informed XGBoost (cells × scenes with per-scene ERA5), grouped spatial-block CV against baselines, validity matrix, joint re-prediction with tests, an optimizer that beats naive baselines, and a 2017→2024 back-test. |
@@ -36,7 +36,7 @@ The judge-panel estimate for v5 is **about 84/100 with Tier 1+2 and about 86 wit
 - **ECOSTRESS.** It is not in Earth Engine for Kochi (only Los Angeles tiles), but **PS1 lists it as an input**, so v5 keeps it through **NASA AppEEARS**. Tier 1 shows an afternoon (12:00–15:30) map on the Proof screen. Tier 2 adds rank agreement with Landsat (Spearman correlation + top-decile overlap). *(The v4 version of this file said "correctly dropped". That would have left a PS1 gap.)*
 - **ESA WorldCover time series.** There is no 2017 or 2024 edition, so the back-test uses Dynamic World and WorldCover is used only for the present-day map.
 - **Sentinel-2 in 2017.** Surface reflectance over India reportedly starts around Dec 2018, so the 2017 back-test uses **Landsat NDVI**. M1 confirms this in GEE before the event.
-- **ERA5 is now a real model input.** The scene-panel model gives each satellite scene its own ERA5 weather, so (1 − albedo) × incoming sunlight varies by scene and is actually learned. *(The v4 note "ERA5 not a model feature" is out of date. `src/visat/config.py` still says it, so update that when code is written at the event.)*
+- **ERA5 is now a real model input.** The scene-panel model gives each satellite scene its own ERA5 weather, so (1 − albedo) × incoming sunlight varies by scene and is actually learned. *(The v4 note "ERA5 not a model feature" is out of date. `src/uhi/config.py` still says it, so update that when code is written at the event.)*
 - **Canals** get **no °C credit**, because they are narrower than the 100 m grid. Instead, the KMRL IURWTS canal project is shown as an overlay, and tree strips along the canal banks are offered as the actual intervention.
 
 One additional gap needs only a one-line Q&A answer, not a rebuild:
@@ -47,7 +47,7 @@ One additional gap needs only a one-line Q&A answer, not a rebuild:
 
 ## 3. Scope risk: the real threat
 
-v5 already cut a lot (Ask VISAT, Thiruvananthapuram, InVEST, UT-GLOBUS, the swipe map, the scrolling ticker, the separate 72-hour screen, conformal intervals, the drag slider). But **Tier 2 still has six items** in the after-4 PM window:
+v5 already cut a lot (Ask UHI, Thiruvananthapuram, InVEST, UT-GLOBUS, the swipe map, the scrolling ticker, the separate 72-hour screen, conformal intervals, the drag slider). But **Tier 2 still has six items** in the after-4 PM window:
 - the Heat-Neutral Check
 - ECOSTRESS stats
 - the alert and news chips
@@ -70,7 +70,7 @@ The roles table spreads these across M1–M4. What remains is sequencing *within
 
 | Risk | Likelihood | Impact | Mitigation | Owner |
 |---|---|---|---|---|
-| **Pre-event code in the repo.** The rules say all project *code, schemas and configurations* must be written during the event. The repo already has `src/visat/config.py`, `pyproject.toml`, CI and tests | Medium | Could be read as a rules breach, possibly disqualification | **Team decision needed before the event.** Move these to a `prep` branch or delete them from `main`, and recreate them at the event. Docs (PLAN/RESOURCES/STRATEGY) are plans, not code | Team |
+| **Pre-event code in the repo.** The rules say all project *code, schemas and configurations* must be written during the event. The repo already has `src/uhi/config.py`, `pyproject.toml`, CI and tests | Medium | Could be read as a rules breach, possibly disqualification | **Team decision needed before the event.** Move these to a `prep` branch or delete them from `main`, and recreate them at the event. Docs (PLAN/RESOURCES/STRATEGY) are plans, not code | Team |
 | Scene-panel model underperforms or is late | Medium | Weakens the physics-informed and atmospheric-driver story | 4 PM checkpoint fallback to the composite model, described honestly. Report n scenes and confidence intervals either way | M1 |
 | pydeck can't register clicks on arbitrary land (`on_select` returns only picked objects), and reruns reset the view | High if unplanned | The hero screen breaks live | **5–8 pre-drawn candidate sites** as a pickable polygon layer, `st.segmented_control` for the use type, `view_state` kept in `session_state`, and all results cached | M3 |
 | Budget interaction lags on rerun | Medium | The wow moment stutters | **Preset buttons for ₹1/10/50 crore** with precomputed results, no drag slider | M3 |
@@ -94,9 +94,7 @@ The roles table spreads these across M1–M4. What remains is sequencing *within
 | Your population layer: is it really 2024 data? | M1 | GHSL's latest real epoch is 2020 (2025/2030 are projections). It's a population-density weight, not what we validate. The *temperature* change we prove is real 2017→2024 satellite data. |
 | Is using news RSS feeds okay here? | M4 | They're public syndication feeds. We show only headline, channel, time and link, never article text, and it sits next to the official KSDMA/IMD alert, which is the authority. |
 | How do I know the live layer is really live right now? | M3 | Look at the timestamp on the strip ("updated X min ago"). It refreshes every 15 minutes, and the freshness panel on the Proof screen shows which layers are live, cached or frozen. |
-| Why only four screens? | M3 | A councillor needs four answers: where it's dangerous today, what to do with the money, whether a new project adds heat, and whether to trust it. Everything else is in expanders for Q&A. |
-| At ₹50 crore, doesn't "trees everywhere" cool *more people* than your plan? | M2 | Checked directly against our real committed numbers: yes — 550,369 vs 433,751 people touched at all, because trees are cheap and spread thin. But our plan delivers 810,418 person-°C of cooling versus 194,048 for trees-everywhere — over 4× more *intensity* for the same money, which is what actually protects people in a heatwave. We optimize for degrees that matter, not a headcount of anyone touched by 0.1 °C. |
-| Why does your model barely show any cooling from cool roofs, when your own physics formula says −2.3 °C? | M1/M2 | Real finding from our own validation, not a bug: albedo and built-up density are correlated in Kochi (r≈0.47), so the model's built-up feature already explains most of the warming and there's little separate signal left for albedo alone. That's exactly why we cross-check cool roofs against the physics formula instead of trusting the ML number by itself — the same conservatism shows up in our back-test slope (1.87, meaning we understate real change magnitude), so it's a consistent, honest pattern, not a one-off. |
+| Why five workspaces? | M3 | Councillors can inspect heat, compare investments, test a ward scenario, screen a new project, and inspect evidence. Supporting detail stays available for review. |
 
 ---
 

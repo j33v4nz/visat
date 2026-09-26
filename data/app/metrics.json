@@ -8135,19 +8135,7 @@
     1.58
    ]
   ],
-  "label": "Δ surface-°C 2017→2024 (Feb–Apr), each year normalised to its city median",
-  "matched": {
-   "n_changed_matched": 8000,
-   "n_control_pool": 14248,
-   "k": 5,
-   "mean_control_trend_c": -0.34926146488189697,
-   "mean_observed_did_c": 0.3000910101413727,
-   "mean_predicted_did_c": 0.11352842301130295,
-   "mae_c": 1.4282347390660697,
-   "pearson_r": 0.39129247764934505,
-   "median_match_distance": 0.3758878943028363,
-   "label": "Exploratory 2017-feature kNN matched comparison; not causal"
-  }
+  "label": "Δ surface-°C 2017→2024 (Feb–Apr), each year normalised to its city median"
  },
  "ecostress": null,
  "cpcb": null,

@@ -14,9 +14,7 @@ data/live_cache.json
 data/news_cache.json
 *.tif
 *.tiff
-# osmnx's HTTP response cache (osm_features.py) — .gitignore has no trailing-comment syntax,
-# so this must be its own line or "cache/" silently stops matching
-cache/
+cache/  # osmnx's HTTP response cache (osm_features.py)
 
 # Secrets (API keys go in Streamlit Cloud → App settings → Secrets)
 .streamlit/secrets.toml
@@ -26,3 +24,9 @@ service-account*.json
 
 # Office lock files (LibreOffice leaves these behind)
 .~lock.*#
+
+# Local debugging/review output (keep out of the repo)
+debug.log
+/audit_*.png
+/judge_*.png
+artifacts/review/*.zip

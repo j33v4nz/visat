@@ -1,8 +1,8 @@
 import pytest
 
-from visat import demo_data, exposure, model, optimize
-from visat.features import add_focal_features
-from visat.scenarios import Engine
+from uhi import demo_data, exposure, model, optimize
+from uhi.features import add_focal_features
+from uhi.scenarios import Engine
 
 
 @pytest.fixture(scope="session")

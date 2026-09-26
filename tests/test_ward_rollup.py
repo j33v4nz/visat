@@ -5,7 +5,7 @@ import json
 import pandas as pd
 import pytest
 
-from visat import config
+from uhi import config
 
 
 def test_named_ward_artifacts_match_cell_assignment():

@@ -1,7 +1,7 @@
 [project]
-name = "visat"
+name = "uhi"
 version = "0.1.0"
-description = "VISAT: Kochi Heat Action Planner — HackMe'26 PS1 (Urban Heat Mitigation via AI/ML)"
+description = "UHI: Urban Heat Intelligence - Kochi Heat Action Planner — HackMe'26 PS1 (Urban Heat Mitigation via AI/ML)"
 requires-python = ">=3.12"
 dependencies = [
     "numpy",
@@ -29,7 +29,6 @@ reactions = [
 
 [dependency-groups]
 dev = [
-    "playwright>=1.63.0",
     "pytest",
     "ruff",
 ]
@@ -45,4 +44,4 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/visat"]
+packages = ["src/uhi"]
