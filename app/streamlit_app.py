@@ -53,7 +53,7 @@ if lang == "ml":
     </style>""", unsafe_allow_html=True)
 TEAL = [70, 196, 190]
 HEAT = [255, 122, 61]
-KOCHI_VIEW = pdk.ViewState(latitude=9.99, longitude=76.30, zoom=11.2, pitch=0)
+KOCHI_VIEW = pdk.ViewState(latitude=9.99, longitude=76.30, zoom=12.3, pitch=0)
 
 
 @st.cache_data
