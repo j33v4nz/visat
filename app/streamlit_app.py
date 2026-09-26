@@ -534,11 +534,17 @@ elif mode == "project":
                                 get_radius=40, get_fill_color=TEAL+[240], pickable=True))
 
 labels = [{"name": t(name), "position": [lon, lat]} for name, (lat, lon) in config.KOCHI_POINTS.items()]
+# deck.gl's TextLayer characterSet has no "auto" keyword: a plain string value is read
+# literally as the exact set of characters to build glyphs for. "auto" therefore built a
+# font atlas containing only the 4 letters a/u/t/o, so every other letter in "Kakkanad",
+# "Kalamassery" etc. had no glyph and rendered blank. Use the real characters instead.
+label_charset = "".join(sorted({ch for row in labels for ch in row["name"]}))
 layers.append(pdk.Layer("TextLayer", id="place_labels", data=labels, get_position="position",
-                        get_text="name", get_size=12, get_color=[220,235,242,220],
+                        get_text="name", get_size=16, get_color=[235,240,245,255],
                         get_text_anchor="'middle'", get_alignment_baseline="'center'",
                         background=True, get_background_color=[12,24,32,170],
-                        background_padding=[6,3], font_family="Arial", character_set="'auto'"))
+                        background_padding=[6,3], font_family="Arial",
+                        character_set=f"'{label_charset}'"))
 
 
 def select_ward():
