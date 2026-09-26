@@ -157,7 +157,7 @@ def details(section):
                                 actions, D["manifest"]["source"], language=lang)
         st.download_button(t("Download Ward Heat Card (open → print to PDF)"), card,
                            file_name=f"ward_heat_card_{choice.replace(' ', '_')}_{lang}.html", mime="text/html")
-        st.iframe("data:text/html;base64," + base64.b64encode(card.encode()).decode(), height=590)
+        st.iframe("data:text/html;charset=utf-8;base64," + base64.b64encode(card.encode()).decode(), height=590)
     elif section == "project":
         st.subheader(t("Compare the modelled heat before and after offsets"))
         chosen = next(s for s in D["hn"]["sites"] if s["site"] == site)
@@ -357,7 +357,7 @@ with st.container(key="inspector"):
         st.toggle(t("Apply available offsets"), key="neutral")
         if st.session_state.get("neutral"):
             ledger = base64.b64encode(heat_ledger(R, t).encode()).decode()
-            st.iframe(f"data:text/html;base64,{ledger}", height=185)
+            st.iframe(f"data:text/html;charset=utf-8;base64,{ledger}", height=185)
             if R["after"]["mean_dt_c"] > .005:
                 st.warning(local("Heat remains. This proposal does not pass the heat-neutral screen.",
                                  "ചൂട് കൂടുതലാണ്. പദ്ധതി ചൂട്-നിഷ്പക്ഷ പരിശോധനയിൽ വിജയിക്കുന്നില്ല."))
