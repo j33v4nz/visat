@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 import altair as alt
+import numpy as np
 import pandas as pd
 import pydeck as pdk
 import streamlit as st
@@ -23,7 +24,31 @@ st.markdown(
     header[data-testid="stHeader"] {visibility:hidden;} #MainMenu, footer {visibility:hidden;}
     [data-testid="stMainBlockContainer"] {padding-top:1rem;}
     html, body, [class*="css"] {font-size:20px;}
-    [data-testid="stMetricValue"] {font-size:44px;}
+    [data-testid="stMetric"] {background:linear-gradient(160deg,#182524 0%,#121b1a 100%);
+        border:1px solid #2a3d3b;border-radius:14px;padding:12px 16px;}
+    [data-testid="stMetricValue"], [data-testid="stMetricValue"] * {font-size:40px!important;
+        font-weight:800!important;letter-spacing:-0.5px;}
+    [data-testid="stMetricLabel"] p {color:#9fb3b0;font-size:0.9rem!important;text-transform:uppercase;
+        letter-spacing:0.6px;}
+    .hero {display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:0 0 4px;}
+    .hero .title {font-size:2.2rem;white-space:nowrap;line-height:1.2;font-weight:800;margin:0;padding:0;
+        background:linear-gradient(90deg,#fcffa4 0%,#f57d15 45%,#46c4be 100%);
+        -webkit-background-clip:text;background-clip:text;color:transparent;}
+    .hero span {color:#9fb3b0;font-size:1rem;}
+    .legend {font-size:15px;color:#b9c8c5;margin:6px 0 2px;}
+    .legend .bar {height:12px;border-radius:6px;margin:4px 0;}
+    .legend .ends {display:flex;justify-content:space-between;}
+    .swatch {display:inline-block;width:12px;height:12px;border-radius:50%;margin:0 5px 0 12px;
+        vertical-align:middle;}
+    .gauge {position:relative;height:16px;border-radius:8px;margin:28px 0 22px;
+        background:linear-gradient(90deg,#e8c35a 0%,#e97a2e 25%,#d4483f 55%,#8e1b3a 100%);}
+    .gauge .mark {position:absolute;top:-24px;transform:translateX(-50%);font-size:14px;
+        white-space:nowrap;font-weight:700;}
+    .gauge .mark::after {content:'';position:absolute;left:50%;top:20px;width:3px;height:24px;
+        background:#fff;transform:translateX(-50%);border-radius:2px;}
+    .gauge .tick {position:absolute;top:20px;font-size:12px;color:#8aa09c;transform:translateX(-50%);}
+    .bigstat {font-size:54px;font-weight:800;line-height:1.05;}
+    .sub {color:#9fb3b0;font-size:0.95rem;}
     .chip {display:inline-block;padding:4px 12px;border-radius:999px;margin-right:8px;font-size:17px;}
     .danger {background:#b8320b;color:#fff;} .warn {background:#e97a2e;color:#111;}
     .ok {background:#1f6f6d;color:#fff;} .demo {background:#e8c35a;color:#111;padding:6px 12px;
@@ -54,6 +79,41 @@ if lang == "ml":
 TEAL = [70, 196, 190]
 HEAT = [255, 122, 61]
 KOCHI_VIEW = pdk.ViewState(latitude=9.99, longitude=76.30, zoom=12.3, pitch=0)
+KOCHI_3D = pdk.ViewState(latitude=9.935, longitude=76.285, zoom=11.9, pitch=50, bearing=-15)
+# Same inferno stops as pipeline.colorize, so legends and 3D colours match the heat image.
+INFERNO = [(0, 0, 4), (40, 11, 84), (101, 21, 110), (159, 42, 99), (212, 72, 66), (245, 125, 21),
+           (250, 193, 39), (252, 255, 164)]
+FIX_COLORS = ["#46c4be", "#2c9678", "#1d6b58", "#5a8cff", "#b5ece8", "#7fa9a5", "#8fd18f"]
+AXIS = {"labelColor": "#b9c8c5", "titleColor": "#b9c8c5", "gridColor": "#24403c",
+        "domainColor": "#36504d", "labelFontSize": 13, "titleFontSize": 13}
+
+
+def inferno(x: float) -> list[int]:
+    """0–1 → RGB on the same ramp as the heat image."""
+    pos = min(max(x, 0.0), 1.0) * (len(INFERNO) - 1)
+    i = min(int(pos), len(INFERNO) - 2)
+    f = pos - i
+    return [round(a * (1 - f) + b * f) for a, b in zip(INFERNO[i], INFERNO[i + 1])]
+
+
+def hexcolor(rgb) -> str:
+    return "#" + "".join(f"{int(v):02x}" for v in rgb[:3])
+
+
+def styled(chart):
+    return chart.configure_axis(**AXIS, labelLimit=220).configure_view(stroke=None).configure(background="transparent")
+
+
+def legend(left_label, right_label, stops=None):
+    stops = stops or [f"rgb{c}" for c in INFERNO]
+    return (f"<div class='legend'><div class='bar' style='background:linear-gradient(90deg,"
+            f"{','.join(stops)})'></div><div class='ends'><span>{left_label}</span>"
+            f"<span>{right_label}</span></div></div>")
+
+
+def swatches(items):
+    return "<div class='legend'>" + "".join(
+        f"<span class='swatch' style='background:{c}'></span>{name}" for name, c in items) + "</div>"
 
 
 @st.cache_data
@@ -91,14 +151,18 @@ wards = wards.set_index("ward_id")
 LIVE = live_data()
 
 # ------------------------------------------------------------------ header + live strip
-left, right, language_col = st.columns([3, 2, 1])
-left.markdown(f"## VISAT · {t('Kochi Heat Action Planner')}")
+left, right, language_col = st.columns([5, 1, 1])
+left.markdown(f"<div class='hero'><div class='title'>VISAT · {t('Kochi Heat Action Planner')}</div>"
+              f"<span>{local('Satellite + weather + physics-informed ML · Kochi Corporation, C-HED',
+                             'ഉപഗ്രഹ ചിത്രങ്ങൾ + കാലാവസ്ഥ + ഭൗതികശാസ്ത്രാധിഷ്ഠിത ML · കൊച്ചി കോർപ്പറേഷൻ')}"
+              "</span></div>", unsafe_allow_html=True)
 language_col.selectbox("Language / ഭാഷ", ["English", "മലയാളം"], key="language")
 if D["manifest"]["source"] == "demo":
     right.markdown("<span class='demo'>DEMO DATA — synthetic Kochi, not real measurements</span>",
                    unsafe_allow_html=True)
 
-band_cls = lambda b: "danger" if b in ("Danger", "Extreme danger") else "warn" if b else "ok"
+band_cls = lambda b: ("danger" if b in ("Danger", "Extreme danger")
+                      else "warn" if b in ("Caution", "Extreme caution") else "ok")
 if LIVE.get("status") != "unavailable":
     s1, s2, s3, s4, s5 = st.columns([1, 1, 1, 1, 2])
     s1.metric(t("Now in Kochi"), f"{LIVE['temp_c']} °C")
@@ -107,9 +171,15 @@ if LIVE.get("status") != "unavailable":
     s4.metric(t("Heat index"), f"{LIVE['heat_index_c']} °C")
     status = {"live": "live", "cached": "cached", "snapshot": "saved snapshot"}[LIVE["status"]]
     peak_label = t("Today's peak")
+    pos = lambda c: min(max((float(c) - 26) / (54 - 26) * 100, 1), 99)
+    ticks = "".join(f"<span class='tick' style='left:{pos(v)}%'>{v}</span>" for v in (27, 32, 39, 51))
     s5.markdown(
+        f"<div class='gauge'>{ticks}"
+        f"<span class='mark' style='left:{pos(LIVE['heat_index_c'])}%'>{local('now', 'ഇപ്പോൾ')}</span>"
+        f"<span class='mark' style='left:{pos(LIVE['peak_heat_index_c'])}%;color:#ff7a3d'>"
+        f"{local('peak', 'ഉയർന്നത്')}</span></div>"
         f"<span class='chip {band_cls(LIVE['band'])}'>{t(LIVE['band'])}</span>"
-        f"<br>{peak_label}: <b>{LIVE['peak_heat_index_c']} °C</b> "
+        f"{peak_label}: <b>{LIVE['peak_heat_index_c']} °C</b> "
         f"({t(LIVE['peak_band'])}) {local('at', 'സമയം')} "
         f"{LIVE['peak_time'][11:16]}<br><small>{t(config.LABEL_LIVE)} · {t(status)} · "
         f"{LIVE.get('fetched_at') or LIVE['time']}</small>", unsafe_allow_html=True)
@@ -164,9 +234,35 @@ def mask_layer():
     ]
 
 
-def deck(layers, tooltip=None):
-    return pdk.Deck(layers=mask_layer() + layers, initial_view_state=KOCHI_VIEW, map_provider="carto",
-                    map_style="dark", tooltip=tooltip or {"text": "{name}"})
+def deck(layers, tooltip=None, view=None):
+    return pdk.Deck(layers=mask_layer() + layers, initial_view_state=view or KOCHI_VIEW,
+                    map_provider="carto", map_style="dark", tooltip=tooltip or {"text": "{name}"})
+
+
+@st.cache_data
+def wards_3d_geo():
+    """Ward polygons coloured by surface heat and raised by people living in hotspots."""
+    lo, hi = M["heat_png_range"]
+    geo = json.loads(json.dumps(D["wards_geo"]))
+    by_name = wards.set_index("ward")
+    max_hot = max(float(wards["people_in_hotspots"].max()), 1.0)
+    for f in geo["features"]:
+        p = f["properties"]
+        row = by_name.loc[p["name"]] if p["name"] in by_name.index else None
+        hot = float(row["people_in_hotspots"]) if row is not None else 0.0
+        p["fill"] = inferno((float(p.get("lst_anom") or 0) - lo) / (hi - lo)) + [235]
+        p["elev"] = 40 + hot / max_hot * 1500
+        p["hot_people"] = f"{hot:,.0f}"
+        p["anom"] = f"{float(p.get('lst_anom') or 0):+.1f}"
+    return geo
+
+
+def ward_3d_layer():
+    return pdk.Layer("GeoJsonLayer", id="wards", data=wards_3d_geo(), stroked=True, filled=True,
+                     extruded=True, wireframe=True, get_elevation="properties.elev",
+                     get_fill_color="properties.fill", get_line_color=[255, 255, 255, 60],
+                     pickable=True, auto_highlight=True, highlight_color=[70, 196, 190, 200],
+                     material={"ambient": 0.55, "diffuse": 0.6, "shininess": 40})
 
 
 def heat_ledger(result):
@@ -235,8 +331,18 @@ with today:
         f"*{t(act['band'])}*): **{', '.join(act['wards'])}** — {advice}"))
     mcol, pcol = st.columns([2, 1])
     with mcol:
-        ev = st.pydeck_chart(deck([heat_layer(), ward_layer()]), on_select="rerun",
+        three_d = st.toggle(local("3D wards · height = people in hotspots",
+                                  "3D വാർഡുകൾ · ഉയരം = ചൂടേറിയ സ്ഥലങ്ങളിലെ ആളുകൾ"), key="today_3d")
+        if three_d:
+            today_deck = deck([heat_layer(0.25), ward_3d_layer()], view=KOCHI_3D, tooltip={
+                "html": "<b>{name}</b><br>{anom} °C vs city<br>{hot_people} people in hotspots"})
+        else:
+            today_deck = deck([heat_layer(), ward_layer()])
+        ev = st.pydeck_chart(today_deck, on_select="rerun",
                              selection_mode="single-object", key="today_map", height=560)
+        lo, hi = M["heat_png_range"]
+        st.markdown(legend(f"{lo:+.1f} °C · {local('cooler', 'തണുപ്പ്')}",
+                           f"{local('hotter', 'ചൂട്')} · {hi:+.1f} °C"), unsafe_allow_html=True)
         st.caption(local(
             f"Heat Stress Map · colour = {config.LABEL_SURFACE} vs city median "
             f"(dark = cooler, yellow = hotter) · outlines = "
@@ -266,8 +372,15 @@ with today:
             st.markdown(f"- {s}")
         drv = {k.split('::', 1)[1]: v for k, v in w.items() if str(k).startswith("drv::")}
         drv.pop("Weather of the day", None)
-        st.bar_chart(pd.Series({t(k): v for k, v in drv.items()}, name="°C"),
-                     horizontal=True, color="#ff7a3d")
+        dd = pd.DataFrame({"driver": [t(k) for k in drv], "c": [float(v) for v in drv.values()]})
+        dd["label"] = dd["c"].map(lambda v: f"{v:+.1f} °C")
+        base = alt.Chart(dd).encode(
+            y=alt.Y("driver:N", sort="-x", title=None),
+            x=alt.X("c:Q", title=local("°C added (+) or removed (−)", "°C കൂട്ടുന്നു (+) / കുറയ്ക്കുന്നു (−)")))
+        bars = base.mark_bar(cornerRadius=4).encode(color=alt.condition(
+            "datum.c > 0", alt.value("#ff7a3d"), alt.value("#46c4be")))
+        text = base.mark_text(align="left", dx=4, color="#e4ebe9", fontSize=13).encode(text="label")
+        st.altair_chart(styled((bars + text).properties(height=210)), width="stretch")
         st.caption(local(f"{int(w['schools'])} schools · {int(w['markets'])} markets · "
                          f"{int(w['construction_sites'])} construction sites",
                          f"{int(w['schools'])} സ്കൂളുകൾ · {int(w['markets'])} ചന്തകൾ · "
@@ -275,9 +388,45 @@ with today:
     if LIVE.get("forecast"):
         fc = pd.DataFrame(LIVE["forecast"]).assign(time=lambda d: pd.to_datetime(d["time"]))
         st.markdown(f"**{t('Next 72 hours — heat index (city)')}**")
-        st.line_chart(fc.set_index("time")["heat_index_c"], color="#ff7a3d", height=180)
+        bands = pd.DataFrame([{"band": t(n), "lo": a, "hi": min(b, 56)}
+                              for n, a, b in config.HEAT_INDEX_BANDS_C])
+        y_lo = min(26.0, float(fc["heat_index_c"].min()) - 1)
+        y_hi = max(42.0, float(fc["heat_index_c"].max()) + 2)
+        bands = bands[bands["lo"] < y_hi].assign(hi=lambda d: d["hi"].clip(upper=y_hi))
+        shade = alt.Chart(bands).mark_rect(opacity=0.16).encode(
+            y=alt.Y("lo:Q", scale=alt.Scale(domain=[y_lo, y_hi]), title="°C"), y2="hi:Q",
+            color=alt.Color("band:N", scale=alt.Scale(
+                domain=[t(n) for n, *_ in config.HEAT_INDEX_BANDS_C],
+                range=["#e8c35a", "#e97a2e", "#d4483f", "#8e1b3a"]),
+                legend=alt.Legend(orient="top", title=None, labelColor="#b9c8c5")))
+        curve = alt.Chart(fc).encode(x=alt.X("time:T", title=None,
+                                             axis=alt.Axis(format="%a %H:%M")),
+                                     y=alt.Y("heat_index_c:Q", title="°C"))
+        area = curve.mark_area(line={"color": "#ff7a3d", "strokeWidth": 2.5}, opacity=0.35,
+                               color=alt.Gradient(gradient="linear", x1=1, x2=1, y1=1, y2=0, stops=[
+                                   alt.GradientStop(color="rgba(22,32,32,0)", offset=0),
+                                   alt.GradientStop(color="#ff7a3d", offset=1)]))
+        pk = fc.loc[[fc["heat_index_c"].idxmax()]].assign(
+            label=lambda d: d["heat_index_c"].map(lambda v: f"{local('peak', 'ഉയർന്നത്')} {v:.1f} °C"))
+        peak_dot = alt.Chart(pk).mark_point(size=120, filled=True, color="#fcffa4").encode(
+            x="time:T", y="heat_index_c:Q")
+        peak_txt = alt.Chart(pk).mark_text(dy=-14, color="#fcffa4", fontSize=13, fontWeight="bold").encode(
+            x="time:T", y="heat_index_c:Q", text="label:N")
+        st.altair_chart(styled((shade + area + peak_dot + peak_txt).properties(height=230)),
+                        width="stretch")
     with st.expander(t("Atmospheric drivers — how the day's weather changes Kochi's surface heat")):
         at = M["atmospheric"]
+        ae = pd.DataFrame([{"change": t(v["label"]), "effect": v["effect_c"], "lo": v["ci_low"],
+                            "hi": v["ci_high"]} for v in at["effects"].values()])
+        enc = alt.Chart(ae).encode(y=alt.Y("change:N", title=None, sort="-x"))
+        forest = (enc.mark_rule(strokeWidth=3, color="#6f8784").encode(
+                      x=alt.X("lo:Q", title=local("Surface °C effect (95% CI)", "ഉപരിതല °C മാറ്റം (95% CI)")),
+                      x2="hi:Q")
+                  + enc.mark_point(size=160, filled=True).encode(x="effect:Q", color=alt.condition(
+                      "datum.effect > 0", alt.value("#ff7a3d"), alt.value("#46c4be")))
+                  + alt.Chart(pd.DataFrame({"x": [0]})).mark_rule(strokeDash=[4, 4], color="#9fb3b0")
+                  .encode(x="x:Q"))
+        st.altair_chart(styled(forest.properties(height=40 * len(ae) + 40)), width="stretch")
         st.dataframe(pd.DataFrame([{t("Change"): t(v["label"]), t("Surface °C"): round(v["effect_c"], 2),
                                     "95% CI": f"{v['ci_low']:+.2f} to {v['ci_high']:+.2f}"}
                                    for v in at["effects"].values()]), hide_index=True)
@@ -322,26 +471,40 @@ with plan_tab:
     k4.metric(t("Sites (100 m)"), f"{ours['cells']:,}")
     mc, sc = st.columns([2, 1])
     with mc:
-        pal = {cfg["label"]: c for cfg, c in zip(config.INTERVENTIONS.values(), [
-            [70, 196, 190], [40, 150, 120], [30, 110, 90], [80, 140, 255], [235, 235, 235],
-            [180, 180, 180], [120, 200, 120]])}
+        hexrgb = lambda h: [int(h[i:i + 2], 16) for i in (1, 3, 5)]
+        pal = {cfg["label"]: hexrgb(c) for cfg, c in zip(config.INTERVENTIONS.values(), FIX_COLORS)}
         picks = pd.DataFrame(P["picks"], columns=["lat", "lon", "fix", "dt", "cost"])
         picks["color"] = picks["fix"].map(pal)
+        picks["elev"] = picks["dt"].abs().clip(upper=8) * 90 + 40
         cool = pd.DataFrame(P["cooling"], columns=["lat", "lon", "dt"])
+        plan_3d = st.toggle(local("3D view · column height = cooling at the site",
+                                  "3D കാഴ്ച · ഉയരം = ആ സ്ഥലത്തെ ചൂടുകുറവ്"), value=True, key="plan_3d")
+        pick_layer = (
+            pdk.Layer("ColumnLayer", id="picks", data=picks, get_position=["lon", "lat"], radius=42,
+                      get_elevation="elev", elevation_scale=1, extruded=True, get_fill_color="color",
+                      pickable=True, auto_highlight=True)
+            if plan_3d else
+            pdk.Layer("ScatterplotLayer", id="picks", data=picks, get_position=["lon", "lat"],
+                      get_radius=55, get_fill_color="color", stroked=True, get_line_color=[0, 0, 0, 180],
+                      line_width_min_pixels=1, pickable=True))
         map_layers = [
             heat_layer(0.35),
             pdk.Layer("ScatterplotLayer", id="cooling", data=cool, get_position=["lon", "lat"],
-                      get_radius=45, get_fill_color=TEAL + [70]),
-            pdk.Layer("ScatterplotLayer", id="picks", data=picks, get_position=["lon", "lat"],
-                      get_radius=40, get_fill_color="color", pickable=True),
+                      get_radius=50, get_fill_color=TEAL + [60]),
+            pick_layer,
         ]
         if show_canal_banks and not D["canal_banks"].empty:
             map_layers.append(pdk.Layer(
                 "ScatterplotLayer", id="canal_banks", data=D["canal_banks"],
                 get_position=["lon", "lat"], get_radius=18,
                 get_fill_color=[70, 140, 255, 150], pickable=False))
-        st.pydeck_chart(deck(map_layers, tooltip={"text": "{fix}: {dt} °C"}),
-                        key="plan_map", height=520)
+        st.pydeck_chart(deck(map_layers, tooltip={"text": "{fix}: {dt} °C"},
+                             view=KOCHI_3D if plan_3d else None),
+                        key="plan_map", height=540)
+        used = [cfg["label"] for cfg in config.INTERVENTIONS.values() if cfg["label"] in ours["mix"]]
+        st.markdown(swatches([(t(n), hexcolor(pal[n])) for n in used]
+                             + [(local("cooled by spillover", "സമീപ സ്വാധീനം"), "#46c4be66")]),
+                    unsafe_allow_html=True)
         st.caption(local(
             "Coloured dots = where each fix goes (public land only). Teal haze = cells cooled "
             f"≥0.05 °C, incl. spillover. {config.LABEL_SURFACE}. The plan covers the study area; "
@@ -361,13 +524,50 @@ with plan_tab:
         comp = pd.DataFrame([{"Strategy": t(s["strategy"]), "People cooled": s["people_cooled"],
                               "Person-°C": s["person_deg_cooling"]} for s in [ours, *P["baselines"]]])
         st.markdown(f"**{t('Same money, three strategies')}**")
-        st.bar_chart(comp.set_index("Strategy")["Person-°C"], color="#46c4be", horizontal=True)
+        comp["ours"] = [True] + [False] * (len(comp) - 1)
+        comp["label"] = comp["Person-°C"].map(lambda v: f"{v:,.0f}")
+        cb = alt.Chart(comp).encode(
+            y=alt.Y("Strategy:N", sort=None, title=None),
+            x=alt.X("Person-°C:Q", title=local("person-°C of cooling", "ആൾ-°C ചൂടുകുറവ്")))
+        st.altair_chart(styled((
+            cb.mark_bar(cornerRadius=5).encode(color=alt.condition(
+                "datum.ours", alt.value("#46c4be"), alt.value("#4a5f5c")))
+            + cb.mark_text(align="left", dx=5, color="#e4ebe9", fontSize=13).encode(text="label")
+        ).properties(height=170)), width="stretch")
+        st.markdown(f"<div class='sub'>{local('VISAT plan', 'VISAT പദ്ധതി')}: "
+                    f"<b style='color:#46c4be;font-size:1.4rem'>{gain:.1f}×</b> "
+                    f"{local('the best simple strategy', 'ലളിതമായ മികച്ച രീതി')}</div>",
+                    unsafe_allow_html=True)
+        mix = pd.DataFrame([{"fix": t(k), "lakh": round(v["cost_rs"] / 1e5, 1), "sites": v["cells"],
+                             "color": hexcolor(pal.get(k, TEAL))}
+                            for k, v in ours["mix"].items()])
+        donut = alt.Chart(mix).mark_arc(innerRadius=58, outerRadius=100, stroke="#0e1514",
+                                        strokeWidth=2).encode(
+            theta="lakh:Q", color=alt.Color("fix:N", scale=alt.Scale(
+                domain=mix["fix"].tolist(), range=mix["color"].tolist()),
+                legend=alt.Legend(orient="bottom", columns=2, title=None, labelColor="#b9c8c5")),
+            tooltip=["fix", "sites", alt.Tooltip("lakh:Q", title="₹ lakh")])
+        centre = alt.Chart(pd.DataFrame({"t": [f"₹{b} Cr"]})).mark_text(
+            fontSize=20, fontWeight="bold", color="#e4ebe9").encode(text="t:N")
+        st.markdown(f"**{local('Where the money goes', 'പണം എവിടേക്ക്')}**")
+        st.altair_chart(styled((donut + centre).properties(height=280)), width="stretch")
         st.dataframe(pd.DataFrame([{t("Fix"): t(k), t("Sites"): v["cells"],
                                     t("₹ lakh"): round(v["cost_rs"] / 1e5, 1)}
                                    for k, v in ours["mix"].items()]), hide_index=True)
     with st.expander(t("Budget curve & scenario evaluation (every intervention PS1 lists)")):
-        curve = pd.DataFrame(D["plans"]["curve"]).set_index("budget_cr")
-        st.line_chart(curve, height=260)
+        curve = pd.DataFrame(D["plans"]["curve"]).melt("budget_cr", var_name="strategy",
+                                                        value_name="person_deg")
+        cl = alt.Chart(curve).mark_line(point=True, strokeWidth=3).encode(
+            x=alt.X("budget_cr:Q", title=local("Budget (₹ crore)", "ബജറ്റ് (₹ കോടി)")),
+            y=alt.Y("person_deg:Q", title=local("person-°C of cooling", "ആൾ-°C ചൂടുകുറവ്")),
+            color=alt.Color("strategy:N", scale=alt.Scale(
+                domain=["VISAT plan", "Trees everywhere", "Spread evenly"],
+                range=["#46c4be", "#e8c35a", "#8a9e9b"]),
+                legend=alt.Legend(orient="top", title=None, labelColor="#b9c8c5")),
+            tooltip=["strategy", "budget_cr", alt.Tooltip("person_deg:Q", format=",.0f")])
+        now_rule = alt.Chart(pd.DataFrame({"x": [float(b)]})).mark_rule(
+            strokeDash=[5, 4], color="#fcffa4").encode(x="x:Q")
+        st.altair_chart(styled((cl + now_rule).properties(height=280)), width="stretch")
         st.caption(local(
             "Estimated person-°C (sum of per-site effects); the three presets above use a full "
             "joint re-prediction.",
@@ -468,16 +668,44 @@ with project_tab:
                             line_width_min_pixels=2, pickable=True),
                   pdk.Layer("ScatterplotLayer", id="heatspread", data=heat, get_position=["lon", "lat"],
                             get_radius=45, get_fill_color=HEAT + [150])]
-        if neutral:
-            off = pd.DataFrame(R["offset_cells"], columns=["lat", "lon", "fix"])
-            layers.append(pdk.Layer("ScatterplotLayer", id="offsets", data=off,
-                                    get_position=["lon", "lat"], get_radius=40,
-                                    get_fill_color=TEAL + [230], pickable=True))
         s0 = next(s for s in sites if s["site"] == site)
         view = pdk.ViewState(latitude=s0["center"][0], longitude=s0["center"][1], zoom=13.6)
-        st.pydeck_chart(pdk.Deck(layers=mask_layer() + layers, initial_view_state=view, map_provider="carto",
+        project_3d = st.toggle(local("3D heat dome · column height = added surface °C",
+                                     "3D ചൂട് ഗോപുരം · ഉയരം = കൂടുന്ന ഉപരിതല °C"),
+                               value=True, key="project_3d")
+        if project_3d:
+            # Heat dome: the project's added heat rises as columns; offsets pull it down in teal.
+            dmax = max(float(heat["dt"].max()) if len(heat) else 0.0, 0.01)
+            dome = heat.assign(
+                elev=lambda d: d["dt"].clip(lower=0) / dmax * 900 + 20,
+                color=lambda d: [inferno(0.45 + 0.55 * v / dmax) + [230] for v in d["dt"].clip(lower=0)],
+                name=lambda d: d["dt"].map(lambda v: f"+{v:.2f} °C"), fix="")
+            shown = [layers[0], layers[1], pdk.Layer(
+                "ColumnLayer", id="heatspread", data=dome, get_position=["lon", "lat"], radius=40,
+                get_elevation="elev", get_fill_color="color", extruded=True, pickable=True,
+                auto_highlight=True)]
+            if neutral:
+                off = pd.DataFrame(R["offset_cells"], columns=["lat", "lon", "fix"]).assign(name="")
+                shown.append(pdk.Layer("ColumnLayer", id="offsets", data=off, get_position=["lon", "lat"],
+                                       radius=40, get_elevation=260, get_fill_color=TEAL + [240],
+                                       extruded=True, pickable=True))
+            view = pdk.ViewState(latitude=s0["center"][0] - 0.004, longitude=s0["center"][1],
+                                 zoom=14.2, pitch=55, bearing=-25)
+        else:
+            shown = list(layers)
+            if neutral:
+                off = pd.DataFrame(R["offset_cells"], columns=["lat", "lon", "fix"])
+                shown.append(pdk.Layer("ScatterplotLayer", id="offsets", data=off,
+                                       get_position=["lon", "lat"], get_radius=40,
+                                       get_fill_color=TEAL + [230], pickable=True))
+        st.pydeck_chart(pdk.Deck(layers=mask_layer() + shown, initial_view_state=view, map_provider="carto",
                                  map_style="dark", tooltip={"text": "{name}{fix}"}),
                         key="project_map", height=560)
+        st.markdown(swatches([(local("added surface heat", "കൂടുന്ന ചൂട്"), "#f57d15"),
+                              (local("offset sites", "ചൂട് കുറയ്ക്കൽ സ്ഥലങ്ങൾ"), "#46c4be"),
+                              (local("project site", "പദ്ധതി സ്ഥലം"), "#ffffff")]),
+                    unsafe_allow_html=True)
+        view = pdk.ViewState(latitude=s0["center"][0], longitude=s0["center"][1], zoom=13.6)
         st.caption(local(
             "Orange = where the project adds surface heat. Teal = modelled offset sites "
             "(trees nearby + cool/green roofs on the project).",
@@ -529,14 +757,26 @@ with proof_tab:
             predicted, observed = t("Predicted Δ °C"), t("Observed Δ °C")
             pts = pd.DataFrame(bt["points"], columns=[predicted, observed])
             lim = [min(pts.min()), max(pts.max())]
-            chart = alt.Chart(pts).mark_circle(size=18, opacity=0.5, color="#ff7a3d").encode(
-                x=predicted, y=observed)
-            line = alt.Chart(pd.DataFrame({"x": lim, "y": lim})).mark_line(color="#46c4be").encode(
-                x="x", y="y")
-            st.altair_chart(chart + line, width="stretch")
+            q1, q2, q3 = st.columns(3)
+            q1.metric(local("Changed cells", "മാറിയ സ്ഥലങ്ങൾ"),
+                      f"{bt['n_changed_cells']:,}")
+            q2.metric(local("Correlation r", "ബന്ധം r"), f"{bt['pearson_r']:.2f}")
+            q3.metric(local("Typical error", "ശരാശരി പിശക്"), f"±{bt['mae_c']:.2f} °C")
+            chart = alt.Chart(pts).mark_circle(size=16, opacity=0.35).encode(
+                x=alt.X(predicted, scale=alt.Scale(domain=lim)),
+                y=alt.Y(observed, scale=alt.Scale(domain=lim)),
+                color=alt.Color(observed, scale=alt.Scale(scheme="inferno", domainMid=0), legend=None))
+            line = alt.Chart(pd.DataFrame({"x": lim, "y": lim})).mark_line(
+                color="#46c4be", strokeWidth=2.5, strokeDash=[6, 4]).encode(
+                x=alt.X("x:Q", title=predicted), y=alt.Y("y:Q", title=observed))
+            slope, icpt = np.polyfit(pts[predicted], pts[observed], 1)
+            trend = alt.Chart(pd.DataFrame({"x": lim, "y": [icpt + slope * v for v in lim]})).mark_line(
+                color="#fcffa4", strokeWidth=3, clip=True).encode(x="x:Q", y="y:Q")
+            st.altair_chart(styled((chart + line + trend).properties(height=420)), width="stretch")
             st.caption(local(
                 f"{bt['label']} · {bt['n_changed_cells']:,} cells that really changed · "
-                f"r = {bt['pearson_r']:.2f} · error ±{bt['mae_c']:.2f} °C · teal = perfect match",
+                f"r = {bt['pearson_r']:.2f} · error ±{bt['mae_c']:.2f} °C · teal dashes = perfect "
+                "match · yellow = fitted trend",
                 f"2017→2024 ഉപരിതല താപമാറ്റം · യഥാർത്ഥത്തിൽ മാറിയ {bt['n_changed_cells']:,} സ്ഥലങ്ങൾ · "
                 f"ബന്ധം r = {bt['pearson_r']:.2f} · ശരാശരി പിശക് ±{bt['mae_c']:.2f} °C · "
                 "നീലപ്പച്ച രേഖ = കൃത്യമായ പ്രവചനം"))
@@ -546,6 +786,15 @@ with proof_tab:
     with b2:
         cv = M["cv"]
         st.markdown(f"**{t('Honest accuracy (areas the model never saw)')}**")
+        cvd = pd.DataFrame([{"model": k.replace(" (ours)", ""), "r2": v["r2"], "ours": "(ours)" in k,
+                             "label": f"R² {v['r2']:.2f}"} for k, v in cv["spatial_cv"].items()])
+        cve = alt.Chart(cvd).encode(y=alt.Y("model:N", sort=None, title=None),
+                                    x=alt.X("r2:Q", scale=alt.Scale(domain=[0, 1]), title="R²"))
+        st.altair_chart(styled((
+            cve.mark_bar(cornerRadius=5).encode(color=alt.condition(
+                "datum.ours", alt.value("#46c4be"), alt.value("#4a5f5c")))
+            + cve.mark_text(align="left", dx=5, color="#e4ebe9", fontSize=13).encode(text="label")
+        ).properties(height=160)), width="stretch")
         st.dataframe(pd.DataFrame([{t("Model"): k, "R²": round(v["r2"], 3),
                                     t("Error (°C)"): round(v["rmse"], 2)}
                                    for k, v in cv["spatial_cv"].items()]), hide_index=True)
@@ -635,7 +884,8 @@ with proof_tab:
                             D["manifest"]["source"], language=lang)
     st.download_button("⬇ " + t("Download Ward Heat Card (open → print to PDF)"), card,
                        file_name=f"ward_heat_card_{wc.replace(' ', '_')}.html", mime="text/html")
-    st.iframe("data:text/html;base64," + base64.b64encode(card.encode()).decode(), height=520)
+    preview = card.replace("</head>", "<style>html,body{background:#fff;color:#111;}</style></head>", 1)
+    st.iframe("data:text/html;base64," + base64.b64encode(preview.encode()).decode(), height=560)
 
 st.divider()
 st.caption(local(
