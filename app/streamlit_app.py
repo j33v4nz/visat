@@ -148,8 +148,24 @@ def heat_layer(opacity=0.85):
                      bounds=b, opacity=opacity)
 
 
+def mask_layer():
+    """Dim everything outside the modelled study area so panning/zooming past the data's
+    edge reads as leaving a labelled study area, not a broken map cutting off."""
+    lon0, lat0, lon1, lat1 = M["heat_png_bounds"]
+    outer = [[-180, -85], [180, -85], [180, 85], [-180, 85]]
+    inner = [[lon0, lat0], [lon1, lat0], [lon1, lat1], [lon0, lat1]]
+    return [
+        pdk.Layer("PolygonLayer", id="mask", data=[{"polygon": [outer, inner]}],
+                 get_polygon="polygon", get_fill_color=[13, 17, 17, 225],
+                 stroked=False, filled=True, pickable=False),
+        pdk.Layer("PathLayer", id="mask_border", data=[{"path": inner + [inner[0]]}],
+                 get_path="path", get_color=[70, 196, 190, 160], get_width=2,
+                 width_min_pixels=1.5, pickable=False),
+    ]
+
+
 def deck(layers, tooltip=None):
-    return pdk.Deck(layers=layers, initial_view_state=KOCHI_VIEW, map_provider="carto",
+    return pdk.Deck(layers=mask_layer() + layers, initial_view_state=KOCHI_VIEW, map_provider="carto",
                     map_style="dark", tooltip=tooltip or {"text": "{name}"})
 
 
@@ -459,7 +475,7 @@ with project_tab:
                                     get_fill_color=TEAL + [230], pickable=True))
         s0 = next(s for s in sites if s["site"] == site)
         view = pdk.ViewState(latitude=s0["center"][0], longitude=s0["center"][1], zoom=13.6)
-        st.pydeck_chart(pdk.Deck(layers=layers, initial_view_state=view, map_provider="carto",
+        st.pydeck_chart(pdk.Deck(layers=mask_layer() + layers, initial_view_state=view, map_provider="carto",
                                  map_style="dark", tooltip={"text": "{name}{fix}"}),
                         key="project_map", height=560)
         st.caption(local(
@@ -476,7 +492,7 @@ with project_tab:
         before_map, after_map = st.columns(2)
         with before_map:
             st.markdown(f"**{t('Project only')}**")
-            st.pydeck_chart(pdk.Deck(layers=layers[:3], initial_view_state=view,
+            st.pydeck_chart(pdk.Deck(layers=mask_layer() + layers[:3], initial_view_state=view,
                                      map_provider="carto", map_style="dark"),
                             key="project_before_map", height=320)
         with after_map:
@@ -486,7 +502,7 @@ with project_tab:
                 data=pd.DataFrame(R["offset_cells"], columns=["lat", "lon", "fix"]),
                 get_position=["lon", "lat"], get_radius=40,
                 get_fill_color=TEAL + [230], pickable=True)]
-            st.pydeck_chart(pdk.Deck(layers=comparison_layers, initial_view_state=view,
+            st.pydeck_chart(pdk.Deck(layers=mask_layer() + comparison_layers, initial_view_state=view,
                                      map_provider="carto", map_style="dark"),
                             key="project_after_map", height=320)
     if D["reactions"]:
