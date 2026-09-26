@@ -4,6 +4,7 @@ import base64
 import html
 import json
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import altair as alt
@@ -63,6 +64,7 @@ weather_placeholder.markdown(
     "<div class='weather-skeleton' aria-label='Loading weather'>" + "<span></span>" * 4 + "</div>",
     unsafe_allow_html=True)
 LIVE = live_data()
+IST = timezone(timedelta(hours=5, minutes=30), "IST")  # no DST, so a fixed offset is exact
 weather_placeholder.empty()
 names = wards.sort_values("heat_stress", ascending=False)["ward"].tolist()
 mode = st.session_state.get("workspace", "heat")
@@ -224,21 +226,31 @@ with st.container(key="topbar"):
         markup("<div class='brand'><div class='brand-mark'>UHI</div><div><div class='brand-name'>UHI: URBAN HEAT INTELLIGENCE</div>"
                f"<div class='brand-sub'>{local('KOCHI · URBAN CLIMATE WORKSPACE', 'കൊച്ചി · നഗര കാലാവസ്ഥാ വിശകലനം')}</div></div></div>")
     with weather:
-        if LIVE.get("status") != "unavailable":
-            weather_status = LIVE.get("status", "snapshot")
+        # Only this strip reruns each second: a real Kochi clock next to the (15-min) weather reading.
+        @st.fragment(run_every=1)
+        def weather_strip():
+            live_now = live_data()
+            if live_now.get("status") == "unavailable":
+                return
+            weather_status = live_now.get("status", "snapshot")
             weather_status_label = {
                 "live": local("LIVE", "തത്സമയം"),
                 "cached": local("CACHED", "കാഷ് ചെയ്തത്"),
                 "snapshot": local("SNAPSHOT", "സംഭരിച്ച ചിത്രം"),
             }.get(weather_status, weather_status.upper())
-            observation_time = str(LIVE.get("time", ""))[-5:] or "—"
-            markup("<div class='weather-strip'>" + "".join(
+            clock = datetime.now(IST).strftime("%H:%M:%S")
+            observed = str(live_now.get("time", ""))[-5:] or "—"
+            observed_note = esc(local(f"Weather observed at {observed} IST",
+                                      f"കാലാവസ്ഥ രേഖപ്പെടുത്തിയത് {observed} IST"))
+            markup(f"<div class='weather-strip' title='{observed_note}'>" + "".join(
                 f"<div class='weather-stat'><small>{esc(label)}</small><b>{esc(value)}</b></div>"
-                for label, value in [(local(f"KOCHI · {weather_status_label}", f"കൊച്ചി · {weather_status_label}"), f"{observation_time} IST"),
-                                     (local("Air temperature", "വായുതാപനില"), f"{LIVE['temp_c']}°"),
-                                     (t("Feels like"), f"{LIVE['feels_c']}°"),
-                                     (t("Humidity"), f"{LIVE['rh']}%"),
-                                     (t("Heat index"), f"{LIVE['heat_index_c']}°")]) + "</div>")
+                for label, value in [(local(f"KOCHI · {weather_status_label}", f"കൊച്ചി · {weather_status_label}"), f"{clock} IST"),
+                                     (local("Air temperature", "വായുതാപനില"), f"{live_now['temp_c']}°"),
+                                     (t("Feels like"), f"{live_now['feels_c']}°"),
+                                     (t("Humidity"), f"{live_now['rh']}%"),
+                                     (t("Heat index"), f"{live_now['heat_index_c']}°")]) + "</div>")
+
+        weather_strip()
     language.selectbox("Language / ഭാഷ", ["English", "മലയാളം"], key="language", label_visibility="collapsed")
 
 with st.container(key="navigation"):
