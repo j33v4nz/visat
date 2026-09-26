@@ -100,7 +100,7 @@ The roles table spreads these across M1–M4. What remains is sequencing *within
 
 ## 6. Presentation checklist
 
-- **Visual system (v5):** dark theme; red/orange means *heat* only and teal means *fixes* only (inferno-style scale), with no third accent. Text at least 20 px, key numbers 48–64 px. Decide the exact hex values now, not at 4 AM.
+- **Visual system:** dark-only near-black theme; orange marks heat actions, mint marks cooling, and warm-white text stays legible over the map. Keep supporting labels compact and key results prominent.
 - **Backup:** put 3–4 screenshots of the key moments into the deck, in case both the live URL and the backup video fail. The key moments are the Today strip with "act today", the Plan ₹10 crore preset beating the baselines, the Check-a-Project ledger going +1.3 → 0.0 °C, and the Proof back-test chart.
 - **Use PS1's own words on slide 1:** "heat stress hotspots", "physics-informed", "cooling interventions". Judges pattern-match problem-statement wording.
 - **Physical takeaway:** hand out printed A5 Ward Cards for the jury's own area at the close (Tier 3). Judges discuss the thing they hold.

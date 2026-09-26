@@ -27,6 +27,8 @@ service-account*.json
 
 # Local debugging/review output (keep out of the repo)
 debug.log
+*.log
+.pytest_temp/
 /audit_*.png
 /judge_*.png
 artifacts/review/*.zip

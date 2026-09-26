@@ -1,6 +1,6 @@
-# VISAT: every simulation PS1 needs
+# UHI: Urban Heat Intelligence - simulation catalogue
 
-This file lists every simulation or what-if run that Problem Statement 1 asks for, how VISAT runs it, and where it stands. All numbers come from the committed build in `data/app/`, which uses real data: `source: frozen`, built 26 Sep 2026 03:48 IST from 54,168 cells and 23 Landsat scenes. To regenerate everything:
+This file lists every simulation or what-if run that Problem Statement 1 asks for, how UHI runs it, and where it stands. All numbers come from the committed build in `data/app/`, which uses real data: `source: frozen`, built 26 Sep 2026 03:48 IST from 54,168 cells and 23 Landsat scenes. To regenerate everything:
 
 ```bash
 uv run python -m uhi.pipeline --source frozen
@@ -37,17 +37,17 @@ Each intervention is simulated on every eligible cell and scored in the validity
 
 | Budget | Strategy | People cooled | Person-°C cooling | Mean ΔT for cooled people | Status |
 |---|---|---|---|---|---|
-| ₹1 cr | **VISAT plan** (cool roofs + street trees, 100 cells) | 52,951 | 46,972 | −0.85 °C | ✅ |
+| ₹1 cr | **UHI plan** (cool roofs + street trees, 100 cells) | 52,951 | 46,972 | −0.85 °C | ✅ |
 | | Spread evenly | 212 | 107 | | ✅ baseline |
 | | Trees everywhere | 13,196 | 4,632 | | ✅ baseline |
-| ₹10 cr | **VISAT plan** (4 fix types, 431 cells) | **186,258** | 228,650 | −1.20 °C | ✅ headline number |
+| ₹10 cr | **UHI plan** (4 fix types, 431 cells) | **186,258** | 228,650 | −1.20 °C | ✅ headline number |
 | | Spread evenly | 9,272 | 10,453 | | ✅ baseline |
 | | Trees everywhere | 113,022 | 44,298 | | ✅ baseline |
-| ₹50 cr | **VISAT plan** (4 fix types, 1,188 cells) | 433,751 | 810,418 | −1.86 °C | ✅ |
+| ₹50 cr | **UHI plan** (4 fix types, 1,188 cells) | 433,751 | 810,418 | −1.86 °C | ✅ |
 | | Spread evenly | 42,090 | 50,608 | | ✅ baseline |
 | | Trees everywhere | 550,369 | 194,048 | | ✅ baseline |
 
-At ₹50 cr, "Trees everywhere" cools more people but only by a little each: VISAT gives about 4× the person-°C. If a judge asks, say so plainly. The optimiser targets total person-°C, not headcount.
+At ₹50 cr, "Trees everywhere" cools more people but only by a little each: UHI gives about 4× the person-°C. If a judge asks, say so plainly. The optimiser targets total person-°C, not headcount.
 
 The budget curve in the chart is estimated as a sum of per-site effects. The three presets above use full joint evaluation.
 
@@ -93,3 +93,23 @@ These aren't interventions, but every scenario number depends on them.
 ## Still to do
 
 Nothing that PS1 requires is missing. Only items 14 and 15 remain, and both are blocked on outside access, so pitch them as future work. If time allows, it's worth adding one more sensitivity run: re-run the ₹10 cr plan with vulnerability weighting switched off (`all_candidates(vulnerability=False)`). That shows how much the plan depends on the vulnerability weights.
+
+
+## Implemented in the Simulation workspace
+
+The existing Simulation page now exposes five views:
+
+- **Interventions:** all eight validity-matrix entries, method labels, eligibility counts, low-support warnings, and side-by-side effect bars. The map shows selected sites from the saved 50 crore plan, not every eligible cell. OSM canal-bank candidates are labelled as unverified and are not presented as official IURWTS alignments.
+- **Budgets:** the three saved, jointly evaluated plans; total person-degree cooling, headcount, actual spending, intervention mix, selected locations, and both baselines. The UI explicitly shows the 50 crore headcount trade-off and distinguishes the approximate budget curve from joint preset evaluation.
+- **Development:** all 24 site/use combinations, before/after offsets, residual-heat verdict, cost, location overlays, and resident previews when a cache exists.
+- **Ward lab:** immediate weather sensitivity estimates relative to the saved reference atmosphere. Saved treatment-site effects are shown separately; they are not added to the entire ward's anomaly. This preview does not rerun the fitted model or change the historical heat raster.
+- **Evidence:** spatial validation, back-test, atmospheric sensitivity, physics cross-check and an availability register, derived from the actual data files.
+
+Every view produces a printable HTML report containing its selection, numerical results, source build and limitations. English and Malayalam labels are supported. The layout remains dark-only, with a map beneath the controls.
+
+### Availability correction for this build
+
+The original tables above describe the intended catalogue. The checked-in artifacts are authoritative: `metrics.json` currently has no matched kNN result, ECOSTRESS result or CPCB result, and `reactions_cache.json` is absent. These are shown as unavailable, rather than marked complete. SOLWEIG, InVEST and vulnerability-weighting sensitivity remain future work. The app reads build provenance directly from `manifest.json`; it does not use the timestamp in this document as runtime metadata.
+# Optional 3D preview
+
+The **3D Preview** tab follows Evidence. Choose a ward, cooling measure and optional weather changes, then press **Start simulation**. A lightweight local canvas renders an illustrative 3D neighbourhood with an animated before/after transition, drag rotation, replay and a comparison slider. Subsequent selections refresh the scene. Treatment estimates use saved ward sites where available, otherwise the study-wide median; weather sensitivity remains a separate estimate. Buildings, planting and colours are schematic rather than surveyed or calibrated geometry. No additional service or model download is required.

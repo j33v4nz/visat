@@ -83,7 +83,9 @@ UHI is a web app for **C-HED and ward councillors**. It uses free satellite data
 | **5. Proof & Ward Card** | *Can we trust it? What do I take to council?* | 2017→2024 back-test chart, honest accuracy vs baselines, validity matrix, CPCB and ECOSTRESS checks, data freshness, limits. **Download Ward Heat Card (PDF)** |
 
 **Design rules** (from the UX review)
-- Dark theme; text at least 20 px, key numbers 48–64 px.
+- Dark-only theme with near-black panels, warm-white text, orange heat accents and restrained mint cooling indicators.
+- Keep labels compact but high contrast; emphasize key results without crowding the map.
+- Five task-focused workspaces: heat overview, cooling plan, scenario simulation, project check and evidence.
 - Red/orange means heat; teal means fixes. No other accent colour.
 - Screen names are questions, and each screen has one headline sentence generated from the data.
 - Diagnostics (CV charts, physics tables) sit in expanders and come out for Q&A.

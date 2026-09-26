@@ -224,6 +224,10 @@ screen keeps its label ("surface °C, ~10:30 AM, Jan–Apr" / "city-scale"); PS1
 
 ## UHI dashboard additions
 
+- [x] Added optional 3D Preview after Evidence with Start simulation, ward/measure/weather controls, an animated schematic neighbourhood, drag rotation, before/after comparison and Malayalam labels.
+
 - [x] Rebuilt the map-first dashboard in a high-contrast black theme with orange and cooling-mint accents; removed the light theme.
 - [x] Added Malayalam labels and a ward-level scenario simulator with live sensitivity estimates and a downloadable report.
 - [x] Rebranded user-facing project text as UHI: Urban Heat Intelligence; renamed the Python package to `uhi` (the GitHub repository slug remains unchanged).
+
+- [x] Expanded Simulation into Interventions / Budgets / Development / Ward Lab / Evidence using the saved scenario catalogue, with map overlays, support warnings, budget trade-offs, all 24 development runs and printable reports. Missing validation and reaction artifacts are marked unavailable.
