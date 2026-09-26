@@ -3,12 +3,12 @@
 This file lists every simulation or what-if run that Problem Statement 1 asks for, how VISAT runs it, and where it stands. All numbers come from the committed build in `data/app/`, which uses real data: `source: frozen`, built 26 Sep 2026 03:48 IST from 54,168 cells and 23 Landsat scenes. To regenerate everything:
 
 ```bash
-uv run python -m visat.pipeline --source frozen
+uv run python -m uhi.pipeline --source frozen
 ```
 
 ## How every simulation runs
 
-Every what-if uses the same engine, `src/visat/scenarios.py` (`Engine`), and follows the same rules:
+Every what-if uses the same engine, `src/uhi/scenarios.py` (`Engine`), and follows the same rules:
 
 - **Analog fixes** move a cell toward the median of its k=20 most similar real Kochi cells that already have the fix. The result is clipped to the observed range (1st to 99th percentile), and changes are only allowed in the cooling direction.
 - **Formula fixes** cover cool roofs, cool pavements and green roofs, which have no data analog. They use a labelled energy-balance formula, ΔT ≈ −Δα × S / h × area share (S = 750 W/m², h = 25 W/m²K), and get no spillover credit.
@@ -33,7 +33,7 @@ Each intervention is simulated on every eligible cell and scored in the validity
 
 ## 2. Budget-optimised plan (PS1 Outcome: optimal strategy with type, placement and °C)
 
-`src/visat/optimize.py` picks the most person-°C of cooling per rupee, with one fix per cell, on public land only, weighted by vulnerability. Each plan is compared with two naive baselines and evaluated jointly.
+`src/uhi/optimize.py` picks the most person-°C of cooling per rupee, with one fix per cell, on public land only, weighted by vulnerability. Each plan is compared with two naive baselines and evaluated jointly.
 
 | Budget | Strategy | People cooled | Person-°C cooling | Mean ΔT for cooled people | Status |
 |---|---|---|---|---|---|
@@ -53,7 +53,7 @@ The budget curve in the chart is estimated as a sum of per-site effects. The thr
 
 ## 3. Heat-Neutral Development Check (proposed projects)
 
-`src/visat/heat_neutral.py` works in two steps. First it simulates developing a 3×3 block (about 9 ha, green to built) using real Kochi donors for that use. Then it finds the cheapest offset (trees within about 1 km, plus cool or green roofs on the project) that brings people-weighted °C back to zero within ±500 m.
+`src/uhi/heat_neutral.py` works in two steps. First it simulates developing a 3×3 block (about 9 ha, green to built) using real Kochi donors for that use. Then it finds the cheapest offset (trees within about 1 km, plus cool or green roofs on the project) that brings people-weighted °C back to zero within ±500 m.
 
 That gives 6 sites × 4 uses = **24 simulations, all done**:
 
