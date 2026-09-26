@@ -526,7 +526,7 @@ layers.append(pdk.Layer("TextLayer", id="place_labels", data=labels, get_positio
                         get_text="name", get_size=12, get_color=[220,235,242,220],
                         get_text_anchor="'middle'", get_alignment_baseline="'center'",
                         background=True, get_background_color=[12,24,32,170],
-                        background_padding=[6,3], font_family="Arial", character_set="auto"))
+                        background_padding=[6,3], font_family="Arial", character_set="'auto'"))
 
 
 def select_ward():
