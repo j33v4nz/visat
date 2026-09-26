@@ -1,0 +1,917 @@
+[0926/072114.140:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072114.185:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072114.206:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072114.221:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x99c001ba200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072114.508:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x99c008dfc00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072115.563:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x99c001ba200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072115.584:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x99c008dfc00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072133.827:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072133.872:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072133.898:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072133.912:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x647c00caac00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072134.252:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x647c001db400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072135.426:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x647c00caac00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072135.449:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x647c001db400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072141.588:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072141.638:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072141.664:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072141.676:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4d2400ed3400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072141.960:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4d2400ecfe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072142.959:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4d2400ed3400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072142.980:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4d2400ecfe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072151.662:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072151.709:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072151.725:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072151.741:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x42f4001e3400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072152.011:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x42f400ec5800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072153.057:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x42f4001e3400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072153.077:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x42f400ec5800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072155.333:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072158.371:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072158.402:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072158.419:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072158.429:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x60ec001d6000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072158.634:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x60ec00902800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072159.393:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x60ec001d6000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072159.425:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x60ec00902800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072200.141:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072203.134:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072203.169:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072203.186:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072203.199:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x139400f4b600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072203.426:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x139400f4e600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072204.804:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x139400f4b600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072204.841:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x139400f4e600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072208.440:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072208.478:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072208.497:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072208.509:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1a1c00ee9a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072208.723:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1a1c00eebe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072209.788:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1a1c00ee9a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072209.810:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1a1c00eebe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072211.311:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072216.073:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072216.110:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072216.128:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072216.138:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x122c008fc200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072216.390:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x122c008fce00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072217.390:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x122c008fc200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072217.420:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x122c008fce00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072218.943:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072218.975:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072218.994:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072219.003:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1cec008e8400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072219.224:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1cec001d6000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072220.069:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1cec008e8400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072220.090:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1cec001d6000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072228.907:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072228.957:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072228.980:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072228.996:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x6d2400ed9c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072229.306:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x6d24001e2600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072230.334:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x6d2400ed9c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072230.364:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x6d24001e2600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072232.679:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072232.710:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072232.725:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072232.738:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x664001ea600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072232.944:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x664008e8400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072233.685:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x664001ea600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072233.704:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x664008e8400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072234.533:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072242.478:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072242.527:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072242.553:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072242.565:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0xcec01217e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072242.876:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0xcec01219600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072244.088:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0xcec01217e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072244.108:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0xcec01219600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072245.636:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072245.927:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072245.964:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072245.981:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072245.990:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2c9400f43a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072246.205:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2c9400f41c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072247.138:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2c9400f43a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072247.171:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2c9400f41c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072258.019:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072258.046:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072258.064:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072258.073:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x531c00ec8c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072258.440:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x531c00ecc800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072259.364:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x531c00ec8c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072259.389:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x531c00ecc800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072259.669:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072259.700:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072259.717:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072259.725:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2a34001de600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072300.133:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2a3400caf400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072301.256:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2a34001de600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072301.273:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2a3400caf400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072301.751:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072308.683:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072308.709:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072308.725:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072308.731:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x13bc00f41400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072308.907:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x13bc001e1c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072309.554:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x13bc00f41400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072309.569:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x13bc001e1c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072310.482:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072314.674:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072314.701:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072314.716:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072314.723:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3c1c00ecb600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072314.905:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3c1c00ed2200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072315.543:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3c1c00ecb600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072315.559:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3c1c00ed2200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072316.167:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072321.129:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072321.157:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072321.171:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072321.180:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x6484001dec00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072321.354:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x648400ecb600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072321.991:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x6484001dec00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072322.007:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x648400ecb600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072322.952:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072329.315:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072329.343:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072329.358:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072329.367:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x7564008ff400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072329.537:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x7564008fe800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072330.165:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x7564008ff400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072330.182:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x7564008fe800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072336.781:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072336.809:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072336.824:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072336.833:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1bbc001dfe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072337.012:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1bbc001de600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072337.692:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1bbc001dfe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072337.708:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1bbc001de600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072338.521:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072346.009:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072346.050:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072346.067:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072346.078:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x6b4c00f60800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072346.327:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x6b4c00f5e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072346.560:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072346.591:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072346.607:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072346.616:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x192c00eea800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072346.884:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x192c00ee1200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072347.127:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x6b4c00f60800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072347.173:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x6b4c00f5e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072347.735:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x192c00eea800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072347.753:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x192c00ee1200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072356.183:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072356.212:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072356.228:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072356.238:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0xf7c008e7e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072356.452:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0xf7c001d7e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072357.418:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0xf7c008e7e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072357.434:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0xf7c001d7e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072358.555:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072358.582:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072358.599:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072358.608:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x36c008f3000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072358.845:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x36c008fa200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072400.016:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x36c008f3000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072400.056:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x36c008fa200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072414.370:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072414.407:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072414.424:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072414.434:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x24ac00ed0a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072414.680:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x24ac001d5400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072414.838:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072414.870:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072414.886:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072414.898:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x74ac00efba00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072415.158:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x74ac00ef8a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072415.616:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x24ac00ed0a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072415.646:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x24ac001d5400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072416.257:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x74ac00efba00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072416.277:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x74ac00ef8a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072417.533:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072417.561:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072417.577:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072417.584:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x275400ae1c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072417.759:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x275400ae3a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072418.381:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x275400ae1c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072418.389:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x275400ae3a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072419.523:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072426.542:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072426.569:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072426.585:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072426.592:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x525c00ecbe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072426.769:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x525c00eca000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072427.427:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x525c00ecbe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072427.445:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x525c00eca000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072434.500:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072434.530:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072434.544:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072434.553:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x223c008fd200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072434.727:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x223c00902600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072435.347:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x223c008fd200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072435.364:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x223c00902600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072439.129:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072439.157:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072439.172:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072439.180:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x14c4001de600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072439.362:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x14c400f46e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072439.982:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x14c4001de600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072439.999:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x14c400f46e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072444.555:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072444.583:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072444.598:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072444.605:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x779c001d9000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072444.780:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x779c00906200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072445.423:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x779c001d9000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072445.442:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x779c00906200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072449.277:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072449.306:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072449.322:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072449.333:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1bdc00f9b400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072449.564:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1bdc00f97e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072450.286:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1bdc00f9b400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072450.309:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1bdc00f97e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072451.110:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072452.581:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072452.612:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072452.629:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072452.637:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4ccc00f89600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072452.945:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4ccc00f81200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072453.567:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4ccc00f89600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072453.585:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4ccc00f81200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072504.241:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072504.269:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072504.284:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072504.291:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2c7c00ed1000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072504.462:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2c7c00ed3a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072505.139:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2c7c00ed1000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072505.156:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2c7c00ed3a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072507.866:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072507.894:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072507.909:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072507.917:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3a6c008ef800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072508.090:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3a6c001db600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072508.711:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3a6c008ef800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072508.731:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3a6c001db600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072509.428:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072515.999:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072516.037:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072516.053:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072516.064:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x52ec008fe600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072516.285:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x52ec001dba00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072516.472:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072516.501:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072516.519:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072516.527:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x7d94001d3600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072516.792:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x7d94008ece00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072517.012:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x52ec008fe600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072517.028:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x52ec001dba00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072517.694:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x7d94001d3600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072517.716:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x7d94008ece00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072520.646:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072520.674:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072520.690:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072520.698:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x227c008f7a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072520.886:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x227c001df800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072521.523:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x227c008f7a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072521.546:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x227c001df800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072522.248:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072533.499:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072533.530:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072533.550:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072533.561:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x45c4001d6000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072533.789:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x45c40090fa00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072534.555:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x45c4001d6000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072534.577:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x45c40090fa00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072535.215:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072535.243:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072535.262:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072535.274:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x165400ed3400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072535.370:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072535.530:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1654001d8400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072536.376:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x165400ed3400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072536.429:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x1654001d8400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072536.791:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072550.168:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072550.195:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072550.211:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072550.218:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4694001dae00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072550.389:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4694008f2200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072551.015:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4694001dae00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072551.036:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4694008f2200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072551.749:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072619.459:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072619.487:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072619.506:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072619.514:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4f2c00f56c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072619.684:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4f2c00f52a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072620.280:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4f2c00f56c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072620.294:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x4f2c00f52a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072634.460:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072634.486:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072634.500:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072634.510:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x168c00ed4400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072634.673:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x168c00ed5600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072635.285:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x168c00ed4400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072635.292:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x168c00ed5600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072659.513:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072659.541:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072659.555:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072659.563:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x266400f6e200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072659.726:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x266400f65e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072700.326:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x266400f6e200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072700.334:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x266400f65e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072701.776:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072719.514:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072719.541:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072719.557:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072719.564:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x799c00ec8200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072719.730:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x799c00ec5800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072720.320:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x799c00ec8200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072720.329:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x799c00ec5800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072721.259:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/072752.058:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072752.086:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072752.100:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072752.107:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3274001e0400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072752.271:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3274008e7200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072752.868:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3274001e0400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072752.876:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3274008e7200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072803.019:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072803.046:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072803.061:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072803.070:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3bf4001d6600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072803.237:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3bf4001d6c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072803.846:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3bf4001d6600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072803.861:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3bf4001d6c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072814.790:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072814.815:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072814.831:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072814.839:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3ddc00caee00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072815.004:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3ddc00ca8800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072815.613:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3ddc00caee00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072815.620:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3ddc00ca8800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072936.323:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072936.351:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072936.367:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072936.376:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x7064008f6600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072936.555:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x7064008f6000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072937.199:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x7064008f6600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072937.207:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x7064008f6000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/072952.680:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072952.706:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/072952.723:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/072952.731:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x74a4001db400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072952.906:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x74a4008ee800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072953.583:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x74a4001db400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/072953.598:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x74a4008ee800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/073053.059:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073053.087:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/073053.102:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073053.110:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x698c00ca8e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073053.278:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x698c00ca8200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073053.883:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x698c00ca8e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073053.893:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x698c00ca8200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/073216.850:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073216.877:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/073216.891:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073216.900:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0xcc4001d9e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073217.064:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0xcc4008f0a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073217.664:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0xcc4001d9e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073217.678:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0xcc4008f0a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/073246.609:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073246.636:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/073246.650:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073246.658:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x77fc001d9e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073246.823:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x77fc00f58e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073247.423:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x77fc001d9e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073247.437:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x77fc00f58e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/073315.218:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073315.245:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/073315.260:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073315.269:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x214c00f76000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073315.433:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x214c00f7a200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073316.053:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x214c00f76000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073316.062:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x214c00f7a200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/073337.853:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073337.881:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/073337.895:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073337.902:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x20b400f3e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073338.067:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x20b400f3cc00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073338.676:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x20b400f3e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073338.685:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x20b400f3cc00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/073349.156:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073349.184:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/073349.198:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073349.207:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3adc00902000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073349.378:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3adc00904a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073349.995:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3adc00902000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073350.004:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x3adc00904a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/073705.717:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073705.756:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/073705.775:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073705.784:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x599c001d5a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073706.022:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x599c001d7e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073706.759:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x599c001d5a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073706.769:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x599c001d7e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/073729.362:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073729.389:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/073729.405:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073729.412:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x52d4001da200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073729.585:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x52d400ec8800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073730.239:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x52d4001da200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073730.255:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x52d400ec8800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/073730.868:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/073755.988:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073756.013:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/073756.031:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073756.039:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x477c008f0200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073756.211:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x477c031aa400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073756.883:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x477c008f0200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073756.913:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x477c031aa400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/073822.700:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073822.728:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/073822.743:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/073822.751:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x740c008f2e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073822.932:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x740c008ebc00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073823.648:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x740c008f2e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/073823.657:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x740c008ebc00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/074154.541:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/074154.567:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/074154.582:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/074154.590:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2a9400ec8000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074154.761:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2a9400ec9200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074155.453:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2a9400ec8000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074155.471:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x2a9400ec9200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/074156.660:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/074303.392:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/074303.419:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/074303.433:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/074303.441:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x753400ca9400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074303.630:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x753400ca4600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074304.302:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x753400ca9400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074304.322:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x753400ca4600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/074305.626:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/074433.464:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/074433.490:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/074433.505:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/074433.512:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x342c00ede200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074433.686:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x342c00ed6a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074434.311:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x342c00ede200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074434.331:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x342c00ed6a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/074435.741:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)
+[0926/074512.697:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/074512.724:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/074512.738:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/074512.745:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x5334001d4800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074512.910:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x533400ed1e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074513.503:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x5334001d4800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074513.518:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x533400ed1e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/074545.474:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/074545.499:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:125: '/' : Divide by zero during constant folding
+WARNING: 0:135: '/' : Divide by zero during constant folding
+
+[0926/074545.513:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+
+[0926/074545.522:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x5dfc001df200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074545.689:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x5dfc001de000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074546.315:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x5dfc001df200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0926/074546.339:ERROR:gpu\command_buffer\service\gl_utils.cc:427] [.WebGL-0x5dfc001de000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[0926/074547.849:WARNING:ui\gl\angle_platform_impl.cc:42] Shader.cpp:768 (gl::Shader::resolveCompile): Compiler log: WARNING: 0:122: '/' : Divide by zero during constant folding
+WARNING: 0:132: '/' : Divide by zero during constant folding
+ (No more compiler logs will be reported in logs)

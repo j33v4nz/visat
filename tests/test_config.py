@@ -1,4 +1,4 @@
-from visat import config
+from uhi import config
 
 
 def test_grid_and_seasons():

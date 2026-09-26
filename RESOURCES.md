@@ -1,4 +1,4 @@
-# VISAT resource pack (verified September 2026)
+# UHI resource pack (verified September 2026)
 
 This is everything the team needs to get ready for HackMe'26: accounts, datasets, live weather, libraries, local Kochi data, costs and pitch facts. It is research only. All code gets written at the event.
 
@@ -150,7 +150,7 @@ These notes are from the current Claude API reference. They are for writing the 
 | Refusals | Check `stop_reason` before reading content. When writing `claude-opus-5` code, enable the server-side refusal fallback per the current docs |
 | Batches | The Message Batches API costs **50% less** but runs asynchronously and can take a while. Use it only if precomputing early in the night; otherwise use normal calls |
 | Rough cost | About 3k input + about 3k output tokens per call ≈ **$0.09/call** on `claude-opus-5` ($5 in / $25 out per million tokens) → **about $2–4 for all precomputed results**, less with caching or batches. Re-check prices on the day |
-| Number guard | After parsing, reject any quote that contains a number not present in the VISAT input numbers, and regenerate or drop it |
+| Number guard | After parsing, reject any quote that contains a number not present in the UHI input numbers, and regenerate or drop it |
 | Demo safety | Precompute everything into **`data/app/reactions_cache.json` (tracked in git)**. The demo reads the cache; a live re-run is optional and falls back to the cache. The API key lives in Streamlit Cloud secrets, never in the repo |
 | Disclosure | Mention this in the AI-use disclosure slide: which model, what it does, and that it never changes the numbers |
 
@@ -170,7 +170,7 @@ These notes are from the current Claude API reference. They are for writing the 
 
 ## 3b. Kerala rules and advisories (from panel research; M4 re-verifies before the event)
 
-| Item | What it says | Use in VISAT | Source |
+| Item | What it says | Use in UHI | Source |
 |---|---|---|---|
 | Labour Commissioner order, 2026 | Outdoor workers rest **12–3 PM**, **13 Feb – 20 May 2026**; at most 8 hours between 7 AM and 7 PM | Linked from "Act today"; wards with construction sites ranked higher | [Kerala Kaumudi](https://keralakaumudi.com/en/news/news.php?id=1478856&u=govt-reschedules-working-hours-for-labourers-as-temperatures-soar-rest-from-12-3-pm) |
 | KSDMA heat advisories | Avoid direct sun 11 AM–3 PM; water, ORS, cotton clothing; schools avoid assemblies and outdoor classes; local bodies run drinking-water kiosks (*thanneer pandal*); fire safety at markets and waste dumps; protect livestock | Action list on "Act today" and the Ward Card | KSDMA (find the current PDF) |
@@ -257,7 +257,7 @@ These notes are from the current Claude API reference. They are for writing the 
 
 ## 8. New Q&A item: "Doesn't Kawaki already do this?"
 
-> "Kawaki proves Kochi already wants data-driven cooling. It picks grove sites in heat-vulnerable areas. VISAT is the next layer. It compares trees against cool roofs and mangroves under a ₹ budget, checks new projects so they don't add heat, and verifies predictions against real 2017→2024 change. It gives C-HED a tool to plan the next Kawaki sites, not a replacement."
+> "Kawaki proves Kochi already wants data-driven cooling. It picks grove sites in heat-vulnerable areas. UHI is the next layer. It compares trees against cool roofs and mangroves under a ₹ budget, checks new projects so they don't add heat, and verifies predictions against real 2017→2024 change. It gives C-HED a tool to plan the next Kawaki sites, not a replacement."
 
 ---
 
@@ -280,7 +280,7 @@ These notes are from the current Claude API reference. They are for writing the 
 - [ ] **PS1 compliance checklist (PLAN.md section 0) re-checked by the whole team**
 - [ ] C-HED / councillor / KSDMA contacted (M4). **Use only genuine quotes.** If there's no reply, say "awaiting response"
 - [ ] Slide template, pitch script and AI-use disclosure drafted (M4)
-- [ ] Sketches of the 4 screens and the ward card, and a dark-theme test on a projector (M3)
+- [ ] Sketches of the 5 workspaces and the ward card, and a dark-theme test on a projector (M3)
 - [ ] Practice run of the full pipeline (practice code stays off the event repo)
 - [ ] Two phone hotspots with data packs
 

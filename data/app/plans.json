@@ -2,7 +2,7 @@
  "presets": {
   "1": {
    "ours": {
-    "strategy": "VISAT plan",
+    "strategy": "UHI plan",
     "cost_rs": 9998849.970817566,
     "person_deg_cooling": 46971.85866489798,
     "people_cooled": 52950.95129105449,
@@ -2168,7 +2168,7 @@
   },
   "10": {
    "ours": {
-    "strategy": "VISAT plan",
+    "strategy": "UHI plan",
     "cost_rs": 99829849.87461567,
     "person_deg_cooling": 228650.3449022179,
     "people_cooled": 186257.62695723772,
@@ -9841,7 +9841,7 @@
   },
   "50": {
    "ours": {
-    "strategy": "VISAT plan",
+    "strategy": "UHI plan",
     "cost_rs": 499929400.3660679,
     "person_deg_cooling": 810417.9089427441,
     "people_cooled": 433750.9634129256,
@@ -27121,49 +27121,49 @@
  "curve": [
   {
    "budget_cr": 0.5,
-   "VISAT plan": 28755.91555291692,
+   "UHI plan": 28755.91555291692,
    "Spread evenly": 412.09980225025123,
    "Trees everywhere": 1434.6977054862489
   },
   {
    "budget_cr": 1,
-   "VISAT plan": 45319.48260489827,
+   "UHI plan": 45319.48260489827,
    "Spread evenly": 446.4743474953817,
    "Trees everywhere": 2983.74798294925
   },
   {
    "budget_cr": 2,
-   "VISAT plan": 73538.80380868641,
+   "UHI plan": 73538.80380868641,
    "Spread evenly": 3232.7895829551035,
    "Trees everywhere": 6028.918849513193
   },
   {
    "budget_cr": 5,
-   "VISAT plan": 144845.6898656806,
+   "UHI plan": 144845.6898656806,
    "Spread evenly": 3653.9139500808005,
    "Trees everywhere": 16815.799518666638
   },
   {
    "budget_cr": 10,
-   "VISAT plan": 241738.41180399896,
+   "UHI plan": 241738.41180399896,
    "Spread evenly": 7598.486046055684,
    "Trees everywhere": 33080.76979228853
   },
   {
    "budget_cr": 20,
-   "VISAT plan": 409564.5224184694,
+   "UHI plan": 409564.5224184694,
    "Spread evenly": 12760.196028127702,
    "Trees everywhere": 68406.28959421082
   },
   {
    "budget_cr": 35,
-   "VISAT plan": 631774.4377185504,
+   "UHI plan": 631774.4377185504,
    "Spread evenly": 21182.496616262644,
    "Trees everywhere": 118637.54537408141
   },
   {
    "budget_cr": 50,
-   "VISAT plan": 832027.5788266772,
+   "UHI plan": 832027.5788266772,
    "Spread evenly": 33303.870198483244,
    "Trees everywhere": 168887.14593384607
   }

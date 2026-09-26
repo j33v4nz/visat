@@ -1,10 +1,10 @@
-# VISAT: Kochi Heat Action Planner (v5, final)
+# UHI: Urban Heat Intelligence - Kochi Heat Action Planner (v5, final)
 
 *Cross-checked on 25 Sep 2026 against Problem Statement 1 in the hackathon doc, the HackMe'26 rules and rubric, and every file in this repo.*
 
-**HackMe'26 · VISAT Engineering College · AI/ML track · PS1: Urban Heat Mitigation via AI/ML**
+**HackMe'26 · AI/ML track · PS1: Urban Heat Mitigation via AI/ML**
 
-> **"VISAT shows Kochi where heat is dangerous today, where ₹10 crore cools the most people, and screens every new project so the city stops getting hotter. We prove it against real change from 2017 to 2024."**
+> **"UHI shows Kochi where heat is dangerous today, where ₹10 crore cools the most people, and screens every new project so the city stops getting hotter. We prove it against real change from 2017 to 2024."**
 
 **Closing line of the pitch:** *"₹10 crore → −X surface-°C for Y people, back-test error ±Z."*
 
@@ -24,11 +24,11 @@ The app runs on frozen real Kochi data: 54,168 grid cells and 23 clean Landsat s
   from the frozen app cells plus OSM counts. All 74 wards receive cells: 8,063 cells and about
   941,517 people estimated by the GHSL grid inside the municipal boundaries. Global model and plan
   values were preserved.
-  `python -m visat.ward_rollup` reproduces this ward-only rebuild without Earth Engine.
+  `python -m uhi.ward_rollup` reproduces this ward-only rebuild without Earth Engine.
 - [x] Implemented an exploratory 2017-feature kNN matched comparison of changed cells against
   unchanged cells in `validation.py`, with tests and a Proof-screen result when the full pipeline runs.
 - [ ] Produce the **real** matched comparison metric. The raw `backtest.parquet` export is absent here;
-  whoever has M1's original `data/frozen/` files must rerun `python -m visat.pipeline --source frozen`.
+  whoever has M1's original `data/frozen/` files must rerun `python -m uhi.pipeline --source frozen`.
 - [ ] Submit the NASA AppEEARS request and download afternoon ECOSTRESS LST. No NASA Earthdata
   credential or ECOSTRESS GeoTIFF is available in this workspace; the afternoon map and agreement
   cannot be reported yet.
@@ -41,9 +41,9 @@ The matched comparison is descriptive, not a causal claim.
 
 ## 0. Problem Statement 1 compliance checklist
 
-Every requirement in PS1 (from the hackathon doc), and where VISAT covers it. **Re-check this table after every change and before submission.**
+Every requirement in PS1 (from the hackathon doc), and where UHI covers it. **Re-check this table after every change and before submission.**
 
-| PS1 requirement | Where VISAT covers it | Tier |
+| PS1 requirement | Where UHI covers it | Tier |
 |---|---|---|
 | **Description:** geospatial AI/ML, physics-informed decision making, hotspots, drivers, optimized scenario-based interventions | The whole system; the scene-panel physics model; the optimizer | 1 |
 | **Obj 1:** heat stress maps from **satellite *and* meteorological data** | **Heat Stress Map** (PS1's own term), built from a heat exposure index = satellite LST rank (*where*) × meteorological heat index (*when*, from ERA5 per scene + live Open-Meteo) × population (*who*) | 1 |
@@ -72,14 +72,15 @@ Every requirement in PS1 (from the hackathon doc), and where VISAT covers it. **
 
 ## 2. Our solution
 
-VISAT is a web app for **C-HED and ward councillors**. It uses free satellite data, weather data (historical and live), and physics-informed machine learning. It has four screens:
+UHI is a web app for **C-HED and ward councillors**. It uses free satellite data, weather data (historical and live), and physics-informed machine learning. It has five workspaces: heat overview, cooling plan, scenario simulation, project check and evidence, plus the Ward Card.
 
 | Screen | Question it answers | What's on it |
 |---|---|---|
 | **1. Today** | *Where is heat dangerous today?* | **Heat Stress Map** (Kochi in 100 m squares); live strip (temperature, humidity, heat index, danger band); **"Act today: wards X, Y, Z"** tied to the Labour order and KSDMA advisories; official alert chip + Malayalam news chip (T2). **Click a ward** to open a driver panel in plain words: *"Low tree cover adds +1.8 °C."* |
 | **2. Plan ₹** | *What should we do with our money?* | Preset buttons **₹1 / ₹10 / ₹50 crore** (instant, cached). Plan map + table: type · place · −°C · people · ₹. Compared with "spread evenly" and "trees everywhere". Big numbers: people protected, °C, ₹ per °C |
-| **3. Check a Project** ⭐ | *Will this new project make it hotter?* | **The hero screen.** Pick one of 5–8 pre-drawn sites and a use (IT park / mall / housing / parking). A **heat ledger** shows *"+1.3 surface-°C (morning) · 4,200 people"*, then the cheapest offset brings it to *"0.0 °C · ₹38 L"*, with a "which rule / who signs" line (the figures here are illustrative) |
-| **4. Proof & Ward Card** | *Can we trust it? What do I take to council?* | 2017→2024 back-test chart, honest accuracy vs baselines, validity matrix, CPCB and ECOSTRESS checks, data freshness, limits. **Download Ward Heat Card (PDF)** |
+| **3. Scenario Lab** | *What could this ward become under changed weather and cooling measures?* | Select a ward, intervention and site count, then adjust air temperature, humidity, wind and sunlight. Live estimate uses saved sensitivities and downloads a qualified report. |
+| **4. Check a Project** ⭐ | *Will this new project make it hotter?* | **The hero screen.** Pick one of 5–8 pre-drawn sites and a use (IT park / mall / housing / parking). A **heat ledger** shows *"+1.3 surface-°C (morning) · 4,200 people"*, then the cheapest offset brings it to *"0.0 °C · ₹38 L"*, with a "which rule / who signs" line (the figures here are illustrative) |
+| **5. Proof & Ward Card** | *Can we trust it? What do I take to council?* | 2017→2024 back-test chart, honest accuracy vs baselines, validity matrix, CPCB and ECOSTRESS checks, data freshness, limits. **Download Ward Heat Card (PDF)** |
 
 **Design rules** (from the UX review)
 - Dark theme; text at least 20 px, key numbers 48–64 px.
@@ -174,13 +175,13 @@ A small MiroFish-style simulation. It is **not** a full social-network swarm.
   - an environmental volunteer
 
   Each persona has a ward, age band, hours outdoors, main concerns and a starting stance.
-- **Input:** the proposal (e.g. the heat-neutral rule for the chosen site, or the ₹10 crore plan for a ward) plus **VISAT's own numbers** (°C, ₹, people).
+- **Input:** the proposal (e.g. the heat-neutral rule for the chosen site, or the ₹10 crore plan for a ward) plus **UHI's own numbers** (°C, ₹, people).
 - **Output per persona, as schema-validated JSON:** stance (support / neutral / oppose), top concern, what would change their mind, and a one-line quote (**labelled "simulated"**; Malayalam optional).
 - **Shown as:** a stance bar by group, the top 5 concerns, and a **"who to consult first"** list.
 - **Engineering, so it's more than prompt generation:**
   - Personas are generated from data tables.
   - Structured output uses a fixed JSON schema.
-  - A **number guard** rejects any reply that quotes a number not found in VISAT's input.
+  - A **number guard** rejects any reply that quotes a number not found in UHI's input.
   - Shared persona context is cached across calls.
   - Results are **precomputed** for the 5–8 pre-drawn sites × use types, so the demo makes **no live AI call**. A "re-run" button is optional and falls back to the cache.
   - pytest covers schema validity, the number guard and cache fallback.
@@ -232,7 +233,7 @@ Every row also shows its **"within-support %"**: how much of the change stays in
 5. Validity matrix + joint re-prediction + tests.
 6. Optimizer vs naive baselines, with ₹1/10/50 crore presets.
 7. Back-test normalised to the city median; **ECOSTRESS afternoon map** on the Proof screen (~30 min, keeps PS1 input coverage even if Tier 2 slips).
-8. The four screens, Open-Meteo strip with fallback, Ward Card PDF, README, deck.
+8. The five workspaces, Open-Meteo strip with fallback, Ward Card PDF, README, deck.
 
 **Tier 2: after the 4 PM checkpoint**
 - ⭐ Heat-Neutral Development Check.
@@ -250,7 +251,7 @@ Every row also shows its **"within-support %"**: how much of the change stays in
 - **Public Reaction Preview** (simulated personas, section 4b). It is built last and is the **first thing cut** if time is short. Start it only once the Heat-Neutral Check works.
 
 **Cut** (mentioned only as future scope):
-- Ask VISAT chatbot
+- Ask UHI chatbot
 - Thiruvananthapuram
 - InVEST, SOLWEIG, UT-GLOBUS
 - scrolling ticker
@@ -266,7 +267,7 @@ Every row also shows its **"within-support %"**: how much of the change stays in
 |---|---|---|
 | **M1, Data & Model (ML)** | AppEEARS request (hour 0) → Earth Engine scene stack + ERA5 + 2017 Landsat, frozen by 2 PM → scene-panel model + CV + baselines + SHAP → Heat Stress Map → back-test → ECOSTRESS afternoon map → *(T2)* ECOSTRESS rank agreement, DiD | Data, model, validation |
 | **M2, Scenarios & Optimizer (ML)** | Validity matrix → analog + formula scenarios → joint re-prediction + tests → optimizer + baselines + presets → *(T2)* Heat-Neutral Check engine, vulnerability weights | Optimizer, physics, Heat-Neutral Check |
-| **M3, App (Design)** | Hello-world + CI by 12 PM → 4 screens, dark theme → Open-Meteo strip + fallback → Ward Card PDF → *(T2)* Check-a-Project UI (pre-drawn sites, use picker) → *(T3)* ledger animation, before/after, IURWTS overlay, Public Reaction expander | Live demo, ward walkthrough |
+| **M3, App (Design)** | Hello-world + CI by 12 PM → 5 workspaces, dark-only theme → Open-Meteo strip + fallback → Ward Card PDF → *(T2)* Check-a-Project UI (pre-drawn sites, use picker) → *(T3)* ledger animation, before/after, IURWTS overlay, Public Reaction expander | Live demo, ward walkthrough |
 | **M4, Product & Pitch (Design)** | Costs + rules → README + AI disclosure → *(T2)* official alert chip + Malayalam news chip, "who signs" lines → deck, video, demo script → *(T3)* printed A5 cards, Public Reaction Preview (persona table, prompts, precomputed results) → timekeeper and submitter | Problem, costs, policy, impact |
 
 ## 9. 24-hour timeline (work starts ~10 AM)
@@ -278,7 +279,7 @@ Every row also shows its **"within-support %"**: how much of the change stays in
 | **2:00 PM** | **Data frozen** |
 | **4:00 PM** | **Checkpoint 1:** scene-panel model (or fallback) + Heat Stress Map on screen → Tier 2 unlocked |
 | 7:00 PM | Validity matrix, optimizer, back-test done |
-| **11:00 PM** | **Checkpoint 2:** all 4 screens live online → Tier 3 unlocked |
+| **11:00 PM** | **Checkpoint 2:** all 5 workspaces live online → Tier 3 unlocked |
 | **1:00 AM** | If the optimizer is broken, ship ranked hotspots + °C per intervention |
 | 2–5 AM | Sleep in shifts (M1 + M3 from 2:00 to 3:30, M2 + M4 from 3:30 to 5:00) |
 | 5:00 AM | Feature freeze; record the backup demo video |
@@ -311,7 +312,7 @@ Each member presents one screen. Keep the backup recording ready and warm the ap
 | How do satellite and weather combine? | M1 | Exposure = LST rank × heat index × population. The weather model is city-scale, so it sets the day's danger, not the differences between wards. |
 | Do canals cool the city? | M4 | Not much. They're narrower than our 100 m grid, so we give them 0 °C credit. IURWTS is shown as a committed project, and we offer tree strips along its banks. |
 | Is heat-neutral development legal? | M4 | It's a screening tool and a policy proposal. It could run as a voluntary offset for a KMBR extra-FSI incentive, or be attached to SEIAA Form-1A for large projects. |
-| Doesn't Kawaki already do this? | M4 | Kawaki picks tree-grove sites. VISAT adds budget trade-offs, project screening, and verification, so it can plan the next Kawaki sites. |
+| Doesn't Kawaki already do this? | M4 | Kawaki picks tree-grove sites. UHI adds budget trade-offs, project screening, and verification, so it can plan the next Kawaki sites. |
 | Why Malayalam news? Isn't it unreliable? | M4 | It's supporting evidence shown next to the official KSDMA/IMD alert, with channel, time and link. |
 | What if the live feed fails? | M3 | Every live item falls back to its last cached value with a timestamp. We rehearsed with Wi-Fi off. |
 | Did you cover the whole problem statement? | M4 | Yes. Section 0 maps every PS1 objective, input and outcome to a feature. |
@@ -322,7 +323,7 @@ Each member presents one screen. Keep the backup recording ready and warm the ap
 
 ## 12. Before the event (no code carried in)
 
-- **⚠️ Team decision first.** The repo already has pre-event code and configuration: `src/visat/config.py`, `tests/`, `.github/workflows/ci.yml`, `pyproject.toml`, `.gitignore`. HackMe'26 says *"all project code, schemas, and configurations must be written during the event."* Move these to a `prep` branch (or delete them from `main`) before the event, and recreate them live at hour 0–2. `config.py` is also out of date against v5: its ERA5 comment, `STUDY_MONTHS`, and the missing cool-pavement, pond and canal-bank costs, ECOSTRESS and CPCB entries. The docs (PLAN/RESOURCES/STRATEGY/README) are plans and can stay.
+- **⚠️ Team decision first.** The repo already has pre-event code and configuration: `src/uhi/config.py`, `tests/`, `.github/workflows/ci.yml`, `pyproject.toml`, `.gitignore`. HackMe'26 says *"all project code, schemas, and configurations must be written during the event."* Move these to a `prep` branch (or delete them from `main`) before the event, and recreate them live at hour 0–2. `config.py` is also out of date against v5: its ERA5 comment, `STUDY_MONTHS`, and the missing cool-pavement, pond and canal-bank costs, ECOSTRESS and CPCB entries. The docs (PLAN/RESOURCES/STRATEGY/README) are plans and can stay.
 - **Everyone:** Earth Engine sign-up (now), Python + `uv`, GitHub.
 - **M1:**
   - Create a NASA Earthdata account and practise an AppEEARS request.

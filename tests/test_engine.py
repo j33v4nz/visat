@@ -1,9 +1,9 @@
 import numpy as np
 import pytest
 
-from visat import config, heat_neutral, optimize, validation
-from visat.features import heat_band, heat_index_c, relative_humidity
-from visat.scenarios import eligible
+from uhi import config, heat_neutral, optimize, validation
+from uhi.features import heat_band, heat_index_c, relative_humidity
+from uhi.scenarios import eligible
 
 
 def test_heat_index_matches_nws_table():

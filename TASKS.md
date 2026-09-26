@@ -1,4 +1,4 @@
-# VISAT — who does what (event day)
+# UHI — who does what (event day)
 
 **Start here.** The app runs end-to-end on frozen **real Kochi data**. Times are **hours from kick-off (H+0)**;
 submission portal locks at **9:00 AM Day 2**.
@@ -52,12 +52,12 @@ came from this side and why, without duplicating or overwriting anyone else's no
     harbours, 243 parks) — this is what M1's checklist above is already reporting.
 
 **Update:** The ward-only rebuild is now done from saved app cells and OSM counts with
-`python -m visat.ward_rollup`; the 575 fallback zones are gone. The raw GEE exports
+`python -m uhi.ward_rollup`; the 575 fallback zones are gone. The raw GEE exports
 (`cells_static.parquet`, `scenes.parquet`, `scenes_meta.parquet`, `backtest.parquet`) are still absent
 here. Whoever has that local `data/frozen/` folder can run the full pipeline again to compute the
 new matched back-test metric:
 ```bash
-uv run python -m visat.pipeline --source frozen
+uv run python -m uhi.pipeline --source frozen
 ```
 The ward-only pass preserved the frozen global model and plan values; its Ward Card action values
 come from the already saved per-site plan picks (rounded to 0.01 °C).
@@ -94,18 +94,18 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 
 | Piece | File | PS1 |
 |---|---|---|
-| Physics-informed scene-panel XGBoost (monotone constraints, per-scene ERA5, (1−α)·S↓) | `src/visat/model.py` | Obj 3 |
+| Physics-informed scene-panel XGBoost (monotone constraints, per-scene ERA5, (1−α)·S↓) | `src/uhi/model.py` | Obj 3 |
 | Grouped spatial-block CV vs linear + unconstrained baselines, random-CV shown for honesty | `model.py` | Outcome: validated model |
 | Atmospheric drivers with bootstrap CIs over scenes | `model.py` | Obj 2 |
-| Heat Stress Map (LST rank × heat index × population), ward roll-up, hotspots, "act today" | `src/visat/exposure.py` | Obj 1 |
-| What-if engine: analog transitions (k=20 real Kochi donors, P1–P99 support, cooling-direction only), energy-balance formulas, joint re-prediction, spillover | `src/visat/scenarios.py` | Obj 4 |
+| Heat Stress Map (LST rank × heat index × population), ward roll-up, hotspots, "act today" | `src/uhi/exposure.py` | Obj 1 |
+| What-if engine: analog transitions (k=20 real Kochi donors, P1–P99 support, cooling-direction only), energy-balance formulas, joint re-prediction, spillover | `src/uhi/scenarios.py` | Obj 4 |
 | Validity matrix (all 7 interventions + IURWTS canals at 0 °C credit) | `scenarios.py` | Outcome: scenario evaluation |
-| Budget optimizer + "spread evenly" / "trees everywhere" baselines, ₹1/10/50 Cr presets | `src/visat/optimize.py` | Outcome: optimal strategy |
-| Heat-Neutral Development Check (reverse transition, context-matched donors, cheapest offset) | `src/visat/heat_neutral.py` | Innovation |
-| Back-test 2017→2024, ECOSTRESS agreement, CPCB check | `src/visat/validation.py` | Proof |
+| Budget optimizer + "spread evenly" / "trees everywhere" baselines, ₹1/10/50 Cr presets | `src/uhi/optimize.py` | Outcome: optimal strategy |
+| Heat-Neutral Development Check (reverse transition, context-matched donors, cheapest offset) | `src/uhi/heat_neutral.py` | Innovation |
+| Back-test 2017→2024, ECOSTRESS agreement, CPCB check | `src/uhi/validation.py` | Proof |
 | Live Open-Meteo strip + Malayalam news chip, both with cache → snapshot fallback | `live.py`, `news.py` | Live layer |
-| Ward Heat Card (printable HTML) | `src/visat/report.py` | Impact |
-| Public Reaction Preview (Tier 3, simulated personas, number guard) | `src/visat/reactions.py` | Extra |
+| Ward Heat Card (printable HTML) | `src/uhi/report.py` | Impact |
+| Public Reaction Preview (Tier 3, simulated personas, number guard) | `src/uhi/reactions.py` | Extra |
 | Earth Engine export, OSM features, frozen loader | `gee_export.py`, `osm_features.py`, `frozen.py` | Inputs |
 | 4-screen Streamlit app, dark projector theme | `app/streamlit_app.py`, `.streamlit/config.toml` | UI |
 | 26 tests: budget, never-warms, eligibility, joint vs single, baselines, heat-neutral, fallbacks, Malayalam, number guard, app smoke | `tests/` | Demo safety |
@@ -119,7 +119,7 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
       area = bbox `76.20, 9.88, 76.40, 10.10`, dates **Jan–Apr 2024 and 2025**, GeoTIFF, EPSG:4326.
       When ready, unzip all `*LST_doy*.tif` into `data/raw/ecostress/`. **Still needs doing — do this now,
       it takes a while to process on NASA's side.**
-- [x] **H+0.5** `visat.gee_export` done for real: 54,168 cells, **23 clean scenes** (Jan-2019–Feb-2026),
+- [x] **H+0.5** `uhi.gee_export` done for real: 54,168 cells, **23 clean scenes** (Jan-2019–Feb-2026),
       2017/2024 back-test composites. Took ~20 min after 2 Earth Engine fixes (see below).
 - [x] **H+2** OSM features done: 28,378 roads, 542 schools, 62 markets, 390 hospitals, 16 construction, 5 harbours, 243 parks, 5,525 canal-bank cells.
 - [x] **H+2** Kochi 74-ward map: **done (PR #7, AI-assisted — see the section near the top of this file).**
@@ -132,7 +132,7 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
       `data/app/` rollup is now built from frozen app cells and OSM counts: 74 wards, 8,063 cells.
 - [ ] **H+2.5** (optional, M4 downloads) CPCB Vyttila/Eloor CSVs → `data/raw/cpcb/`. Also optional: the
       AppEEARS ECOSTRESS download (M1, still pending — see top of file).
-- [x] **H+3** `visat.pipeline --source frozen` run — **real `data/app/` built and committed.**
+- [x] **H+3** `uhi.pipeline --source frozen` run — **real `data/app/` built and committed.**
       **Real numbers:** ₹1cr → 52,951 people cooled · ₹10cr → 186,258 · ₹50cr → 433,751.
       **Honest validation:** spatial-CV R² = 0.83 (ours) vs 0.84 (unconstrained) vs 0.62 (linear) — physics
       constraints cost a little raw fit for guaranteed-sensible behaviour, both crush the linear baseline.
@@ -161,12 +161,16 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 
 ## M3 — App (Design)
 
+- [x] **Dashboard redesign:** full-screen heat map with floating navigation, weather strip,
+      layer controls, and compact Heat / Plan / Project / Evidence panels. Detailed analysis,
+      project map comparisons, alerts, and bilingual Ward Cards open in overlays.
+      Desktop and mobile browser flows checked; the local app runs on port 8501.
 - [ ] **H+0 🚀 Deploy now** on [Streamlit Community Cloud](https://share.streamlit.io): repo `j33v4nz/visat`,
       branch `main`, main file **`app/streamlit_app.py`**, Python **3.12**. It installs from `requirements.txt`.
       Share the live URL in the team chat. (If the build picks `pyproject.toml`/`uv.lock` instead and fails,
       check the "dependency file" note in RESOURCES.md §4b.)
 - [x] **H+1** Projector test: 20 px text, dark theme, map ≥65% width. Hide anything not in the demo in expanders.
-- [x] **H+4** Re-check all four screens on the frozen real-data build, the **₹10 crore** preset, and the
+- [x] **H+4** Re-check all five workspaces on the frozen real-data build, the **₹10 crore** preset, and the
       **Kakkanad → IT park** flow. The UI now reports the remaining **+0.26 °C** after offsets honestly.
 - [x] **H+4 follow-up** Re-check named ward selection and Ward Cards after the ward-only `data/app/`
       rebuild; the app now has 74 real ward names and boundaries.
@@ -186,7 +190,7 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
       KMBR FSI clause, SEIAA thresholds, IURWTS status). Fix anything wrong directly in `config.py`.
 - [ ] **H+1** Official alert source: put the best IMD/KSDMA link(s) in `config.OFFICIAL_ALERT_LINKS`.
 - [ ] **H+2** Malayalam: a **native speaker** fills `report.ML_LABELS` (Ward Card headings). No machine translation.
-      **Implemented in the app:** English/Malayalam switch across all four screens and a Malayalam
+      **Implemented in the app:** English/Malayalam switch across all five workspaces and a Malayalam
       printable Ward Card, with source numbers unchanged. The Malayalam copy uses KSDMA's
       `താപസൂചിക` terminology; native-speaker editorial review remains open before calling it final.
 - [ ] **H+2** Review the news keyword lists in `news.py` (HEAT, PLACE, GULF) with a native reader.
@@ -194,7 +198,7 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
       impact/scale. Include the **AI-use disclosure** (Claude-assisted coding; reaction preview uses Claude Opus 5
       only to phrase simulated personas — never numbers).
 - [ ] **T3** Public Reaction Preview: `uv sync --extra reactions`, set `ANTHROPIC_API_KEY`, run
-      `uv run python -m visat.reactions` (~24 calls, ~$2–4) → commits `data/app/reactions_cache.json`.
+      `uv run python -m uhi.reactions` (~24 calls, ~$2–4) → commits `data/app/reactions_cache.json`.
 - [ ] **H+19** Record the 2–3 min demo video (backup). **H+22.5** submit: repo, live URL, video, deck.
 - **Presents:** problem + impact. **Q&A:** costs, "is heat-neutral legal?", "doesn't Kawaki do this?", "is news reliable?"
 
@@ -207,7 +211,7 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 | H+2 | Live URL works (demo data) · CI green |
 | **H+4** | ✅ **Real data frozen and committed** |
 | **H+6** | Checkpoint 1: real Heat Stress Map + honest CV on screen → start Tier 2 |
-| **H+13** | Checkpoint 2: all 4 screens on real data, live URL → start Tier 3 |
+| **H+13** | Checkpoint 2: all 5 workspaces on real data, live URL → start Tier 3 |
 | H+15 | If anything core is broken → ship ranked hotspots + °C per fix |
 | H+16–19 | Sleep in shifts (M1+M3, then M2+M4) |
 | **H+19** | Feature freeze · record video |
@@ -216,3 +220,10 @@ uv run streamlit run app/streamlit_app.py # open http://localhost:8501
 
 **Rules:** commit small and often; never commit secrets (`.streamlit/secrets.toml`, `.env`); every number on
 screen keeps its label ("surface °C, ~10:30 AM, Jan–Apr" / "city-scale"); PS1 checklist is PLAN.md §0.
+
+
+## UHI dashboard additions
+
+- [x] Rebuilt the map-first dashboard in a high-contrast black theme with orange and cooling-mint accents; removed the light theme.
+- [x] Added Malayalam labels and a ward-level scenario simulator with live sensitivity estimates and a downloadable report.
+- [x] Rebranded user-facing project text as UHI: Urban Heat Intelligence; renamed the Python package to `uhi` (the GitHub repository slug remains unchanged).
